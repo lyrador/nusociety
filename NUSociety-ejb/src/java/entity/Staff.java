@@ -31,7 +31,7 @@ public class Staff implements Serializable {
     @Column(nullable = false, length = 32)
     private String password;
     @Column(nullable = false, unique = true, length = 32)
-    private String userName;
+    private String username;
     @Column(nullable = false)
     private String profilePicture;
     
@@ -47,7 +47,7 @@ public class Staff implements Serializable {
         this();
         this.email = email;
         this.password = password;
-        this.userName = userName;
+        this.username = username;
         this.profilePicture = profilePicture;
     }
 
@@ -68,11 +68,11 @@ public class Staff implements Serializable {
     }
 
     public String getUserName() {
-        return userName;
+        return username;
     }
 
     public void setUserName(String userName) {
-        this.userName = userName;
+        this.username = userName;
     }
 
     public String getProfilePicture() {
