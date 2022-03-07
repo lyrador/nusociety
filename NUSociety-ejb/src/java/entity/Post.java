@@ -130,4 +130,5 @@ public class Post implements Serializable {
         return "entity.Post[ id=" + postId + " ]";
     }
     
+    
 }

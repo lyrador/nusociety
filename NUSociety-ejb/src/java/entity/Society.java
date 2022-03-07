@@ -159,4 +159,5 @@ public class Society implements Serializable {
         return "entity.Society[ id=" + societyId + " ]";
     }
     
+    
 }
