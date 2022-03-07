@@ -45,12 +45,10 @@ public class Society implements Serializable {
     
     @ManyToMany
     private List<SocietyCategory> societyCategories;
-    
-//    @ManyToMany
-//    private List<Staff> staffs;
-//    
-//    @OneToMany(mappedBy = "society")
-//    private List<Post> posts;
+    @OneToMany(mappedBy = "society", cascade = {}, fetch = FetchType.LAZY)
+    private List<Post> posts;
+    @ManyToMany(mappedBy = "societies")
+    private List<Staff> staffs;   
 //    
 //    @ManyToMany
 //    private List<Student> students;
@@ -61,9 +59,12 @@ public class Society implements Serializable {
     public Society() {
         this.announcements = new ArrayList<>();
         this.societyCategories = new ArrayList<>();
+        this.posts = new ArrayList<>();
+        this.staffs = new ArrayList<>();
     }
 
     public Society(String name, String description, Date dateCreated) {
+        this();
         this.name = name;
         this.description = description;
         this.dateCreated = dateCreated;
@@ -115,6 +116,22 @@ public class Society implements Serializable {
 
     public void setSocietyCategories(List<SocietyCategory> societyCategories) {
         this.societyCategories = societyCategories;
+    }
+
+    public List<Post> getPosts() {
+        return posts;
+    }
+
+    public void setPosts(List<Post> posts) {
+        this.posts = posts;
+    }
+
+    public List<Staff> getStaffs() {
+        return staffs;
+    }
+
+    public void setStaffs(List<Staff> staffs) {
+        this.staffs = staffs;
     }
     
     @Override

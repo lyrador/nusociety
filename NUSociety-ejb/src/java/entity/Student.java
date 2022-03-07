@@ -49,9 +49,15 @@ public class Student implements Serializable {
     private List<Attendance> attendances;
     @ManyToMany(cascade = {}, fetch = FetchType.LAZY)
     private List<Notification> notifications;
+    @OneToMany(mappedBy = "student", cascade = {}, fetch = FetchType.LAZY)
+    private List<Comment> comments;
+    @OneToMany(mappedBy = "student", cascade = {}, fetch = FetchType.LAZY)
+    private List<Post> posts;
 
     public Student() {
         attendances = new ArrayList<>();
+        comments = new ArrayList<>();
+        posts = new ArrayList<>();
     }
 
     public Student(String name, String email, String password, String userName, String profilePicture, AccessRightEnum accessRightEnum) {
@@ -161,4 +167,22 @@ public class Student implements Serializable {
     public void setAccessRightEnum(AccessRightEnum accessRightEnum) {
         this.accessRightEnum = accessRightEnum;
     }
+    
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
+
+    public List<Post> getPosts() {
+        return posts;
+    }
+
+    public void setPosts(List<Post> posts) {
+        this.posts = posts;
+    }
+    
+    
 }
