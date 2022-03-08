@@ -36,6 +36,7 @@ public class Post implements Serializable {
     
     @OneToMany(mappedBy = "post", cascade = {}, fetch = FetchType.EAGER)
     private List<Comment> comments;  
+    
     @ManyToOne(optional = false, cascade = {}, fetch = FetchType.EAGER)
     @JoinColumn(nullable = false)
     private Student student;   

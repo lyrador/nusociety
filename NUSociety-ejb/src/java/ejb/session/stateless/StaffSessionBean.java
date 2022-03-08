@@ -5,6 +5,7 @@
  */
 package ejb.session.stateless;
 
+import entity.Society;
 import entity.Staff;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -12,6 +13,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import util.exception.StaffDeletionException;
 import util.exception.StaffNotFoundException;
 
 /**
@@ -43,9 +45,39 @@ public class StaffSessionBean implements StaffSessionBeanLocal {
     }
     
     //Update staff
+    @Override
+    public void updateStaff(Staff newS) throws StaffNotFoundException {
+        Staff s = retrievePostById(newS.getStaffId());
+        
+        s.setEmail(newS.getEmail());
+        s.setPassword(newS.getPassword());
+        s.setProfilePicture(newS.getProfilePicture());
+        s.setUserName(newS.getUserName());
+    }
     
     //Delete staff
-    //**Staff should only be able to be deleted if their society have more than one Staff**
+    //**Staff should only be able to be deleted if their society have more than one Staff || Staff not in charge of society**
+    
+    @Override
+    public void deleteStaff(Long staffId) throws StaffNotFoundException, StaffDeletionException{
+        Staff s = retrievePostById(staffId);
+        boolean enoughStaff = false;
+        
+        //Check if the Societies that the Staff is in charge of has at least 1 Staff member after deletion
+        for(Society so : s.getSocieties()) {
+            if(so.getStaffs().size() >= 2) {
+                enoughStaff = false;
+            }
+        }
+        
+        if(s.getSocieties().isEmpty() || enoughStaff) {
+            em.remove(s);
+        } else {
+            throw new StaffDeletionException("Staff with ID: " + staffId +
+                    " is in charge of a Society. Unable to delete unless another Staff takes charge of the Society!");
+                    
+        }
+    }
      
     @Override
     public Staff retrieveStaffByUsername(String username) throws StaffNotFoundException {
