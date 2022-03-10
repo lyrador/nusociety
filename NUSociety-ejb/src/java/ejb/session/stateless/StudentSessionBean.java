@@ -14,6 +14,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import util.enumeration.AccessRightEnum;
+import util.exception.StudentNotFoundException;
 
 /**
  *
@@ -34,9 +35,13 @@ public class StudentSessionBean implements StudentSessionBeanLocal {
     }
     
     @Override
-    public Student retrieveStudentByStudentId(Long studentId) {
-        Student student = em.find(Student.class, studentId);     
-        return student;
+    public Student retrieveStudentByStudentId(Long studentId) throws StudentNotFoundException{
+        Student student = em.find(Student.class, studentId);   
+        if(student != null) {
+            return student;
+        } else {
+            throw new StudentNotFoundException("Student with Id: " + studentId + " cannot be found!");
+        }
     }
     
     @Override
@@ -47,7 +52,7 @@ public class StudentSessionBean implements StudentSessionBeanLocal {
     }
     
     @Override
-    public void deleteStudent(Long studentId) {
+    public void deleteStudent(Long studentId) throws StudentNotFoundException {
         Student studentToBeDeleted = retrieveStudentByStudentId(studentId);
         
         for(Attendance attendance: studentToBeDeleted.getAttendances()) {
@@ -65,5 +70,24 @@ public class StudentSessionBean implements StudentSessionBeanLocal {
         studentToBeDeleted.getNotifications().clear();
         
         em.remove(studentToBeDeleted); 
+    }
+    
+    @Override
+    public void updateStudent(Student tempStudent) throws StudentNotFoundException {
+        
+        Student studentToUpdate = em.find(Student.class, tempStudent.getStudentId());
+
+        if (tempStudent.getName() != null)
+            studentToUpdate.setName(tempStudent.getName());
+        if (tempStudent.getEmail() != null)
+            studentToUpdate.setEmail(tempStudent.getEmail());
+        if (tempStudent.getEmail() != null)
+            studentToUpdate.setPassword(tempStudent.getPassword());
+        if (tempStudent.getUserName()!= null)
+            studentToUpdate.setUserName(tempStudent.getUserName());
+        if (tempStudent.getProfilePicture()!= null)
+            studentToUpdate.setProfilePicture(tempStudent.getProfilePicture());
+        if (tempStudent.getAccessRightEnum()!= null)
+            studentToUpdate.setAccessRightEnum(tempStudent.getAccessRightEnum());
     }
 }

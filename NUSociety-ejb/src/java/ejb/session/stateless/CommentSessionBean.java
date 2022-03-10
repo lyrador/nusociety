@@ -15,6 +15,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import util.exception.CommentNotFoundException;
 import util.exception.PostNotFoundException;
+import util.exception.StudentNotFoundException;
 
 /**
  *
@@ -94,9 +95,15 @@ public class CommentSessionBean implements CommentSessionBeanLocal {
     //View List of Comment of a Student
     //Exception handling
     @Override
-    public List<Comment> viewAllCommentsOfStudent(Long studentId) {
-        Student s = studentSessionBean.retrieveStudentByStudentId(studentId);
-        return s.getComments();
+    public List<Comment> viewAllCommentsOfStudent(Long studentId) throws StudentNotFoundException {
+        
+        
+        try {
+            Student s = studentSessionBean.retrieveStudentByStudentId(studentId);
+            return s.getComments();
+        } catch (StudentNotFoundException ex) {
+            throw new StudentNotFoundException("Student with Id: " + studentId + " cannot be found!");
+        }
     }
     
 }

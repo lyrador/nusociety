@@ -10,6 +10,7 @@ import java.util.List;
 import javax.ejb.Local;
 import util.exception.CommentNotFoundException;
 import util.exception.PostNotFoundException;
+import util.exception.StudentNotFoundException;
 
 /**
  *
@@ -20,7 +21,7 @@ public interface CommentSessionBeanLocal {
 
     public List<Comment> viewAllCommentsOfPost(Long postId) throws PostNotFoundException;
 
-    public List<Comment> viewAllCommentsOfStudent(Long studentId);
+    public List<Comment> viewAllCommentsOfStudent(Long studentId) throws StudentNotFoundException;
 
     public Long createComment(Comment comment);
 
