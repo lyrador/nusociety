@@ -63,11 +63,11 @@ public class CommentSessionBean implements CommentSessionBeanLocal {
     
     //Update Comment
     @Override
-    public void updateComment(Comment newC) throws CommentNotFoundException {
-        Comment c = retrieveCommentById(newC.getCommentId());
+    public void updateComment(Long cId, String newContent) throws CommentNotFoundException {
+        Comment c = retrieveCommentById(cId);
         
         //Only update content, Date shouldn't be updated
-        c.setContent(newC.getContent());
+        c.setContent(newContent);
     }
     
     //Delete Comment

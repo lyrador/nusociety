@@ -11,6 +11,8 @@ import ejb.session.stateless.StudentSessionBeanLocal;
 import entity.Comment;
 import entity.Post;
 import entity.Student;
+import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
@@ -19,9 +21,11 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
+import javax.faces.view.ViewScoped;
 //import javax.faces.view.ViewScoped;
 import util.exception.CommentNotFoundException;
 import util.exception.PostNotFoundException;
@@ -32,8 +36,8 @@ import util.exception.StudentNotFoundException;
  * @author 65912
  */
 @Named(value = "createNewCommentManagedBean")
-@RequestScoped
-public class CommentManagementManagedBean {
+@SessionScoped
+public class CommentManagementManagedBean implements Serializable {
 
     @EJB
     private PostSessionBeanLocal postSessionBean;
@@ -46,15 +50,20 @@ public class CommentManagementManagedBean {
     private Long newStudentId;
     private Long newPostId;
 
-    private Comment commentToBeUpdated;
+    private String contentUpdate;
+    private Long commentUpdateId;
+    
+    private Long commentDeleteId;
     
     //Next time change to student's own comments
     private List<Comment> listOfComments;
 
     public CommentManagementManagedBean() {
         newCommentEntity = new Comment();
+        //commentToBeUpdated = new Comment();
     }
     
+    //Change to student
     @PostConstruct
     public void PostConstruct() {
         listOfComments = commentSessionBean.viewAllCommentsInDatabase();
@@ -64,12 +73,14 @@ public class CommentManagementManagedBean {
         try {
             newCommentEntity.setStudent(studentSessionBean.retrieveStudentByStudentId(newStudentId));
             newCommentEntity.setPost(postSessionBean.retrievePostById(newPostId));
+            
             newCommentEntity.setCreationDate(new Date());
 
             Long cId = commentSessionBean.createComment(newCommentEntity);
             newCommentEntity = new Comment();
             newStudentId = null;
             newPostId = null;
+            listOfComments = commentSessionBean.viewAllCommentsInDatabase();
             
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "New Comment created successfully (Comment ID: " + cId + ")", null));
         } catch (PostNotFoundException ex) {
@@ -79,7 +90,7 @@ public class CommentManagementManagedBean {
 
     //Retrieve Comment from client, Initialise the attributes required for update
     public void doUpdateComment(ActionEvent event) {
-        commentToBeUpdated = (Comment) event.getComponent().getAttributes().get("commentToBeUpdated");
+        //commentToBeUpdated = (Comment) event.getComponent().getAttributes().get("commentToBeUpdated");
         //creationDateUpdate = commentToBeUpdated.getCreationDate();
         //contentUpdate = commentToBeUpdated.getContent();
 
@@ -87,7 +98,9 @@ public class CommentManagementManagedBean {
 
     public void updateComment(ActionEvent event) {
         try {
-            commentSessionBean.updateComment(commentToBeUpdated);
+            
+            commentSessionBean.updateComment(commentUpdateId,contentUpdate);
+            listOfComments = commentSessionBean.viewAllCommentsInDatabase();
 
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Comment updated successfully", null));
         } catch (CommentNotFoundException ex) {
@@ -100,8 +113,10 @@ public class CommentManagementManagedBean {
 
     public void deleteComment(ActionEvent event) {
         try {
-            Comment commentToDelete = (Comment) event.getComponent().getAttributes().get("commentToDelete");
-            commentSessionBean.deleteComment(commentToDelete.getCommentId());
+            //Comment commentToDelete = (Comment) event.getComponent().getAttributes().get("commentToDelete");
+            commentSessionBean.deleteComment(commentDeleteId);
+            commentDeleteId = null;
+            listOfComments = commentSessionBean.viewAllCommentsInDatabase();
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Comment Deleted successfully", null));
 
         } catch (CommentNotFoundException ex) {
@@ -117,14 +132,6 @@ public class CommentManagementManagedBean {
 
     public void setNewCommentEntity(Comment newCommentEntity) {
         this.newCommentEntity = newCommentEntity;
-    }
-
-    public Comment getCommentToBeUpdated() {
-        return commentToBeUpdated;
-    }
-
-    public void setCommentToBeUpdated(Comment commentToBeUpdated) {
-        this.commentToBeUpdated = commentToBeUpdated;
     }
 
     public Long getNewStudentId() {
@@ -149,6 +156,30 @@ public class CommentManagementManagedBean {
 
     public void setListOfComments(List<Comment> listOfComments) {
         this.listOfComments = listOfComments;
+    }
+
+    public Long getCommentDeleteId() {
+        return commentDeleteId;
+    }
+
+    public void setCommentDeleteId(Long commentDeleteId) {
+        this.commentDeleteId = commentDeleteId;
+    }
+
+    public Long getCommentUpdateId() {
+        return commentUpdateId;
+    }
+
+    public void setCommentUpdateId(Long commentUpdateId) {
+        this.commentUpdateId = commentUpdateId;
+    }
+
+    public String getContentUpdate() {
+        return contentUpdate;
+    }
+
+    public void setContentUpdate(String contentUpdate) {
+        this.contentUpdate = contentUpdate;
     }
     
     

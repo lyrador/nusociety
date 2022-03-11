@@ -7,77 +7,25 @@
       template="/template/defaultTemplate.xhtml"
       xmlns:p="http://primefaces.org/ui">
 
-    <h:form id="formAllComments">
+    <ui:insert name="header">
+        <ui:include src="/header.xhtml" />
+    </ui:insert>
 
-        <p:messages id="messages" redisplay="false" />
+    <ul>
+        <li><h:link outcome="/Comment/viewAllComments.xhtml">View All Comments</h:link></li>
+        <li><h:link outcome="/Comment/createComment.xhtml">Create New Comment</h:link></li>
+        <li><h:link outcome="/Comment/deleteComment.xhtml">Delete Comment</h:link></li>
+        <li><h:link outcome="/Comment/updateComment.xhtml">Update Comment</h:link></li>
 
-        <p:dataTable id="dataTableAllComments" widgetVar="dataTableAllComments" value="#{createNewCommentManagedBean.listOfComments}" var="comment" rowKey="#{comment.commentId}" rowIndexVar="row"
-                     rows="10" paginator="true" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="10,20,50">
+        
+    </ul>
 
-            <p:column headerText="Creation Date" sortBy="#{comment.creationDate}" >
-                <h:outputText value="#{comment.creationDate}" />
-            </p:column>
-            
-            <p:column headerText="Comment Content" sortBy="#{comment.content}" >
-                <h:outputText value="#{comment.content}" />
-            </p:column>
-            
-            <p:column headerText="Post ID" sortBy="#{comment.post.postId}" >
-                <h:outputText value="#{comment.post.postId}" />
-            </p:column>
+    <ui:insert name="footer">
+        <ui:include src="/footer.xhtml" />
+    </ui:insert>
 
-        </p:dataTable>
-    </h:form>
-    
-    
 
-    <h:form id="formCreateNewComment">
-        <p:messages id="messagesCreateNewComment" redisplay="false"/>
-        <p:panelGrid>
-            <p:row>
-                <p:column>
-                    <p:outputLabel for="content" value="Content: " style="font-weight: bold;"/>
-                </p:column>
-                <p:column>
-                    <p:inputText id="content" value="#{createNewCommentManagedBean.newCommentEntity.content}" placeholder="Lorem Ipsum" required="true" requiredMessage="Content is required"/>
-                </p:column>
-                <p:column>
-                    <p:message for="content"/>
-                </p:column>
-            </p:row>
 
-            <p:row>
-                <p:column>
-                    <p:outputLabel for="student" value="Student ID: " style="font-weight: bold;"/>
-                </p:column>
-                <p:column>
-                    <p:inputText id="student" value="#{createNewCommentManagedBean.newStudentId}" placeholder="" required="true" requiredMessage="Student ID is required"/>
-                </p:column>
-                <p:column>
-                    <p:message for="student"/>
-                </p:column>
-            </p:row>
-
-            <p:row>
-                <p:column>
-                    <p:outputLabel for="post" value="Post ID: " style="font-weight: bold;"/>
-                </p:column>
-                <p:column>
-                    <p:inputText id="post" value="#{createNewCommentManagedBean.newPostId}" placeholder="" required="true" requiredMessage="Post ID is required"/>
-                </p:column>
-                <p:column>
-                    <p:message for="post"/>
-                </p:column>
-            </p:row>
-
-            <p:row>
-                <p:column colspan="3">
-                    <p:commandButton type="reset" value="Clear" />&nbsp;
-                    <p:commandButton  value="Create New Commnet" actionListener="#{createNewCommentManagedBean.createNewComment(event)}" />
-                </p:column>
-            </p:row>
-        </p:panelGrid>
-    </h:form>
 
 </html>
 
