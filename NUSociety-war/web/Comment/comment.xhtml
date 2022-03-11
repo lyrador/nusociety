@@ -1,0 +1,83 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      template="/template/defaultTemplate.xhtml"
+      xmlns:p="http://primefaces.org/ui">
+
+    <h:form id="formAllComments">
+
+        <p:messages id="messages" redisplay="false" />
+
+        <p:dataTable id="dataTableAllComments" widgetVar="dataTableAllComments" value="#{createNewCommentManagedBean.listOfComments}" var="comment" rowKey="#{comment.commentId}" rowIndexVar="row"
+                     rows="10" paginator="true" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="10,20,50">
+
+            <p:column headerText="Creation Date" sortBy="#{comment.creationDate}" >
+                <h:outputText value="#{comment.creationDate}" />
+            </p:column>
+            
+            <p:column headerText="Comment Content" sortBy="#{comment.content}" >
+                <h:outputText value="#{comment.content}" />
+            </p:column>
+            
+            <p:column headerText="Post ID" sortBy="#{comment.post.postId}" >
+                <h:outputText value="#{comment.post.postId}" />
+            </p:column>
+
+        </p:dataTable>
+    </h:form>
+    
+    
+
+    <h:form id="formCreateNewComment">
+        <p:messages id="messagesCreateNewComment" redisplay="false"/>
+        <p:panelGrid>
+            <p:row>
+                <p:column>
+                    <p:outputLabel for="content" value="Content: " style="font-weight: bold;"/>
+                </p:column>
+                <p:column>
+                    <p:inputText id="content" value="#{createNewCommentManagedBean.newCommentEntity.content}" placeholder="Lorem Ipsum" required="true" requiredMessage="Content is required"/>
+                </p:column>
+                <p:column>
+                    <p:message for="content"/>
+                </p:column>
+            </p:row>
+
+            <p:row>
+                <p:column>
+                    <p:outputLabel for="student" value="Student ID: " style="font-weight: bold;"/>
+                </p:column>
+                <p:column>
+                    <p:inputText id="student" value="#{createNewCommentManagedBean.newStudentId}" placeholder="" required="true" requiredMessage="Student ID is required"/>
+                </p:column>
+                <p:column>
+                    <p:message for="student"/>
+                </p:column>
+            </p:row>
+
+            <p:row>
+                <p:column>
+                    <p:outputLabel for="post" value="Post ID: " style="font-weight: bold;"/>
+                </p:column>
+                <p:column>
+                    <p:inputText id="post" value="#{createNewCommentManagedBean.newPostId}" placeholder="" required="true" requiredMessage="Post ID is required"/>
+                </p:column>
+                <p:column>
+                    <p:message for="post"/>
+                </p:column>
+            </p:row>
+
+            <p:row>
+                <p:column colspan="3">
+                    <p:commandButton type="reset" value="Clear" />&nbsp;
+                    <p:commandButton  value="Create New Commnet" actionListener="#{createNewCommentManagedBean.createNewComment(event)}" />
+                </p:column>
+            </p:row>
+        </p:panelGrid>
+    </h:form>
+
+</html>
+

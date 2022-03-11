@@ -30,5 +30,7 @@ public interface CommentSessionBeanLocal {
     public void updateComment(Comment newC) throws CommentNotFoundException;
 
     public void deleteComment(Long commentId) throws CommentNotFoundException;
+
+    public List<Comment> viewAllCommentsInDatabase();
     
 }
