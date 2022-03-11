@@ -1,0 +1,51 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      template="/template/defaultTemplate.xhtml"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Update Post</title>
+    </h:head>
+    <h:body>
+        <h1>Update Post</h1>
+
+        <ui:insert name="header">
+            <ui:include src="/header.xhtml" />
+        </ui:insert>
+
+        <h:form id="mainForm">
+
+            <h:messages />
+
+
+            <h:panelGrid columns="3">
+                
+                <h:outputLabel for="newPostId" value="ID of Post to be updated: "/>
+                <h:inputText id="newPostId" value="#{postManagementManagedBean.postUpdateId}" required="true"/>
+                <h:message for=""/>
+
+                <h:outputLabel for="PostContent" value="New Content: "/>
+                <h:inputText id="PostContent" value="#{postManagementManagedBean.postToUpdate.bodyContent}" required="true"/>
+                <h:message for=""/>
+
+                <h:outputLabel for="PostImage" value="New Image: "/>
+                <h:inputText id="PostImage" value="#{postManagementManagedBean.postToUpdate.image}" required="true"/>
+                <h:message for=""/>
+
+                <h:outputText value=""/>
+                <h:commandButton value="Update Post" actionListener="#{postManagementManagedBean.doUpdatePost}"/>
+                <h:outputText value=""/>
+
+            </h:panelGrid>
+
+        </h:form>
+
+        <ui:insert name="footer">
+            <ui:include src="/footer.xhtml" />
+        </ui:insert>
+    </h:body>
+</html>
+

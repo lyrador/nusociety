@@ -40,11 +40,15 @@ public class PostManagementManagedBean implements Serializable {
     private Long newSocietyId;
 
     private Post postToUpdate;
+    private Long postUpdateId;
+    
+    private Long postDeleteId;
 
     private List<Post> listOfPosts;
 
     public PostManagementManagedBean() {
         newPostEntity = new Post();
+        postToUpdate = new Post();
     }
 
     @PostConstruct
@@ -61,6 +65,7 @@ public class PostManagementManagedBean implements Serializable {
         newPostEntity = new Post();
         newSocietyId = null;
         newStudentId = null;
+        listOfPosts = postSessionBean.retrieveAllPostsInDatabase();
         
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "New Post created successfully (Post ID: " + pId + ")", null));
         } catch (StudentNotFoundException ex) {
@@ -71,7 +76,9 @@ public class PostManagementManagedBean implements Serializable {
 
     public void doUpdatePost(ActionEvent event) {
         try {
-            postSessionBean.updatePost(newPostEntity);
+            postSessionBean.updatePost(postUpdateId, postToUpdate);
+            listOfPosts = postSessionBean.retrieveAllPostsInDatabase();
+             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Post updated successfully! ", null));
         } catch (PostNotFoundException ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An error has occurred while updating Post: " + ex.getMessage(), null));
         } catch (Exception ex) {
@@ -82,8 +89,9 @@ public class PostManagementManagedBean implements Serializable {
 
     public void deletePost(ActionEvent event) {
         try {
-            Post commentToDelete = (Post) event.getComponent().getAttributes().get("postToDelete");
-            postSessionBean.deletePost(commentToDelete.getPostId());
+            //Post commentToDelete = (Post) event.getComponent().getAttributes().get("postToDelete");
+            postSessionBean.deletePost(postDeleteId);
+            listOfPosts = postSessionBean.retrieveAllPostsInDatabase();
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Post Deleted successfully", null));
 
         } catch (PostNotFoundException ex) {
@@ -133,5 +141,22 @@ public class PostManagementManagedBean implements Serializable {
         this.listOfPosts = listOfPosts;
     }
 
+    public Long getPostDeleteId() {
+        return postDeleteId;
+    }
+
+    public void setPostDeleteId(Long postDeleteId) {
+        this.postDeleteId = postDeleteId;
+    }
+
+    //Can delete next time
+    public Long getPostUpdateId() {
+        return postUpdateId;
+    }
+
+    public void setPostUpdateId(Long postUpdateId) {
+        this.postUpdateId = postUpdateId;
+    }
+    
     
 }

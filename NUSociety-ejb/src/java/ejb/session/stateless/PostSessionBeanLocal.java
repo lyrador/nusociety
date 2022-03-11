@@ -23,7 +23,7 @@ public interface PostSessionBeanLocal {
 
     public Post retrievePostById(Long postId) throws PostNotFoundException;
 
-    public void updatePost(Post newP) throws PostNotFoundException;
+    public void updatePost(Long pId, Post newP) throws PostNotFoundException;
 
     public void deletePost(Long postId) throws PostNotFoundException;
 

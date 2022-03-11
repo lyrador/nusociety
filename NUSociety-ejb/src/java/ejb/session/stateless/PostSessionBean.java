@@ -59,13 +59,14 @@ public class PostSessionBean implements PostSessionBeanLocal {
     }
     
     //Update Post
+    //Change the Long
     @Override
-    public void updatePost(Post newP) throws PostNotFoundException {
-        Post p = retrievePostById(newP.getPostId());
+    public void updatePost(Long pId, Post newP) throws PostNotFoundException {
+        Post p = retrievePostById(pId);
         
         //Update Body and Image
         p.setBodyContent(newP.getBodyContent());
-        p.setBodyContent(newP.getImage()); 
+        p.setImage(newP.getImage()); 
         
     }
     
