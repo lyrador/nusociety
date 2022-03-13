@@ -1,0 +1,89 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">	
+
+    <h:head>
+        Header
+    </h:head>
+    
+    <h:body>
+        
+        <h3>Society Management</h3>
+        
+        <h:form>
+            
+            <p:menubar>
+
+                <p:submenu label="File" icon="ui-icon-document">
+                    <p:menuitem value="Create New Society" onclick="PF('dialogCreateNewSociety').show()" icon="pi pi-plus" />
+                </p:submenu>                                        
+
+            </p:menubar>
+            <br/>
+
+        </h:form>
+        
+        <h:form id="formCreateNewSociety">
+
+            <p:dialog id="dialogCreateNewSociety" widgetVar="dialogCreateNewSociety" header="Create New Society" closable="true">
+
+                <p:messages id="messagesCreateNewSociety" redisplay="false" />
+
+                <p:panelGrid>
+
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="name" value="Name: " style="font-weight: bold;" />
+                        </p:column>
+                        <p:column>
+                            <p:inputText id="name" value="#{societyManagementManagedBean.newSociety.name}" placeholder="Name" required="true" requiredMessage="Name is required" />
+                        </p:column>
+                        <p:column>
+                            <p:message for="name" />
+                        </p:column>
+                    </p:row>
+
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="description" value="Description: " style="font-weight: bold;" />
+                        </p:column>
+                        <p:column>
+                            <p:inputText id="description" value="#{societyManagementManagedBean.newSociety.description}" placeholder="Description" required="true" requiredMessage="Description is required" />
+                        </p:column>
+                        <p:column>
+                            <p:message for="description" />
+                        </p:column>
+                    </p:row>
+
+
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="profilePicture" value="Upload" style="font-weight: bold;" />
+                        </p:column>
+                        <p:column>
+                            <p:spinner id="reorderQuantity" value="#{productManagementManagedBean.newProductEntity.reorderQuantity}" placeholder="10" min="0" max="1000000" stepFactor="10" required="true" requiredMessage="Reorder Quantity is required" validator="reorderQuantityValidator" />
+                        </p:column>
+                        <p:column>
+                            <p:message for="reorderQuantity" />
+                        </p:column>
+                    </p:row>
+
+                    <p:row>
+                        <p:column colspan="3">
+                            <p:commandButton type="reset" value="Clear" />&nbsp;
+                            <p:commandButton  value="Create New Product" update="@form formAllProducts:dataTableAllProducts" actionListener="#{productManagementManagedBean.createNewProduct}" oncomplete="PF('dialogCreateNewProduct').show();" />
+                        </p:column>
+                    </p:row>
+
+                </p:panelGrid>
+
+            </p:dialog>
+
+        </h:form>
+        
+    </h:body>
+
+</ui:composition>

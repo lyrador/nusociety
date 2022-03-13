@@ -32,7 +32,7 @@ public class StaffSessionBean implements StaffSessionBeanLocal {
     }
     
     @Override
-    public Staff retrievePostById(Long staffId) throws StaffNotFoundException {
+    public Staff retrieveStaffById(Long staffId) throws StaffNotFoundException {
         Staff s = em.find(Staff.class, staffId);
         
         if(staffId != null) {

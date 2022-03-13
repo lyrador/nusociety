@@ -18,7 +18,7 @@ public interface StaffSessionBeanLocal {
 
     public Long createNewStaff(Staff staff);
 
-    public Staff retrievePostById(Long staffId) throws StaffNotFoundException;
+    public Staff retrieveStaffById(Long staffId) throws StaffNotFoundException;
 
     public Staff retrieveStaffByUsername(String username) throws StaffNotFoundException;
     
