@@ -5,7 +5,10 @@
  */
 package ejb.session.stateless;
 
+import entity.Comment;
 import entity.Post;
+import entity.Society;
+import java.util.List;
 import javax.ejb.Local;
 import util.exception.PostNotFoundException;
 
@@ -19,5 +22,15 @@ public interface PostSessionBeanLocal {
     public Long createNewPost(Post post);
 
     public Post retrievePostById(Long postId) throws PostNotFoundException;
+
+    public void updatePost(Long pId, Post newP) throws PostNotFoundException;
+
+    public void deletePost(Long postId) throws PostNotFoundException;
+
+    public List<Comment> retrieveAllCommentsOfPost(Long postId) throws PostNotFoundException;
+
+    public List<Post> retrieveAllPostsInDatabase();
+
+    public Society retrieveSocietyById(Long societyId);
     
 }

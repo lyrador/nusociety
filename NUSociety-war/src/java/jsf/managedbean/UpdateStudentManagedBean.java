@@ -19,31 +19,30 @@ import util.exception.StudentNotFoundException;
  *
  * @author yeeda
  */
-@Named(value = "deleteStudentManagedBean")
+@Named(value = "updateStudentManagedBean")
 @RequestScoped
-public class DeleteStudentManagedBean {
+public class UpdateStudentManagedBean {
 
     @EJB
     private StudentSessionBeanLocal studentSessionBeanLocal;
     
-    private Student studentToBeDeleted;
+    private Student studentToBeUpdated;
 
     /**
-     * Creates a new instance of DeleteStudentManagedBean
+     * Creates a new instance of UpdateStudentManagedBean
      */
-    public DeleteStudentManagedBean() {
-        studentToBeDeleted = new Student();
+    public UpdateStudentManagedBean() {
+        studentToBeUpdated = new Student();
     }
     
-    public void doDeleteStudent(ActionEvent event) throws StudentNotFoundException {
-        Long studentToBeDeletedId = studentToBeDeleted.getStudentId();
-        studentSessionBeanLocal.deleteStudent(studentToBeDeletedId);
+    public void doUpdateStudent(ActionEvent event) throws StudentNotFoundException{
+        studentSessionBeanLocal.updateStudent(studentToBeUpdated);
         
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Student deleted: " + studentToBeDeletedId,"Student deleted: " + studentToBeDeletedId));
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Student updated: " + studentToBeUpdated,"Student updated: " + studentToBeUpdated));
     }
     
     public Student getStudent() {
-        return studentToBeDeleted;
+        return studentToBeUpdated;
     }
 }
   

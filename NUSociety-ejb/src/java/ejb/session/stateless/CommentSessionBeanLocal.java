@@ -5,7 +5,12 @@
  */
 package ejb.session.stateless;
 
+import entity.Comment;
+import java.util.List;
 import javax.ejb.Local;
+import util.exception.CommentNotFoundException;
+import util.exception.PostNotFoundException;
+import util.exception.StudentNotFoundException;
 
 /**
  *
@@ -13,5 +18,19 @@ import javax.ejb.Local;
  */
 @Local
 public interface CommentSessionBeanLocal {
+
+    public List<Comment> viewAllCommentsOfPost(Long postId) throws PostNotFoundException;
+
+    public List<Comment> viewAllCommentsOfStudent(Long studentId) throws StudentNotFoundException;
+
+    public Long createComment(Comment comment);
+
+    public Comment retrieveCommentById(Long commentId) throws CommentNotFoundException;
+
+    public void updateComment(Long cId, String newContent) throws CommentNotFoundException;
+
+    public void deleteComment(Long commentId) throws CommentNotFoundException;
+
+    public List<Comment> viewAllCommentsInDatabase();
     
 }
