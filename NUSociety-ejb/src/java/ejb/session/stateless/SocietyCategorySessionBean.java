@@ -6,11 +6,13 @@
 package ejb.session.stateless;
 
 import entity.SocietyCategory;
+import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import util.exception.CreateSocietyCategoryException;
 import util.exception.DeleteSocietyCategoryException;
 import util.exception.SocietyCategoryNotFoundException;
 import util.exception.UpdateSocietyCategoryException;
@@ -26,9 +28,19 @@ public class SocietyCategorySessionBean implements SocietyCategorySessionBeanLoc
     private EntityManager em;
 
     @Override
-    public SocietyCategory createNewSocietyCategory(SocietyCategory societyCategory) {
-        em.persist(societyCategory);
-        em.flush();
+    public SocietyCategory createNewSocietyCategory(SocietyCategory societyCategory) throws CreateSocietyCategoryException, SocietyCategoryNotFoundException {
+        
+        Query query = em.createQuery("SELECT c FROM SocietyCategory c WHERE c.societyCategoryName = :inName");
+        query.setParameter("inName", societyCategory.getSocietyCategoryName());
+        List<SocietyCategory> list = query.getResultList();
+        
+        if (list.isEmpty()) {
+            em.persist(societyCategory);
+            em.flush();
+        } else {
+            throw new CreateSocietyCategoryException("Society Category already exists!");
+        }
+
         
         return societyCategory;
     }
@@ -41,6 +53,20 @@ public class SocietyCategorySessionBean implements SocietyCategorySessionBeanLoc
             return category;
         } else {
             throw new SocietyCategoryNotFoundException("Society Category Id " + id + " does not exist!");
+        }
+    }
+    
+    @Override
+    public SocietyCategory retrieveSocietyCategoryByName(String name) throws SocietyCategoryNotFoundException {
+        Query query = em.createQuery("SELECT c FROM SocietyCategory c WHERE c.societyCategoryName = :inName");
+        query.setParameter("inName", name);
+        
+        SocietyCategory category = (SocietyCategory) query.getSingleResult();
+        
+        if (category != null) {
+            return category;
+        } else {
+            throw new SocietyCategoryNotFoundException("Society Category Name " + name + " does not exist!");
         }
     }
     
@@ -64,7 +90,7 @@ public class SocietyCategorySessionBean implements SocietyCategorySessionBeanLoc
             
             Query query = em.createQuery("SELECT c FROM SocietyCategory c WHERE c.societyCategoryName = :inName AND c.societyCategoryId <> :inId");
             query.setParameter("inName", category.getSocietyCategoryName());
-            query.setParameter("inTagId", category.getSocietyCategoryId());
+            query.setParameter("inId", category.getSocietyCategoryId());
             
             if(!query.getResultList().isEmpty()) {
                 throw new UpdateSocietyCategoryException("The name of the society category to be updated is duplicated");

@@ -1,0 +1,257 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">	
+
+    <h:head>
+        Header
+    </h:head>
+    
+    <h:body>
+        
+        <h3>Society Management</h3>
+        
+        <h:form>
+            
+            <p:menubar>
+
+                <p:submenu label="Society" icon="ui-users">
+                    <p:menuitem value="Create New Society" onclick="PF('dialogCreateNewSociety').show()" icon="pi pi-plus" />
+                    <p:menuitem value="View All Societies" onclick="PF('dialogAllSocieties').show()" icon="pi pi-plus" />
+                    <p:menuitem value="Update Society" onclick="PF('dialogUpdateSociety').show()" icon="pi pi-plus" />
+                    <p:menuitem value="Delete Society" onclick="PF('dialogDeleteSociety').show()" icon="pi pi-plus" />
+                </p:submenu>                                        
+
+            </p:menubar>
+            <br/>
+
+        </h:form>
+        
+        <h:form id="formCreateNewSociety">
+
+            <p:dialog id="dialogCreateNewSociety" widgetVar="dialogCreateNewSociety" header="Create New Society" closable="true">
+
+                <p:messages id="messagesCreateNewSociety" redisplay="false" />
+
+                <p:panelGrid>
+
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="name" value="Name: " style="font-weight: bold;" />
+                        </p:column>
+                        <p:column>
+                            <p:inputText id="name" value="#{societyManagementManagedBean.newSociety.name}" placeholder="Name" required="true" requiredMessage="Name is required" />
+                        </p:column>
+                        <p:column>
+                            <p:message for="name" />
+                        </p:column>
+                    </p:row>
+
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="description" value="Description: " style="font-weight: bold;" />
+                        </p:column>
+                        <p:column>
+                            <p:inputText id="description" value="#{societyManagementManagedBean.newSociety.description}" placeholder="Description" required="true" requiredMessage="Description is required" />
+                        </p:column>
+                        <p:column>
+                            <p:message for="description" />
+                        </p:column>
+                    </p:row>
+                    
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="selCategories" value="Categories: " style="font-weight: bold;" />
+                        </p:column>
+                        <p:column>
+                            <p:selectManyMenu id="selCategories" value="#{societyManagementManagedBean.newCategoryIds}" showCheckbox="true">
+                                <f:selectItems value="#{societyManagementManagedBean.societyCategories}" var="category" itemValue="#{category.societyCategoryId}" itemLabel="#{category.societyCategoryName}" />
+                            </p:selectManyMenu>
+                        </p:column>
+                        <p:column>
+                            <p:message for="selCategories" />
+                        </p:column>
+                    </p:row>
+                    
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="selStaffs" value="Staff(s)-In-Charge " style="font-weight: bold;" />
+                        </p:column>
+                        <p:column>
+                            <p:selectManyMenu id="selStaffs" value="#{societyManagementManagedBean.newStaffIds}" showCheckbox="true">
+                                <f:selectItems value="#{societyManagementManagedBean.staffs}" var="staff" itemValue="#{staff.staffId}" itemLabel="#{staff.userName}" />
+                            </p:selectManyMenu>
+                        </p:column>
+                        <p:column>
+                            <p:message for="selStaffs" />
+                        </p:column>
+                    </p:row>
+
+
+                    <p:row>
+                        <p:column colspan="3">
+                            <p:commandButton type="reset" value="Clear" />&nbsp;
+                            <p:commandButton  value="Create New Society" update="@form formCreateNewSociety" actionListener="#{societyManagementManagedBean.createNewSociety}" oncomplete="PF('dialogCreateNewSociety').show();" />
+                        </p:column>
+                    </p:row>
+
+                </p:panelGrid>
+
+            </p:dialog>
+
+        </h:form>
+        
+        <h:form id="formAllSocieties">
+
+            <p:dialog id="dialogAllSocieties" widgetVar="dialogAllSocieties" header="View All Societies" closable="true">
+
+                <p:messages id="messagesAllSocieties" redisplay="false" />
+
+                <p:messages id="messages" redisplay="false" closable="true" />
+
+                <p:dataTable id="dataTableAllSocieties"  value="#{societyManagementManagedBean.societies}" var="society" rowKey="#{society.societyId}" rowIndexVar="row"
+                             rows="10" paginator="true" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="10,20,50">
+
+                    <p:column headerText="Society ID" sortBy="#{society.societyId}">
+                        <h:outputText value="#{society.societyId}" />
+                    </p:column>
+
+                    <p:column headerText="Name" sortBy="#{society.societyId}">
+                        <h:outputText value="#{society.name}" />
+                    </p:column>
+                    
+                    <p:column headerText="Description" sortBy="#{society.societyId}">
+                        <h:outputText value="#{society.description}" />
+                    </p:column>
+                    
+                    <p:column headerText="Date Created" sortBy="#{society.dateCreated}">
+                        <h:outputText value="#{society.dateCreated}" />
+                    </p:column>
+
+                </p:dataTable>
+
+            </p:dialog>
+
+        </h:form>
+        
+        <h:form id="formUpdateSociety">
+
+                <p:dialog id="dialogUpdateSociety" widgetVar="dialogUpdateSociety" header="Update Society" closable="true">
+
+                    <p:messages id="messagesUpdateSociety" redisplay="false" />
+
+                    <p:panelGrid>
+                        
+                        <p:row>
+                            <p:column>
+                                <h:outputLabel value="Society ID: " />
+                            </p:column>
+                            <p:column>
+                                <p:inputText id="societyId" value="#{societyManagementManagedBean.societyToUpdate.societyId}" placeholder="1" required="true" requiredMessage="ID is required" />
+                            </p:column>
+                            <p:column>
+                                &nbsp;
+                            </p:column>
+                        </p:row>
+
+                        <p:row>
+                            <p:column>
+                                <h:outputLabel value="Name: " />
+                            </p:column>
+                            <p:column>
+                                <p:inputText id="societyName" value="#{societyManagementManagedBean.societyToUpdate.name}" placeholder="Name" required="true" requiredMessage="Name is required" />
+                            </p:column>
+                            <p:column>
+                                &nbsp;
+                            </p:column>
+                        </p:row>
+                        
+                        <p:row>
+                            <p:column>
+                                <h:outputLabel value="Description: " />
+                            </p:column>
+                            <p:column>
+                                <p:inputText id="societyDescription" value="#{societyManagementManagedBean.societyToUpdate.description}" placeholder="Description" required="true" requiredMessage="Description is required" />
+                            </p:column>
+                            <p:column>
+                                &nbsp;
+                            </p:column>
+                        </p:row>
+                        
+                        <p:row>
+                            <p:column>
+                                <p:outputLabel for="selCategories" value="Categories: " style="font-weight: bold;" />
+                            </p:column>
+                            <p:column>
+                                <p:selectManyMenu id="selCategories" value="#{societyManagementManagedBean.updatedCategoryIds}" showCheckbox="true">
+                                    <f:selectItems value="#{societyManagementManagedBean.societyCategories}" var="category" itemValue="#{category.societyCategoryId}" itemLabel="#{category.societyCategoryName}" />
+                                </p:selectManyMenu>
+                            </p:column>
+                            <p:column>
+                                <p:message for="selCategories" />
+                            </p:column>
+                        </p:row>
+                        
+                        <p:row>
+                            <p:column>
+                                <p:outputLabel for="selStaffs" value="Staffs: " style="font-weight: bold;" />
+                            </p:column>
+                            <p:column>
+                                <p:selectManyMenu id="selStaffs" value="#{societyManagementManagedBean.updatedStaffIds}" showCheckbox="true">
+                                    <f:selectItems value="#{societyManagementManagedBean.staffs}" var="staff" itemValue="#{staff.staffId}" itemLabel="#{staff.userName}" />
+                                </p:selectManyMenu>
+                            </p:column>
+                            <p:column>
+                                <p:message for="selStaffs" />
+                            </p:column>
+                        </p:row>
+                        
+                        <p:row>
+                            <p:column colspan="3">
+                                <p:commandButton value="Update Society" actionListener="#{societyManagementManagedBean.updateSociety}" update="@form formUpdateSociety:dialogUpdateSociety" oncomplete="PF('dialogUpdateSociety').show();" />
+                            </p:column>
+                        </p:row>
+
+                    </p:panelGrid>
+
+                </p:dialog>
+
+            </h:form>
+        
+         <h:form id="formDeleteSociety">
+
+                <p:dialog id="dialogDeleteSociety" widgetVar="dialogDeleteSociety" header="Delete Society" closable="true">
+
+                    <p:messages id="messagesDeleteSociety" redisplay="false" />
+
+                    <p:panelGrid>
+                        
+                        <p:row>
+                            <p:column>
+                                <h:outputLabel value="Society ID: " />
+                            </p:column>
+                            <p:column>
+                                <p:inputText id="societyId" value="#{societyManagementManagedBean.societyToDelete.societyId}" placeholder="1" required="true" requiredMessage="ID is required" />
+                            </p:column>
+                            <p:column>
+                                &nbsp;
+                            </p:column>
+                        </p:row>
+                        
+                        <p:row>
+                            <p:column colspan="3">
+                                <p:commandButton value="Delete Society" actionListener="#{societyManagementManagedBean.deleteSociety}" update="@form formDeleteSociety:dialogDeleteSociety" oncomplete="PF('dialogDeleteSociety').show();" />
+                            </p:column>
+                        </p:row>
+
+                    </p:panelGrid>
+
+                </p:dialog>
+
+            </h:form>
+        
+    </h:body>
+
+</ui:composition>

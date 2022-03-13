@@ -7,6 +7,8 @@ package ejb.session.stateless;
 
 import entity.Society;
 import entity.Staff;
+import java.util.ArrayList;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -47,7 +49,7 @@ public class StaffSessionBean implements StaffSessionBeanLocal {
     //Update staff
     @Override
     public void updateStaff(Staff newS) throws StaffNotFoundException {
-        Staff s = retrievePostById(newS.getStaffId());
+        Staff s = retrieveStaffById(newS.getStaffId());
         
         s.setEmail(newS.getEmail());
         s.setPassword(newS.getPassword());
@@ -60,7 +62,7 @@ public class StaffSessionBean implements StaffSessionBeanLocal {
     
     @Override
     public void deleteStaff(Long staffId) throws StaffNotFoundException, StaffDeletionException{
-        Staff s = retrievePostById(staffId);
+        Staff s = retrieveStaffById(staffId);
         boolean enoughStaff = false;
         
         //Check if the Societies that the Staff is in charge of has at least 1 Staff member after deletion
@@ -89,6 +91,13 @@ public class StaffSessionBean implements StaffSessionBeanLocal {
         } catch (NoResultException | NonUniqueResultException ex) {
             throw new StaffNotFoundException("Error, Employee with username " + username + " does not exist.");
         }
+    }
+    
+    @Override
+    public List<Staff> retrieveAllStaffs() {
+        Query query = em.createQuery("SELECT s FROM Staff s");
+
+        return query.getResultList();
     }
     
 }

@@ -43,7 +43,7 @@ public class Staff implements Serializable {
         this.societies = new ArrayList<>();
     }
 
-    public Staff(String email, String password, String userName, String profilePicture) {
+    public Staff(String email, String password, String username, String profilePicture) {
         this();
         this.email = email;
         this.password = password;

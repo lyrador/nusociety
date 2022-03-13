@@ -9,6 +9,7 @@ import entity.Announcement;
 import java.util.List;
 import javax.ejb.Local;
 import util.exception.AnnouncementNotFoundException;
+import util.exception.SocietyNotFoundException;
 
 /**
  *
@@ -17,7 +18,7 @@ import util.exception.AnnouncementNotFoundException;
 @Local
 public interface AnnouncementSessionBeanLocal {
 
-    public Announcement createNewAnnouncement(Announcement announcement);
+    public Announcement createNewAnnouncement(Announcement announcement, Long societyId) throws SocietyNotFoundException;
 
     public Announcement retrieveAnnouncementById(Long id) throws AnnouncementNotFoundException;
 
@@ -26,5 +27,7 @@ public interface AnnouncementSessionBeanLocal {
     public void updateAnnouncement(Announcement announcement) throws AnnouncementNotFoundException;
 
     public void deleteAnnouncement(Long announcementId) throws AnnouncementNotFoundException;
+
+    public List<Announcement> retrieveAnnouncementsForSociety(Long id);
     
 }

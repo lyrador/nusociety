@@ -36,7 +36,7 @@ public class Society implements Serializable {
     private String name;
     @Column(nullable = false, length = 256)
     private String description;
-    @Column(nullable = false, unique = true, length = 256)
+    @Column(nullable = true, unique = true, length = 256)
     private String profilePicture;
     @Column(nullable = false)
     @Temporal(TemporalType.DATE)
@@ -173,7 +173,7 @@ public class Society implements Serializable {
 
     @Override
     public String toString() {
-        return "entity.Society[ id=" + societyId + " ]";
+        return this.name;
     }
     
     

@@ -6,12 +6,15 @@
 package ejb.session.stateless;
 
 import entity.Announcement;
+import entity.Society;
 import java.util.List;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import util.exception.AnnouncementNotFoundException;
+import util.exception.SocietyNotFoundException;
 
 /**
  *
@@ -20,11 +23,19 @@ import util.exception.AnnouncementNotFoundException;
 @Stateless
 public class AnnouncementSessionBean implements AnnouncementSessionBeanLocal {
 
+    @EJB
+    private SocietySessionBeanLocal societySessionBeanLocal;
+
     @PersistenceContext(unitName = "NUSociety-ejbPU")
     private EntityManager em;
 
     @Override
-    public Announcement createNewAnnouncement(Announcement announcement) {
+    public Announcement createNewAnnouncement(Announcement announcement, Long societyId) throws SocietyNotFoundException {
+        
+        Society society = societySessionBeanLocal.retrieveSocietyById(societyId);
+        announcement.setSociety(society);
+        society.getAnnouncements().add(announcement);
+        
         em.persist(announcement);
         em.flush();
         
@@ -55,12 +66,29 @@ public class AnnouncementSessionBean implements AnnouncementSessionBeanLocal {
     }
     
     @Override
+    public List<Announcement> retrieveAnnouncementsForSociety(Long id) {
+        Query query = em.createQuery("SELECT a FROM Announcement a WHERE a.society.societyId = :inSocietyId");
+        query.setParameter("inSocietyId", id);
+        
+        List<Announcement> announcements = query.getResultList();
+        
+        for (Announcement announcement : announcements) {
+            announcement.getSociety();
+        }
+        
+        return announcements;
+    }
+    
+    @Override
     public void updateAnnouncement(Announcement announcement) throws AnnouncementNotFoundException {
         
         if (announcement.getAnnouncementId() != null) {
-            Announcement annoucementToUpdate = retrieveAnnouncementById(announcement.getAnnouncementId());
+            Announcement announcementToUpdate = retrieveAnnouncementById(announcement.getAnnouncementId());
             
-            annoucementToUpdate.setAnnouncementContent(announcement.getAnnouncementContent());
+            announcementToUpdate.setAnnouncementContent(announcement.getAnnouncementContent());
+            announcementToUpdate.getSociety().getAnnouncements().remove(announcement);
+            announcementToUpdate.getSociety().getAnnouncements().add(announcementToUpdate);
+            
         } else {
             throw new AnnouncementNotFoundException("Announcement " + announcement.getAnnouncementId() + " does not exist!");
         }
@@ -70,6 +98,8 @@ public class AnnouncementSessionBean implements AnnouncementSessionBeanLocal {
     public void deleteAnnouncement(Long announcementId) throws AnnouncementNotFoundException{
         
         Announcement announcementToDelete = retrieveAnnouncementById(announcementId);
+        
+        announcementToDelete.getSociety().getAnnouncements().remove(announcementToDelete);
         
         em.remove(announcementToDelete);
     }

@@ -8,6 +8,7 @@ package ejb.session.stateless;
 import entity.SocietyCategory;
 import java.util.List;
 import javax.ejb.Local;
+import util.exception.CreateSocietyCategoryException;
 import util.exception.DeleteSocietyCategoryException;
 import util.exception.SocietyCategoryNotFoundException;
 import util.exception.UpdateSocietyCategoryException;
@@ -19,7 +20,7 @@ import util.exception.UpdateSocietyCategoryException;
 @Local
 public interface SocietyCategorySessionBeanLocal {
 
-    public SocietyCategory createNewSocietyCategory(SocietyCategory societyCategory);
+    public SocietyCategory createNewSocietyCategory(SocietyCategory societyCategory) throws CreateSocietyCategoryException, SocietyCategoryNotFoundException;
 
     public SocietyCategory retrieveSocietyCategoryById(Long id) throws SocietyCategoryNotFoundException;
 
@@ -28,5 +29,7 @@ public interface SocietyCategorySessionBeanLocal {
     public void updateSocietyCategory(SocietyCategory category) throws SocietyCategoryNotFoundException, UpdateSocietyCategoryException;
 
     public void deleteSocietyCategory(Long categoryId) throws SocietyCategoryNotFoundException, DeleteSocietyCategoryException;
+
+    public SocietyCategory retrieveSocietyCategoryByName(String name) throws SocietyCategoryNotFoundException;
     
 }
