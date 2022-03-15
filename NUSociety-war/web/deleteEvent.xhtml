@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>Delete Event</title>
+    </h:head>
+    <h:body>
+        <h1>Delete Event</h1>
+        
+         <ui:insert name="header">
+            <ui:include src="/header.xhtml" />
+         </ui:insert>
+         
+         <h:form id="mainForm">
+
+            <h:messages />
+            
+            <h:panelGrid columns="3">
+                <h:outputLabel for="eventDeleteId" value="Enter Event Id to Delete: "/>
+                <h:inputText id="eventDeleteId" value="#{deleteEventManagedBean.eventDeleteId}" required="true"/>
+                <h:message for="eventDeleteId"/>
+                
+                <h:outputText value=""/>
+                <h:commandButton value="Delete Event" actionListener="#{deleteEventManagedBean.doDeleteEvent}"/>
+                <h:outputText value=""/>
+                
+            </h:panelGrid>
+            
+         </h:form>
+        
+        <ui:insert name="footer">
+            <ui:include src="/footer.xhtml" />
+        </ui:insert>
+        
+    </h:body>
+</html>
+

@@ -6,7 +6,10 @@
 package ejb.session.stateless;
 
 import entity.Attendance;
+import entity.Comment;
+import entity.Event;
 import entity.Notification;
+import entity.Post;
 import entity.Student;
 import java.util.List;
 import javax.ejb.Stateless;
@@ -55,11 +58,13 @@ public class StudentSessionBean implements StudentSessionBeanLocal {
     public void deleteStudent(Long studentId) throws StudentNotFoundException {
         Student studentToBeDeleted = retrieveStudentByStudentId(studentId);
         
+        //for one to many
         for(Attendance attendance: studentToBeDeleted.getAttendances()) {
             em.remove(attendance);
         }       
         studentToBeDeleted.getAttendances().clear();
         
+        //for many to many
         for(Notification notification: studentToBeDeleted.getNotifications()) {
             
             notification.getStudents().remove(studentToBeDeleted);            
@@ -68,6 +73,29 @@ public class StudentSessionBean implements StudentSessionBeanLocal {
             }
         }       
         studentToBeDeleted.getNotifications().clear();
+        
+        for(Comment comment : studentToBeDeleted.getComments()) {           
+            em.remove(comment);  
+        }
+        studentToBeDeleted.getComments().clear();
+        
+        for(Post post : studentToBeDeleted.getPosts()) {           
+            em.remove(post);  
+        }
+        studentToBeDeleted.getPosts().clear();
+        
+        for(Event event : studentToBeDeleted.getEventsOrganised()) {           
+            em.remove(event);  
+        }
+        studentToBeDeleted.getEventsOrganised().clear();
+        
+        for(Event event: studentToBeDeleted.getEvents()) {
+            
+            event.getStudents().remove(studentToBeDeleted);            
+            if (event.getStudents().size() == 0) {                  
+                em.remove(event);
+            }
+        }       
         
         em.remove(studentToBeDeleted); 
     }
