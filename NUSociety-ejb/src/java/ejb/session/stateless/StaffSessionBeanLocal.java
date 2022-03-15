@@ -6,6 +6,7 @@
 package ejb.session.stateless;
 
 import entity.Staff;
+import java.util.List;
 import javax.ejb.Local;
 import util.exception.StaffDeletionException;
 import util.exception.StaffNotFoundException;
@@ -19,12 +20,14 @@ public interface StaffSessionBeanLocal {
 
     public Long createNewStaff(Staff staff);
 
-    public Staff retrievePostById(Long staffId) throws StaffNotFoundException;
+    public Staff retrieveStaffById(Long staffId) throws StaffNotFoundException;
 
     public Staff retrieveStaffByUsername(String username) throws StaffNotFoundException;
 
     public void updateStaff(Staff newS) throws StaffNotFoundException;
 
     public void deleteStaff(Long staffId) throws StaffNotFoundException, StaffDeletionException;
+
+    public List<Staff> retrieveAllStaffs();
     
 }

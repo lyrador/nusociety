@@ -3,10 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package jsf.managedbean;
+package jsf.managedbean.StudentOld;
 
 import ejb.session.stateless.StudentSessionBeanLocal;
 import entity.Student;
+import java.io.IOException;
 import javax.ejb.EJB;
 import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
@@ -35,15 +36,17 @@ public class FindStudentManagedBean {
         studentToFind = new Student();
     }
     
-    public void doViewStudentDetails(ActionEvent event) throws StudentNotFoundException {
+    public void doViewStudentDetails(ActionEvent event) throws StudentNotFoundException, IOException {
         Long studentToFindId = studentToFind.getStudentId();
-        studentSessionBeanLocal.retrieveStudentByStudentId(studentToFindId);
+        studentToFind = studentSessionBeanLocal.retrieveStudentByStudentId(studentToFindId);
         
-//        Long productIdToView = (Long)event.getComponent().getAttributes().get("productId");
-//        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("productIdToView", productIdToView);
-//        FacesContext.getCurrentInstance().getExternalContext().redirect("viewProductDetails.xhtml");
+        System.out.println(studentToFind.getName());
+
+        Long studentIdToView = (Long)event.getComponent().getAttributes().get("studentId");
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("studentIdToView", studentIdToView);
+        FacesContext.getCurrentInstance().getExternalContext().redirect("viewStudentDetailsManagedBean.xhtml");
         
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Student viewed: " + studentToFindId,"Student viewed: " + studentToFindId));
+//        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Student viewed: " + studentToFindId,"Student viewed: " + studentToFindId));
     }
     
     public Student getStudent() {

@@ -20,7 +20,11 @@
 
             <h:panelGrid columns="3">
                 
-                <h:commandLink value="View" actionListener="#{findStudentManagedBean.doFindStudent}">
+                <h:outputLabel for="studentId" value="Enter Student Id of Student to Find: "/>
+                <h:inputText id="studentId" value="#{findStudentManagedBean.student.studentId}" required="true"/>
+                <h:message for=""/>   
+                
+                <h:commandLink value="Find Student" actionListener="#{findStudentManagedBean.doViewStudentDetails}">
                     <f:attribute name="studentId" value="#{findStudentManagedBean.student.studentId}"/>
                 </h:commandLink>
                 

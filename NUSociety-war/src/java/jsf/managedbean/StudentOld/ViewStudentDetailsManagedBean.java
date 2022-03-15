@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package jsf.managedbean;
+package jsf.managedbean.StudentOld;
 
 import ejb.session.stateless.StudentSessionBeanLocal;
 import entity.Student;
@@ -35,24 +35,24 @@ public class ViewStudentDetailsManagedBean {
     public ViewStudentDetailsManagedBean() {
     }
     
-//    @PostConstruct
-//    public void postConstruct() {
-//        studentIdToView = (Long)FacesContext.getCurrentInstance().getExternalContext().getFlash().get("studentIdToView");
-//        
-//        try {
-//            if(studentIdToView != null) {
-//                studentToView = studentSessionBeanLocal.retrieveStudentByStudentId(studentIdToView);
-//            } else {
-//                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "No student has been selected", null));
-//            }
-//        }
-//        catch (StudentNotFoundException ex) {
-//            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An error has occurred while retrieving the student details: " + ex.getMessage(), null));
-//        }
-//        catch(Exception ex) {
-//            FacesContext.ßgetCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An unexpected error has occurred: " + ex.getMessage(), null));
-//        }
-//    }
+    @PostConstruct
+    public void postConstruct() {
+        studentIdToView = (Long)FacesContext.getCurrentInstance().getExternalContext().getFlash().get("studentIdToView");
+        
+        try {
+            if(studentIdToView != null) {
+                studentToView = studentSessionBeanLocal.retrieveStudentByStudentId(studentIdToView);
+            } else {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "No student has been selected", null));
+            }
+        }
+        catch (StudentNotFoundException ex) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An error has occurred while retrieving the student details: " + ex.getMessage(), null));
+        }
+        catch(Exception ex) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An unexpected error has occurred: " + ex.getMessage(), null));
+        }
+    }
     
     public void phaseListener(PhaseEvent event) {        
     }
