@@ -36,7 +36,7 @@ public class Announcement implements Serializable {
     private Date creationDate;
     
     @ManyToOne(optional = false)
-    @JoinColumn(nullable = true)
+    @JoinColumn(nullable = false)
     private Society society;
 
     public Announcement() {

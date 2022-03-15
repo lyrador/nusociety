@@ -32,10 +32,12 @@ public class Society implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long societyId;
     
-    @Column(nullable = false, length = 64)
+    @Column(nullable = false, unique = true, length = 64)
     private String name;
-    @Column(length = 128)
+    @Column(nullable = false, length = 256)
     private String description;
+    @Column(nullable = true, unique = true, length = 256)
+    private String profilePicture;
     @Column(nullable = false)
     @Temporal(TemporalType.DATE)
     private Date dateCreated;
@@ -49,9 +51,8 @@ public class Society implements Serializable {
     private List<Post> posts;
     @ManyToMany(mappedBy = "societies")
     private List<Staff> staffs;   
-//    
-//    @ManyToMany
-//    private List<Student> students;
+    @ManyToMany
+    private List<Student> students;
 //    
 //    @OneToMany(mappedBy = "society")
 //    private List<Event> events;
@@ -94,6 +95,14 @@ public class Society implements Serializable {
         this.description = description;
     }
 
+    public String getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setProfilePicture(String profilePicture) {
+        this.profilePicture = profilePicture;
+    }
+
     public Date getDateCreated() {
         return dateCreated;
     }
@@ -133,6 +142,14 @@ public class Society implements Serializable {
     public void setStaffs(List<Staff> staffs) {
         this.staffs = staffs;
     }
+
+    public List<Student> getStudents() {
+        return students;
+    }
+
+    public void setStudents(List<Student> students) {
+        this.students = students;
+    }
     
     @Override
     public int hashCode() {
@@ -156,7 +173,7 @@ public class Society implements Serializable {
 
     @Override
     public String toString() {
-        return "entity.Society[ id=" + societyId + " ]";
+        return this.name;
     }
     
     

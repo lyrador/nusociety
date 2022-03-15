@@ -27,8 +27,10 @@ public interface CommentSessionBeanLocal {
 
     public Comment retrieveCommentById(Long commentId) throws CommentNotFoundException;
 
-    public void updateComment(Comment newC) throws CommentNotFoundException;
+    public void updateComment(Long cId, String newContent) throws CommentNotFoundException;
 
     public void deleteComment(Long commentId) throws CommentNotFoundException;
+
+    public List<Comment> viewAllCommentsInDatabase();
     
 }

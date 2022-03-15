@@ -16,6 +16,7 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import util.exception.CommentNotFoundException;
 import util.exception.PostNotFoundException;
 
@@ -58,13 +59,14 @@ public class PostSessionBean implements PostSessionBeanLocal {
     }
     
     //Update Post
+    //Change the Long
     @Override
-    public void updatePost(Post newP) throws PostNotFoundException {
-        Post p = retrievePostById(newP.getPostId());
+    public void updatePost(Long pId, Post newP) throws PostNotFoundException {
+        Post p = retrievePostById(pId);
         
         //Update Body and Image
         p.setBodyContent(newP.getBodyContent());
-        p.setBodyContent(newP.getImage()); 
+        p.setImage(newP.getImage()); 
         
     }
     
@@ -104,7 +106,17 @@ public class PostSessionBean implements PostSessionBeanLocal {
         }
     }
     
+    @Override
+    public List<Post> retrieveAllPostsInDatabase() {
+        Query query = em.createQuery("SELECT p FROM Post p");     
+        return query.getResultList();
+    }
     
+    //Can delete afterwards
+    @Override
+    public Society retrieveSocietyById(Long societyId) {
+        return em.find(Society.class, societyId);
+    }
     //Retrieve all Private Post of societies
     
     //Retrieve all Public Post of societies

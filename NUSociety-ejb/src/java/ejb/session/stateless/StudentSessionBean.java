@@ -38,6 +38,7 @@ public class StudentSessionBean implements StudentSessionBeanLocal {
     public Student retrieveStudentByStudentId(Long studentId) throws StudentNotFoundException{
         Student student = em.find(Student.class, studentId);   
         if(student != null) {
+            student.getNotifications().size();
             return student;
         } else {
             throw new StudentNotFoundException("Student with Id: " + studentId + " cannot be found!");

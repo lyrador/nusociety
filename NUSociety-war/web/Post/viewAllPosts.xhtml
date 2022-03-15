@@ -1,0 +1,57 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      template="/template/defaultTemplate.xhtml"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>View All Posts</title>
+    </h:head>
+    <h:body>
+        <h1>View All Posts</h1>
+
+        <ui:insert name="header">
+            <ui:include src="/header.xhtml" />
+        </ui:insert>
+
+        <h:dataTable value="#{postManagementManagedBean.listOfPosts}" var="Post" style="width: 100%;">
+
+            <h:column>			
+                <f:facet name="postId">Post ID</f:facet>
+                <h:outputText value="#{Post.postId}" />
+            </h:column>
+            
+            <h:column>			
+                <f:facet name="content"> Content</f:facet>
+                <h:outputText value="#{Post.bodyContent}" />
+            </h:column>
+            
+            <h:column>			
+                <f:facet name="header">Image URL</f:facet>
+                <h:outputText value="#{Post.image}" />
+            </h:column>
+            
+            <h:column>			
+                <f:facet name="header">Society Name</f:facet>
+                <h:outputText value="#{Post.society.name}" />
+            </h:column>
+            
+            <h:column>			
+                <f:facet name="header">Student Name</f:facet>
+                <h:outputText value="#{Post.student.userName}" />
+            </h:column>
+            
+            
+            
+            
+
+        </h:dataTable>
+
+        <ui:insert name="footer">
+            <ui:include src="/footer.xhtml" />
+        </ui:insert>
+        </h:body>
+</html>
+

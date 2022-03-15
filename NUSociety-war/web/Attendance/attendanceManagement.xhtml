@@ -1,0 +1,203 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">	
+
+    <h:head>
+        <h3>Attendance Management</h3>
+    </h:head>
+    
+    <h:body>
+        
+        <h:form>      
+            <p:menubar>
+                <p:submenu label="Attendance" icon="ui-users">
+                    <p:menuitem value="Create New Attendance" onclick="PF('dialogCreateNewAttendance').show()" icon="pi pi-plus" />
+                    <p:menuitem value="View All Attendances" onclick="PF('dialogAllAttendances').show()" icon="pi pi-plus" />
+                    <p:menuitem value="Update Attendance" onclick="PF('dialogUpdateAttendance').show()" icon="pi pi-plus" />
+                    <p:menuitem value="Delete Attendance" onclick="PF('dialogDeleteAttendance').show()" icon="pi pi-plus" />
+                </p:submenu>                                        
+            </p:menubar>
+            <br/>
+        </h:form>
+        
+        <h:form id="formCreateNewAttendance">
+            <p:dialog id="dialogCreateNewAttendance" widgetVar="dialogCreateNewAttendance" header="Create New Attendance" closable="true">
+                <p:messages id="messagesCreateNewAttendance" redisplay="false" />
+                <p:panelGrid>
+                    
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="studentId" value="Student Id: " style="font-weight: bold;" />
+                        </p:column>
+                        <p:column>
+                            <p:inputText id="studentId" value="#{attendanceManagementManagedBean.existingStudent.studentId}" placeholder="Student ID" required="true" requiredMessage="Student ID is required" />
+                        </p:column>
+                        <p:column>
+                            <p:message for="studentId" />
+                        </p:column>
+                    </p:row>
+
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="attendedCount" value="Attended Count: " style="font-weight: bold;" />
+                        </p:column>
+                        <p:column>
+                            <p:inputText id="attendedCount" value="#{attendanceManagementManagedBean.newAttendance.attendedCount}" placeholder="Attended Count" required="true" requiredMessage="Attended Count is required" />
+                        </p:column>
+                        <p:column>
+                            <p:message for="attendedCount" />
+                        </p:column>
+                    </p:row>
+
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="totalCount" value="Total Count: " style="font-weight: bold;" />
+                        </p:column>
+                        <p:column>
+                            <p:inputText id="totalCount" value="#{attendanceManagementManagedBean.newAttendance.totalCount}" placeholder="Total Count" required="true" requiredMessage="Total Count is required" />
+                        </p:column>
+                        <p:column>
+                            <p:message for="totalCount" />
+                        </p:column>
+                    </p:row>
+                    
+                    <p:row>
+                        <p:column colspan="3">
+                            <p:commandButton type="reset" value="Clear" />&nbsp;
+                            <p:commandButton  value="Create New Attendance" update="@form formCreateNewAttendance" actionListener="#{attendanceManagementManagedBean.createNewAttendance}" oncomplete="PF('dialogCreateNewAttendance').show();" />
+                        </p:column>
+                    </p:row>
+
+                </p:panelGrid>
+            </p:dialog>
+        </h:form>
+        
+        <h:form id="formAllAttendances">
+            <p:dialog id="dialogAllAttendances" widgetVar="dialogAllAttendances" header="View All Attendances" closable="true">
+                
+                <p:messages id="messagesAllAttendances" redisplay="false" />
+                <p:messages id="messages" redisplay="false" closable="true" />
+                
+                <p:dataTable id="dataTableAllAttendances"  value="#{attendanceManagementManagedBean.attendances}" var="attendance" rowKey="#{attendance.attendanceId}" rowIndexVar="row"
+                             rows="10" paginator="true" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="10,20,50">
+
+                    <p:column headerText="Attendance ID" sortBy="#{attendance.attendanceId}">
+                        <h:outputText value="#{attendance.attendanceId}" />
+                    </p:column>
+                    
+                    <p:column headerText="Student ID" sortBy="#{attendance.attendanceId}">
+                        <h:outputText value="#{attendance.student.studentId}" />
+                    </p:column>
+                    
+                    <p:column headerText="Student Name" sortBy="#{attendance.attendanceId}">
+                        <h:outputText value="#{attendance.student.name}" />
+                    </p:column>
+
+                    <p:column headerText="Attended Count" sortBy="#{attendance.attendedCount}">
+                        <h:outputText value="#{attendance.attendedCount}" />
+                    </p:column>
+                    
+                    <p:column headerText="Total Count" sortBy="#{attendance.totalCount}">
+                        <h:outputText value="#{attendance.totalCount}" />
+                    </p:column>
+                    
+                    <p:column headerText="Attendance Rate" sortBy="#{attendance.attendanceRate}">
+                        <h:outputText value="#{attendance.attendanceRate}%" />
+                    </p:column>
+
+                </p:dataTable>
+                
+            </p:dialog>
+        </h:form>
+        
+        <h:form id="formUpdateAttendance">
+                <p:dialog id="dialogUpdateAttendance" widgetVar="dialogUpdateAttendance" header="Update Attendance" closable="true">
+                    
+                    <p:messages id="messagesUpdateAttendance" redisplay="false" />
+                    
+                    <p:panelGrid>
+                        
+                        <p:row>
+                            <p:column>
+                                <h:outputLabel value="Attendance ID: " />
+                            </p:column>
+                            <p:column>
+                                <p:inputText id="attendanceId" value="#{attendanceManagementManagedBean.attendanceToUpdate.attendanceId}" placeholder="1" required="true" requiredMessage="ID is required" />
+                            </p:column>
+                            <p:column>
+                                &nbsp;
+                            </p:column>
+                        </p:row>
+                        
+                        <p:row>
+                            <p:column>
+                                <p:outputLabel for="attendedCount" value="Attended Count: "/>
+                            </p:column>
+                            <p:column>
+                                <p:inputText id="attendedCount" value="#{attendanceManagementManagedBean.attendanceToUpdate.attendedCount}" placeholder="Attended Count" required="true" requiredMessage="Attended Count is required" />
+                            </p:column>
+                            <p:column>
+                                &nbsp;
+                            </p:column>
+                        </p:row>
+
+                        <p:row>
+                            <p:column>
+                                <p:outputLabel for="totalCount" value="Total Count: "/>
+                            </p:column>
+                            <p:column>
+                                <p:inputText id="totalCount" value="#{attendanceManagementManagedBean.attendanceToUpdate.totalCount}" placeholder="Total Count" required="true" requiredMessage="Total Count is required" />
+                            </p:column>
+                            <p:column>
+                                &nbsp;
+                            </p:column>
+                        </p:row>
+                                                
+ 
+                        <p:row>
+                            <p:column colspan="3">
+                                <p:commandButton value="Update Attendance" actionListener="#{attendanceManagementManagedBean.updateAttendance}" update="@form formUpdateAttendance:dialogUpdateAttendance" oncomplete="PF('dialogUpdateAttendance').show();" />
+                            </p:column>
+                        </p:row>
+
+                    </p:panelGrid>
+
+                </p:dialog>
+
+            </h:form>
+        
+         <h:form id="formDeleteAttendance">
+                <p:dialog id="dialogDeleteAttendance" widgetVar="dialogDeleteAttendance" header="Delete Attendance" closable="true">
+                    <p:messages id="messagesDeleteAttendance" redisplay="false" />
+                    
+                    <p:panelGrid>
+                        
+                        <p:row>
+                            <p:column>
+                                <h:outputLabel value="Attendance ID: " />
+                            </p:column>
+                            <p:column>
+                                <p:inputText id="attendanceId" value="#{attendanceManagementManagedBean.attendanceToDelete.attendanceId}" placeholder="1" required="true" requiredMessage="ID is required" />
+                            </p:column>
+                            <p:column>
+                                &nbsp;
+                            </p:column>
+                        </p:row>
+                        
+                        <p:row>
+                            <p:column colspan="3">
+                                <p:commandButton value="Delete Attendance" actionListener="#{attendanceManagementManagedBean.deleteAttendance}" update="@form formDeleteAttendance:dialogDeleteAttendance" oncomplete="PF('dialogDeleteAttendance').show();" />
+                            </p:column>
+                        </p:row>
+                        
+                    </p:panelGrid>
+                </p:dialog>
+
+            </h:form>
+        
+    </h:body>
+
+</ui:composition>

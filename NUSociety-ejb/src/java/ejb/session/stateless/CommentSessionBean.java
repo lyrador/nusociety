@@ -13,6 +13,7 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import util.exception.CommentNotFoundException;
 import util.exception.PostNotFoundException;
 import util.exception.StudentNotFoundException;
@@ -62,11 +63,11 @@ public class CommentSessionBean implements CommentSessionBeanLocal {
     
     //Update Comment
     @Override
-    public void updateComment(Comment newC) throws CommentNotFoundException {
-        Comment c = retrieveCommentById(newC.getCommentId());
+    public void updateComment(Long cId, String newContent) throws CommentNotFoundException {
+        Comment c = retrieveCommentById(cId);
         
         //Only update content, Date shouldn't be updated
-        c.setContent(newC.getContent());
+        c.setContent(newContent);
     }
     
     //Delete Comment
@@ -104,6 +105,12 @@ public class CommentSessionBean implements CommentSessionBeanLocal {
         } catch (StudentNotFoundException ex) {
             throw new StudentNotFoundException("Student with Id: " + studentId + " cannot be found!");
         }
+    }
+    
+    @Override
+    public List<Comment> viewAllCommentsInDatabase() {
+        Query query = em.createQuery("SELECT c FROM Comment c");     
+        return query.getResultList();
     }
     
 }
