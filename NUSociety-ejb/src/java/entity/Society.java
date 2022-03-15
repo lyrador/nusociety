@@ -51,17 +51,10 @@ public class Society implements Serializable {
     private List<Post> posts;
     @ManyToMany(mappedBy = "societies")
     private List<Staff> staffs;   
-//<<<<<<< HEAD
-    
-    @OneToMany(mappedBy = "society", orphanRemoval = false, cascade = {}, fetch = FetchType.LAZY)
-    private List<Event> events;
-//    
-//    @ManyToMany
-//    private List<Student> students;
-//=======
     @ManyToMany
     private List<Student> students;
-//>>>>>>> origin/master
+    @OneToMany(mappedBy = "society", orphanRemoval = false, cascade = {}, fetch = FetchType.LAZY)
+    private List<Event> events;
 //    
 //    @OneToMany(mappedBy = "society")
 //    private List<Event> events;
