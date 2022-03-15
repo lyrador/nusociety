@@ -72,6 +72,8 @@ public class Society implements Serializable {
         this.description = description;
         this.dateCreated = dateCreated;
     }
+    
+    
 
     public Long getSocietyId() {
         return societyId;

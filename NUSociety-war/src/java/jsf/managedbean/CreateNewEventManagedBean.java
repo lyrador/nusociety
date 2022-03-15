@@ -6,6 +6,7 @@
 package jsf.managedbean;
 
 import ejb.session.stateless.EventSessionBeanLocal;
+import ejb.session.stateless.SocietySessionBeanLocal;
 import ejb.session.stateless.StudentSessionBean;
 import ejb.session.stateless.StudentSessionBeanLocal;
 import entity.Event;
@@ -18,6 +19,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import util.exception.EventAlreadyExistsException;
+import util.exception.SocietyNotFoundException;
 import util.exception.StudentNotFoundException;
 
 /**
@@ -28,7 +30,8 @@ import util.exception.StudentNotFoundException;
 @RequestScoped
 public class CreateNewEventManagedBean {
 
-    
+    @EJB(name = "SocietySessionBeanLocal")
+    private SocietySessionBeanLocal societySessionBeanLocal;
 
     @EJB
     private StudentSessionBeanLocal studentSessionBeanLocal;
@@ -49,14 +52,14 @@ public class CreateNewEventManagedBean {
         newSocietyId = newSocietyId; 
     }
     
-    public void doCreateNewEvent(ActionEvent event) throws EventAlreadyExistsException, StudentNotFoundException {
+    public void doCreateNewEvent(ActionEvent event) throws EventAlreadyExistsException, StudentNotFoundException, SocietyNotFoundException {
         try {
         
         newEvent.setStudent(studentSessionBeanLocal.retrieveStudentByStudentId(getNewStudentId()));
-        //newEvent.setSociety(eventSessionBeanLocal.retrieveSocietyById(getNewSocietyId()));
-        Society dummySociety = new Society("Flaggers", "We Love Flags!", new Date());
-        eventSessionBeanLocal.createNewSociety(dummySociety); 
-        newEvent.setSociety(dummySociety);
+        newEvent.setSociety(societySessionBeanLocal.retrieveSocietyById(newSocietyId));
+        //Society dummySociety = new Society("Flaggers", "We Love Flags!", new Date());
+        //eventSessionBeanLocal.createNewSociety(dummySociety); 
+        //newEvent.setSociety(dummySociety);
         
         Long newEventId = eventSessionBeanLocal.createNewEvent(newEvent); 
         
