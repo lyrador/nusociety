@@ -121,18 +121,17 @@ public class EventSessionBean implements EventSessionBeanLocal {
         em.remove(eventToBeDeleted);                
     }
     
-  /*  @Override
+    @Override
     public Society retrieveSocietyById(Long societyId) {
         return em.find(Society.class, societyId);
-    }*/
+    }
     
-/*    @Override
-     public Long createNewSociety(Society society) /*throws EventAlreadyExistsException*/ //{
-/*        em.persist(society);
+    @Override
+     public Long createNewSociety(Society society) /*throws EventAlreadyExistsException*/ {
+        em.persist(society);
         em.flush();
         return society.getSocietyId();
      }
-*/
 
     
 }

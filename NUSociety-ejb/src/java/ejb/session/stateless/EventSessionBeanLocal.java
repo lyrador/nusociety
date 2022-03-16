@@ -31,8 +31,8 @@ public interface EventSessionBeanLocal {
 
     public void deleteEvent(Long eventId) throws EventNotFoundException;
 
-   // public Society retrieveSocietyById(Long societyId);
+    public Society retrieveSocietyById(Long societyId);
 
-    //public Long createNewSociety(Society society);
+    public Long createNewSociety(Society society);
     
 }
