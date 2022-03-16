@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <section id="mainMenu" class="mainMenu">
+        <h3>Main Menu</h3>
+        <nav>
+            <h:form>
+                    
+                <p:menu style="width:200px;">
+
+                    <p:submenu label="System">
+                        <p:menuitem value="Home" outcome="/index" icon="pi pi-home" />
+                        <p:menuitem value="Logout"  icon="pi pi-sign-out" />
+                    </p:submenu>
+
+                    <p:submenu label="Personal">
+                        <p:menuitem value="Edit Profile" icon="pi pi-arrow-circle-right" />
+                        <p:menuitem value="Change Password" icon="pi pi-arrow-circle-right" />
+                        <p:menuitem value="View My Posts" icon="pi pi-arrow-circle-right" />
+                    </p:submenu>
+                    
+                    <p:submenu label="My Society">
+                        <p:menuitem value="View My Societies"  icon="pi pi-users" />
+                        <p:menuitem value="Find a Society" icon="pi pi-users" />
+                    </p:submenu>
+                    
+                    <p:submenu label="My Events">
+                        <p:menuitem value="View My Events"  icon="pi pi-users" />
+                        <p:menuitem value="Find an Event" icon="pi pi-users" />
+                    </p:submenu>   
+
+                </p:menu>
+
+            </h:form>
+        </nav>
+            
+    </section>
+
+</ui:composition>
+
