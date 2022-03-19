@@ -13,6 +13,7 @@ import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import javax.inject.Inject;
 import org.primefaces.event.FileUploadEvent;
 
 /**
@@ -23,10 +24,11 @@ import org.primefaces.event.FileUploadEvent;
 @RequestScoped
 public class FileUploadManagedBean {
 
-     private String uploadedFilePath;
+    private String uploadedFilePath;
     private Boolean showUploadedFile;    
     
-    
+    @Inject
+    private PostManagementManagedBean postManagementSessionBean;
     
     public FileUploadManagedBean() 
     {
@@ -70,8 +72,10 @@ public class FileUploadManagedBean {
             inputStream.close();
             
             setUploadedFilePath(FacesContext.getCurrentInstance().getExternalContext().getInitParameter("uploadedFilesPath") + "/" + event.getFile().getFileName());
+            System.out.println("link = " + uploadedFilePath);
             showUploadedFile = true;
             
+            postManagementSessionBean.getNewPostEntity().setImage(newFilePath);
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,  "File uploaded successfully", ""));
         }
         catch(IOException ex)
@@ -80,7 +84,52 @@ public class FileUploadManagedBean {
         }
     }
 
-    
+    public void handleFileUploadForUpdate(FileUploadEvent event)
+    {
+        try
+        {
+            String newFilePath = FacesContext.getCurrentInstance().getExternalContext().getInitParameter("alternatedocroot_1") + System.getProperty("file.separator") + event.getFile().getFileName();
+
+            System.err.println("********** Demo03ManagedBean.handleFileUpload(): File name: " + event.getFile().getFileName());
+            System.err.println("********** Demo03ManagedBean.handleFileUpload(): newFilePath: " + newFilePath);
+
+            File file = new File(newFilePath);
+            FileOutputStream fileOutputStream = new FileOutputStream(file);
+
+            int a;
+            int BUFFER_SIZE = 8192;
+            byte[] buffer = new byte[BUFFER_SIZE];
+
+            InputStream inputStream = event.getFile().getInputStream();
+
+            while (true)
+            {
+                a = inputStream.read(buffer);
+
+                if (a < 0)
+                {
+                    break;
+                }
+
+                fileOutputStream.write(buffer, 0, a);
+                fileOutputStream.flush();
+            }
+
+            fileOutputStream.close();
+            inputStream.close();
+            
+            setUploadedFilePath(FacesContext.getCurrentInstance().getExternalContext().getInitParameter("uploadedFilesPath") + "/" + event.getFile().getFileName());
+            System.out.println("link = " + uploadedFilePath);
+            showUploadedFile = true;
+            
+            postManagementSessionBean.getPostToUpdate().setImage(newFilePath);
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,  "File uploaded successfully", ""));
+        }
+        catch(IOException ex)
+        {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,  "File upload error: " + ex.getMessage(), ""));
+        }
+    }
     
     public String getUploadedFilePath() {
         return uploadedFilePath;
@@ -97,5 +146,15 @@ public class FileUploadManagedBean {
     public void setShowUploadedFile(Boolean showUploadedFile) {
         this.showUploadedFile = showUploadedFile;
     }    
+
+    public PostManagementManagedBean getPostManagementSessionBean() {
+        return postManagementSessionBean;
+    }
+
+    public void setPostManagementSessionBean(PostManagementManagedBean postManagementSessionBean) {
+        this.postManagementSessionBean = postManagementSessionBean;
+    }
+    
+    
 }
 

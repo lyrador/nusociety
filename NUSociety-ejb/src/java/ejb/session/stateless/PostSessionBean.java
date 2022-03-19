@@ -117,6 +117,7 @@ public class PostSessionBean implements PostSessionBeanLocal {
     public Society retrieveSocietyById(Long societyId) {
         return em.find(Society.class, societyId);
     }
+    
     //Retrieve all Private Post of societies
     
     //Retrieve all Public Post of societies

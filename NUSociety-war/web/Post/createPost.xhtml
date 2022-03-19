@@ -1,70 +1,82 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core"
-      template="/template/defaultTemplate.xhtml"
-      xmlns:p="http://primefaces.org/ui">
-    
-    <h:form id="formCreateNewpost">
-        <p:messages id="messagesCreateNewpost" redisplay="false"/>
-        <p:panelGrid>
-            <p:row>
-                <p:column>
-                    <p:outputLabel for="content" value="Content: " style="font-weight: bold;"/>
-                </p:column>
-                <p:column>
-                    <p:inputText id="content" value="#{postManagementManagedBean.newPostEntity.bodyContent}" placeholder="Lorem Ipsum" required="true" requiredMessage="Content is required"/>
-                </p:column>
-                <p:column>
-                    <p:message for="content"/>
-                </p:column>
-            </p:row>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                template="/Template/defaultTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="content">
+        <h:form id="formCreateNewpost">
+            <p:messages id="messagesCreateNewpost" redisplay="false"/>
+           
+                <p:panelGrid>
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="content" value="Content: " style="font-weight: bold;"/>
+                        </p:column>
+                        <p:column>
+                            <p:inputText id="content" value="#{postManagementManagedBean.newPostEntity.bodyContent}" placeholder="Lorem Ipsum" required="true" requiredMessage="Content is required"/>
+                        </p:column>
+                        <p:column>
+                            <p:message for="content"/>
+                        </p:column>
+                    </p:row>
+
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="student" value="Student ID: " style="font-weight: bold;"/>
+                        </p:column>
+                        <p:column>
+                            <p:inputText id="student" value="#{postManagementManagedBean.newStudentId}" placeholder="" required="true" requiredMessage="Student ID is required"/>
+                        </p:column>
+                        <p:column>
+                            <p:message for="student"/>
+                        </p:column>
+                    </p:row>
+
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="society" value="Society ID: " style="font-weight: bold;"/>
+                        </p:column>
+                        <p:column>
+                            <p:inputText id="society" value="#{postManagementManagedBean.newSocietyId}" placeholder="" required="true" requiredMessage="Society ID is required"/>
+                        </p:column>
+                        <p:column>
+                            <p:message for="society"/>
+                        </p:column>
+                    </p:row>
+
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="imageURL" value="Upload Image " style="font-weight: bold;"/>
+                        </p:column>
+                        <p:column>
+                            <p:fileUpload id="imageURL" listener="#{fileUploadManagedBean.handleFileUpload}" multiple="true" update="@this" />
+                            <p:panel header="Uploaded File" visible="#{fileUploadManagedBean.showUploadedFile}">
+                                <p:graphicImage value="#{fileUploadManagedBean.uploadedFilePath}" height="50%" />
+                            </p:panel>
+                        </p:column>
+                        <p:column>
+                            <p:message for="imageURL"/>
+                        </p:column>
+                    </p:row>
+
+                    <p:row>
+                        <p:column colspan="3">
+                            <p:commandButton type="reset" value="Clear" />&nbsp;
+                            <p:commandButton  value="Create New Post" actionListener="#{postManagementManagedBean.createNewPost(event)}" />
+                        </p:column>
+                    </p:row>
+                </p:panelGrid>
             
-            <p:row>
-                <p:column>
-                    <p:outputLabel for="imageURL" value="imageURL " style="font-weight: bold;"/>
-                </p:column>
-                <p:column>
-                    <p:inputText id="imageURL" value="#{postManagementManagedBean.newPostEntity.image}" required="true" requiredMessage="Image file is required"/>
-                </p:column>
-                <p:column>
-                    <p:message for="imageURL"/>
-                </p:column>
-            </p:row>
+        </h:form>
 
-            <p:row>
-                <p:column>
-                    <p:outputLabel for="student" value="Student ID: " style="font-weight: bold;"/>
-                </p:column>
-                <p:column>
-                    <p:inputText id="student" value="#{postManagementManagedBean.newStudentId}" placeholder="" required="true" requiredMessage="Student ID is required"/>
-                </p:column>
-                <p:column>
-                    <p:message for="student"/>
-                </p:column>
-            </p:row>
+    </ui:define>
+    
+    
 
-            <p:row>
-                <p:column>
-                    <p:outputLabel for="society" value="Society ID: " style="font-weight: bold;"/>
-                </p:column>
-                <p:column>
-                    <p:inputText id="society" value="#{postManagementManagedBean.newSocietyId}" placeholder="" required="true" requiredMessage="Society ID is required"/>
-                </p:column>
-                <p:column>
-                    <p:message for="society"/>
-                </p:column>
-            </p:row>
+</ui:composition>
 
-            <p:row>
-                <p:column colspan="3">
-                    <p:commandButton type="reset" value="Clear" />&nbsp;
-                    <p:commandButton  value="Create New Post" actionListener="#{postManagementManagedBean.createNewPost(event)}" />
-                </p:column>
-            </p:row>
-        </p:panelGrid>
-    </h:form>
-</html>
 

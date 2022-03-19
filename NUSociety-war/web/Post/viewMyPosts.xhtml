@@ -1,0 +1,217 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                template="/Template/defaultTemplate.xhtml"
+                xmlns:ez="http://xmlns.jcp.org/jsf/composite/ezcomp"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="content">
+
+
+
+        <div class="product card">
+            <h:form id="formViewMyPosts">
+                <p:messages id="messages" redisplay="false" closable="true" />
+                <p:dataScroller id="dataScrollMyPosts" value="#{postManagementManagedBean.listOfPosts}" var="post" chunkSize="10">
+                    <f:facet name="header">
+                        View My Posts
+                    </f:facet>
+
+                    <f:facet name="loader">
+                        <div class="p-text-center">
+                            <p:commandButton type="button" value="More" icon="pi pi-refresh"/>
+                        </div>
+                    </f:facet>
+
+                    <div class="product">
+                        <div class="product-list-item p-p-5">
+
+                            <div class="product-list-detail">
+                                <div class="product-name">
+                                    <h:outputText value="Society:" style="font-weight: bold"/>
+                                    #{post.society.name}</div>
+                                <br/> 
+
+                                <div class="product-description">
+                                    <h:outputText value="Post Content:" style="font-weight: bold"/>
+                                    #{post.bodyContent}</div>
+
+                                <br/> 
+
+                                <h:outputText value="Post ID:" style="font-weight: bold"/>
+                                <span class="product-category">#{post.postId}</span>
+
+                                <br/><br/>
+
+                                <h:outputText value="Image:" style="font-weight: bold"/>
+                                <p:graphicImage value="#{post.image}">
+                                    <f:param name="filename" value="filename.ext" />
+                                </p:graphicImage>
+                                <br/> <br/>
+
+                            </div>
+                            <div class="product-list-action">
+
+                                <p:commandButton value="View Post" actionListener="#{postManagementManagedBean.viewPost}" oncomplete="PF('dialogViewPost').show()" icon="ui-icon-document" title="View" update="formViewPost" style="margin-right:20px;" styleClass="ui-priority-primary" >
+                                    <f:attribute name="selectedPost" value="#{post}" />
+                                </p:commandButton>
+                                <p:commandButton value="Update Post" actionListener="#{postManagementManagedBean.doUpdatePost}" update="formViewMyPosts" oncomplete="PF('dialogUpdatePost').show()" icon="ui-icon-pencil" title="Update" style="margin-right:20px;" styleClass="ui-priority-primary" >
+                                    <f:attribute name="postToUpdate" value="#{post}" />
+                                </p:commandButton>
+                                <p:commandButton value="Delete Post" icon="ui-icon-trash" actionListener="#{postManagementManagedBean.deletePost}" update="formViewMyPosts" >
+                                    <f:attribute name="postToDelete" value="#{post}" />
+                                    <p:confirm header="Confirmation" message="Are you sure you want to delete POST ID: #{post.postId} ?" icon="ui-icon-alert" />
+                                </p:commandButton>
+                                <br/> <br/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                        <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                        <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                    </p:confirmDialog>
+
+                </p:dataScroller>
+            </h:form>
+        </div>
+
+        <h:form id="formViewPost">
+
+            <p:dialog id="dialogViewPost" widgetVar="dialogViewPost" header="View Post" closable="true">
+
+                <p:messages id="messagesViewPost" redisplay="false" />
+
+                <p:panelGrid id="viewPanelGrid1">
+                    <p:row>
+
+                        <h:outputLabel value="Post ID: " style="font-weight: bold"/>
+                        <h:outputText value="#{postManagementManagedBean.postToView.postId}" />
+                        <br/> <br/>
+                        <h:outputLabel value="Society Name: " style="font-weight: bold"/>
+                        <h:outputText value="#{postManagementManagedBean.postToView.society.name}" />
+                        <br/> <br/>
+                        <p:graphicImage value="#{postManagementManagedBean.postToView.image}"/>
+                        <h:outputText value="#{postManagementManagedBean.postToView.bodyContent}"/>  
+                        <br/> <br/>
+                    </p:row>
+
+
+                </p:panelGrid>
+                <div>
+                    <br/> <br/>
+
+                    <p:dataScroller id="dataScrollMyComments" value="#{postManagementManagedBean.commentsOfPost}" var="comment"  chunkSize="3">
+                        <f:facet name="header">
+                            Comments
+                        </f:facet>
+
+                        <f:facet name="loader">
+                            <div class="p-text-center">
+                                <p:commandButton type="button" value="More" icon="pi pi-refresh"/>
+                            </div>
+                        </f:facet>
+
+                        <div class="product">
+                            <div class="product-list-item p-p-5">
+
+                                <div class="product-list-detail">
+                                    <h:outputText value="Student Name: " style="font-weight: bold"/>
+                                    <h:outputText value="#{comment.student.name}" />
+                                    <br/><br/>
+
+                                    <h:outputText value="Comment: " style="font-weight: bold"/>
+                                    <h:outputText value="#{comment.content}" />
+                                    <br/><br/>
+
+                                    <h:outputText value="Date: " style="font-weight: bold"/>
+                                    <h:outputText value="#{comment.creationDate}" />
+                                    <br/> <br/>
+
+                                </div>
+                                <div class="product-list-action">
+
+
+                                    <br/> <br/>
+                                </div>
+                            </div>
+                        </div>
+                    </p:dataScroller>
+                    <p:inputTextarea rows="6" cols="100" id="newCommentContent" value="#{createNewCommentManagedBean.newCommentEntity.content}"/>
+                    <br/>
+                    <p:commandButton actionListener="#{createNewCommentManagedBean.createNewComment}" update="@form formViewPost:dataScrollMyComments" value="Post Comment"  styleClass="ui-confirmdialog-yes">
+                        <f:attribute name="postOfNewComment" value="#{postManagementManagedBean.postToView}" />
+                    </p:commandButton>
+                </div>
+            </p:dialog>
+
+        </h:form>
+
+
+
+        <h:form id="formUpdatePost">
+
+            <p:dialog id="dialogUpdatePost" widgetVar="dialogUpdatePost" header="Update Post" closable="true">
+
+                <p:messages id="messagesUpdatePost" redisplay="false" />
+
+                <p:panelGrid>
+
+                    <p:row>
+                        <p:column>
+                            <h:outputLabel value="Post ID: " />
+                        </p:column>
+                        <p:column>
+                            <h:outputText value="#{postManagementManagedBean.postToUpdate.postId}" />
+                        </p:column>
+                        <p:column>
+                            &nbsp;
+                        </p:column>
+                    </p:row>
+
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="content" value="Content: " />
+                        </p:column>
+                        <p:column>
+                            <p:inputText id="content" value="#{postManagementManagedBean.postToUpdate.bodyContent}" placeholder="#{postManagementManagedBean.postToUpdate.bodyContent}" required="true" requiredMessage="Content is required" />
+                        </p:column>
+                        <p:column>
+                            <p:message for="content" />
+                        </p:column>
+                    </p:row>
+
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="imageURL" value="Upload Image " style="font-weight: bold;"/>
+                        </p:column>
+                        <p:column>
+                            <p:fileUpload id="imageURL" listener="#{fileUploadManagedBean.handleFileUploadForUpdate}" multiple="true" update="@this" />
+                            <p:panel header="Uploaded File" visible="#{fileUploadManagedBean.showUploadedFile}">
+                                <p:graphicImage value="#{fileUploadManagedBean.uploadedFilePath}" height="50%" />
+                            </p:panel>
+                        </p:column>
+                        <p:column>
+                            <p:message for="imageURL"/>
+                        </p:column>
+                    </p:row>
+
+
+
+                    <p:row>
+                        <p:column colspan="3">
+                            <p:commandButton value="Update Post" update="@form formViewMyPosts:dataScrollMyPosts" actionListener="#{postManagementManagedBean.updatePost}" oncomplete="PF('dialogUpdatePost').show();" />
+                        </p:column>
+                    </p:row>
+
+                </p:panelGrid>
+
+            </p:dialog>
+
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>
