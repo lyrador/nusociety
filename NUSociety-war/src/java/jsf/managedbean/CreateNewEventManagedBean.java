@@ -5,9 +5,10 @@
  */
 package jsf.managedbean;
 
-import ejb.session.stateless.EventSessionBeanLocal;
+import ejb.session.stateless.SocietySessionBeanLocal;
 import ejb.session.stateless.StudentSessionBean;
 import ejb.session.stateless.StudentSessionBeanLocal;
+import ejb.session.stateless.EventSessionBeanLocal; 
 import entity.Event;
 import entity.Society;
 import java.util.Date;
@@ -18,6 +19,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import util.exception.EventAlreadyExistsException;
+import util.exception.SocietyNotFoundException;
 import util.exception.StudentNotFoundException;
 
 /**
@@ -28,13 +30,18 @@ import util.exception.StudentNotFoundException;
 @RequestScoped
 public class CreateNewEventManagedBean {
 
-    
+    @EJB(name = "EventSessionBeanLocal")
+    private EventSessionBeanLocal eventSessionBeanLocal;
+
+    @EJB
+    private SocietySessionBeanLocal societySessionBeanLocal;
 
     @EJB
     private StudentSessionBeanLocal studentSessionBeanLocal;
+    
+    
 
-    @EJB
-    private EventSessionBeanLocal eventSessionBeanLocal;
+    
     
     //need society bean, then can remove get society method in event bean
 
@@ -49,14 +56,14 @@ public class CreateNewEventManagedBean {
         newSocietyId = newSocietyId; 
     }
     
-    public void doCreateNewEvent(ActionEvent event) throws EventAlreadyExistsException, StudentNotFoundException {
+    public void doCreateNewEvent(ActionEvent event) throws EventAlreadyExistsException, StudentNotFoundException, SocietyNotFoundException {
         try {
         
         newEvent.setStudent(studentSessionBeanLocal.retrieveStudentByStudentId(getNewStudentId()));
-        //newEvent.setSociety(eventSessionBeanLocal.retrieveSocietyById(getNewSocietyId()));
-        Society dummySociety = new Society("Flaggers", "We Love Flags!", new Date());
-        eventSessionBeanLocal.createNewSociety(dummySociety); 
-        newEvent.setSociety(dummySociety);
+        newEvent.setSociety(societySessionBeanLocal.retrieveSocietyById(newSocietyId));
+        //Society dummySociety = new Society("Flaggers", "We Love Flags!", new Date());
+        //eventSessionBeanLocal.createNewSociety(dummySociety); 
+        //newEvent.setSociety(dummySociety);
         
         Long newEventId = eventSessionBeanLocal.createNewEvent(newEvent); 
         

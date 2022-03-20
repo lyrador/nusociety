@@ -143,7 +143,8 @@ public class PostManagementManagedBean implements Serializable {
         } else {
             // So, browser is requesting the image. Return a real StreamedContent with the image bytes.
             String filename = context.getExternalContext().getRequestParameterMap().get("filename");
-            return new DefaultStreamedContent(new FileInputStream(new File(filename)));
+          //  return new DefaultStreamedContent(new FileInputStream(new File(filename)));
+          return null; 
         }
     }
 
