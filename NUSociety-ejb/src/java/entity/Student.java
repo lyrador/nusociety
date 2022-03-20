@@ -53,6 +53,10 @@ public class Student implements Serializable {
     private List<Comment> comments;
     @OneToMany(mappedBy = "student", cascade = {}, fetch = FetchType.LAZY)
     private List<Post> posts;
+    @ManyToMany(cascade = {}, fetch = FetchType.LAZY)
+    private List<Event> events;
+    @OneToMany(mappedBy = "student", orphanRemoval = false, cascade = {}, fetch = FetchType.LAZY)
+    private List<Event> eventsOrganised;
 
     public Student() {
         attendances = new ArrayList<>();
@@ -182,6 +186,22 @@ public class Student implements Serializable {
 
     public void setPosts(List<Post> posts) {
         this.posts = posts;
+    }
+
+    public List<Event> getEvents() {
+        return events;
+    }
+
+    public void setEvents(List<Event> events) {
+        this.events = events;
+    }
+
+    public List<Event> getEventsOrganised() {
+        return eventsOrganised;
+    }
+
+    public void setEventsOrganised(List<Event> eventsOrganised) {
+        this.eventsOrganised = eventsOrganised;
     }
     
     

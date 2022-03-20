@@ -53,6 +53,8 @@ public class Society implements Serializable {
     private List<Staff> staffs;   
     @ManyToMany
     private List<Student> students;
+    @OneToMany(mappedBy = "society", orphanRemoval = false, cascade = {}, fetch = FetchType.LAZY)
+    private List<Event> events;
 //    
 //    @OneToMany(mappedBy = "society")
 //    private List<Event> events;
@@ -70,6 +72,8 @@ public class Society implements Serializable {
         this.description = description;
         this.dateCreated = dateCreated;
     }
+    
+    
 
     public Long getSocietyId() {
         return societyId;
@@ -174,6 +178,14 @@ public class Society implements Serializable {
     @Override
     public String toString() {
         return this.name;
+    }
+
+    public List<Event> getEvents() {
+        return events;
+    }
+
+    public void setEvents(List<Event> events) {
+        this.events = events;
     }
     
     

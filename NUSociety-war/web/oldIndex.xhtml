@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>NUSociety</title>
+    </h:head>
+    <h:body>
+        <h1>NUSociety</h1>
+
+        <ui:insert name="header">
+            <ui:include src="/header.xhtml" />
+        </ui:insert>
+        <ul>
+            <li><h:link outcome="/Student/studentManagement.xhtml">Student CRUD</h:link></li>
+            <li><h:link outcome="/Notification/notificationManagement.xhtml">Notification CRUD</h:link></li>
+            <li><h:link outcome="/Attendance/attendanceManagement.xhtml">Attendance CRUD</h:link></li>
+            
+            <li><h:link outcome="/Comment/comment.xhtml">Comment CRUD</h:link></li>
+            <li><h:link outcome="/Post/post.xhtml">Post CRUD</h:link></li>
+            
+            <li><h:link outcome="viewAllEvents">View All Events</h:link></li>
+            <li><h:link outcome="createNewEvent">Create New Event</h:link></li>
+            <li><h:link outcome="updateEvent">Update an Event</h:link></li>
+            <li><h:link outcome="deleteEvent">Delete an Event</h:link></li>
+            
+            <li><h:link outcome="viewAllEventCategories">View All Event Categories</h:link></li>
+            <li><h:link outcome="createNewEventCategory">Create New Event Category</h:link></li>
+            <li><h:link outcome="updateEventCategory">Update an Event Category</h:link></li>
+            <li><h:link outcome="deleteEventCategory">Delete an Event Category</h:link></li>
+            
+            <li><h:link outcome="/Society/societyManagement.xhtml">Society CRUD</h:link></li>
+            <li><h:link outcome="/SocietyCategory/societyCategoryManagement.xhtml">Society Category CRUD</h:link></li>
+            <li><h:link outcome="/Announcement/announcementManagement.xhtml">Announcement CRUD</h:link></li>
+        </ul>
+        
+        <ui:insert name="footer">
+            <ui:include src="/footer.xhtml" />
+        </ui:insert>
+    </h:body>
+</html>

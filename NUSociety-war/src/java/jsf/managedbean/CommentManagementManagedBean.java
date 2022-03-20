@@ -26,6 +26,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
 //import javax.faces.view.ViewScoped;
 import util.exception.CommentNotFoundException;
 import util.exception.PostNotFoundException;
@@ -36,7 +37,7 @@ import util.exception.StudentNotFoundException;
  * @author 65912
  */
 @Named(value = "createNewCommentManagedBean")
-@SessionScoped
+@ViewScoped
 public class CommentManagementManagedBean implements Serializable {
 
     @EJB
@@ -45,15 +46,20 @@ public class CommentManagementManagedBean implements Serializable {
     private StudentSessionBeanLocal studentSessionBean;
     @EJB
     private CommentSessionBeanLocal commentSessionBean;
+    
+    @Inject
+    private PostManagementManagedBean postManagementManagedBean;
 
     private Comment newCommentEntity;
-    private Long newStudentId;
-    private Long newPostId;
+    //private Long newStudentId;
+    //private Long newPostId;
 
     private String contentUpdate;
     private Long commentUpdateId;
     
     private Long commentDeleteId;
+    
+    private List<Comment> commentOfPost;
     
     //Next time change to student's own comments
     private List<Comment> listOfComments;
@@ -70,22 +76,20 @@ public class CommentManagementManagedBean implements Serializable {
     }
 
     public void createNewComment(ActionEvent event) throws StudentNotFoundException {
-        try {
-            newCommentEntity.setStudent(studentSessionBean.retrieveStudentByStudentId(newStudentId));
-            newCommentEntity.setPost(postSessionBean.retrievePostById(newPostId));
-            
-            newCommentEntity.setCreationDate(new Date());
-
-            Long cId = commentSessionBean.createComment(newCommentEntity);
-            newCommentEntity = new Comment();
-            newStudentId = null;
-            newPostId = null;
-            listOfComments = commentSessionBean.viewAllCommentsInDatabase();
-            
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "New Comment created successfully (Comment ID: " + cId + ")", null));
-        } catch (PostNotFoundException ex) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An error has occurred while creating the new Comment: " + ex.getMessage(), null));
-        }
+        
+        //Student Id should take from Session Scope!!!
+        System.out.println("TEST!!!");
+        Post postOfNewComment = (Post) event.getComponent().getAttributes().get("postOfNewComment");
+        newCommentEntity.setStudent(postOfNewComment.getStudent());
+        newCommentEntity.setPost(postOfNewComment);
+        newCommentEntity.setCreationDate(new Date());
+        
+        Long cId = commentSessionBean.createComment(newCommentEntity);
+        postManagementManagedBean.getCommentsOfPost().add(newCommentEntity);
+        newCommentEntity = new Comment();
+        
+        //listOfComments = commentSessionBean.viewAllCommentsInDatabase();
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "New Comment created successfully (Comment ID: " + cId + ")", null));
     }
 
     //Retrieve Comment from client, Initialise the attributes required for update
@@ -125,6 +129,11 @@ public class CommentManagementManagedBean implements Serializable {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An unexpected error has occurred: " + ex.getMessage(), null));
         }
     }
+    
+    public void findCommentOfPost(ActionEvent event) {
+        Post selectedPost = (Post) event.getComponent().getAttributes().get("selectedPost");
+        commentOfPost = selectedPost.getComments();
+    }
 
     public Comment getNewCommentEntity() {
         return newCommentEntity;
@@ -132,22 +141,6 @@ public class CommentManagementManagedBean implements Serializable {
 
     public void setNewCommentEntity(Comment newCommentEntity) {
         this.newCommentEntity = newCommentEntity;
-    }
-
-    public Long getNewStudentId() {
-        return newStudentId;
-    }
-
-    public void setNewStudentId(Long newStudentId) {
-        this.newStudentId = newStudentId;
-    }
-
-    public Long getNewPostId() {
-        return newPostId;
-    }
-
-    public void setNewPostId(Long newPostId) {
-        this.newPostId = newPostId;
     }
 
     public List<Comment> getListOfComments() {
@@ -180,6 +173,14 @@ public class CommentManagementManagedBean implements Serializable {
 
     public void setContentUpdate(String contentUpdate) {
         this.contentUpdate = contentUpdate;
+    }
+
+    public List<Comment> getCommentOfPost() {
+        return commentOfPost;
+    }
+
+    public void setCommentOfPost(List<Comment> commentOfPost) {
+        this.commentOfPost = commentOfPost;
     }
     
     
