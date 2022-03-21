@@ -32,5 +32,7 @@ public interface SocietySessionBeanLocal {
     public void deleteSociety(Long societyId) throws SocietyNotFoundException;
 
     public List<Society> searchSocietyByName(String searchString);
+
+    public List<Society> retrieveSocietiesForMember(Long memberId);
     
 }

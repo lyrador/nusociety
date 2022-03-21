@@ -13,6 +13,7 @@ import entity.Announcement;
 import entity.Society;
 import entity.SocietyCategory;
 import entity.Staff;
+import entity.Student;
 import javax.inject.Named;
 import javax.faces.view.ViewScoped;
 import java.io.Serializable;
@@ -20,9 +21,15 @@ import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import util.exception.CreateSocietyException;
 import util.exception.SocietyCategoryNotFoundException;
 import util.exception.SocietyNotFoundException;
@@ -34,7 +41,7 @@ import util.exception.UnknownPersistenceException;
  * @author raihan
  */
 @Named(value = "societyManagementManagedBean")
-@ViewScoped
+@SessionScoped
 public class SocietyManagementManagedBean implements Serializable {
 
     @EJB
@@ -48,9 +55,13 @@ public class SocietyManagementManagedBean implements Serializable {
     
     
     private List<Society> societies;
+    private List<Society> filteredSocieties;
     private List<SocietyCategory> societyCategories;
     private List<Staff> staffs;
     private List<Announcement> announcements;
+    
+    private Long memberId;
+    private List<Society> memberSocieties;
     
     private Society newSociety;
     private List<Long> newCategoryIds;
@@ -61,6 +72,9 @@ public class SocietyManagementManagedBean implements Serializable {
     private List<Long> updatedStaffIds;
     
     private Society societyToDelete;
+    
+    private ServletRequest request;
+    private ServletResponse response;
     
     public SocietyManagementManagedBean() {
         newSociety = new Society();
@@ -74,6 +88,9 @@ public class SocietyManagementManagedBean implements Serializable {
         this.societyCategories = societyCategorySessionBeanLocal.retrieveAllSocietyCategories();
         this.staffs = staffSessionBeanLocal.retrieveAllStaffs();
         this.announcements = announcementSessionBeanLocal.retrieveAllAnnouncements();
+        Student currentStudent = (Student) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("currentStudent");
+        this.memberId = currentStudent.getStudentId();
+        this.memberSocieties = currentStudent.getMemberSocieties();
     }
     
     public void createNewSociety(ActionEvent event) {
@@ -82,6 +99,10 @@ public class SocietyManagementManagedBean implements Serializable {
             newSociety.setDateCreated(new Date());
             Society society = societySessionBeanLocal.createNewSociety(getNewSociety(), getNewCategoryIds(), getNewStaffIds());
             getSocieties().add(society);
+            
+            if(filteredSocieties != null) {
+                filteredSocieties.add(society);
+            }
             
             setNewSociety(new Society());
             setNewCategoryIds(null);
@@ -130,11 +151,26 @@ public class SocietyManagementManagedBean implements Serializable {
             societySessionBeanLocal.deleteSociety(societyToDelete.getSocietyId());
             
             societies.remove(societyToDelete);
+            
+            if(filteredSocieties != null) {
+                filteredSocieties.remove(societyToDelete);
+            }
+
 
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Society deleted successfully", null));
         } catch(SocietyNotFoundException ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An error has occurred while deleting society: " + ex.getMessage(), null));
-        }catch(Exception ex) {
+        } catch(Exception ex) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An unexpected error has occurred: " + ex.getMessage(), null));
+        }
+    }
+    
+    public void getSocietiesForMember(ActionEvent event) {
+        
+        try {
+            memberSocieties = societySessionBeanLocal.retrieveSocietiesForMember(memberId);
+
+        } catch(Exception ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An unexpected error has occurred: " + ex.getMessage(), null));
         }
     }
@@ -225,6 +261,30 @@ public class SocietyManagementManagedBean implements Serializable {
 
     public void setNewStaffIds(List<Long> newStaffIds) {
         this.newStaffIds = newStaffIds;
+    }
+
+    public Long getMemberId() {
+        return memberId;
+    }
+
+    public void setMemberId(Long memberId) {
+        this.memberId = memberId;
+    }
+
+    public List<Society> getMemberSocieties() {
+        return memberSocieties;
+    }
+
+    public void setMemberSocieties(List<Society> memberSocieties) {
+        this.memberSocieties = memberSocieties;
+    }
+
+    public List<Society> getFilteredSocieties() {
+        return filteredSocieties;
+    }
+
+    public void setFilteredSocieties(List<Society> filteredSocieties) {
+        this.filteredSocieties = filteredSocieties;
     }
     
     

@@ -17,7 +17,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import util.enumeration.AccessRightEnum;
+import util.exception.InvalidLoginCredentialException;
 import util.exception.StudentNotFoundException;
+//import util.security.CryptographicHelper;
 
 /**
  *
@@ -42,6 +44,13 @@ public class StudentSessionBean implements StudentSessionBeanLocal {
         Student student = em.find(Student.class, studentId);   
         if(student != null) {
             student.getNotifications().size();
+            student.getPosts().size();
+            student.getComments().size();
+            student.getMemberSocieties().size();
+            student.getFollowedSocieties().size();
+            student.getEvents().size();
+            student.getEventsOrganised().size();
+            student.getAttendances().size();
             return student;
         } else {
             throw new StudentNotFoundException("Student with Id: " + studentId + " cannot be found!");
@@ -102,6 +111,28 @@ public class StudentSessionBean implements StudentSessionBeanLocal {
     }
     
     @Override
+    public Student retrieveStudentByUsername(String username) throws StudentNotFoundException {
+        
+        Query query = em.createQuery("SELECT s FROM Student s WHERE s.userName = :inUsername");
+        query.setParameter("inUsername", username);
+        
+        Student student = (Student) query.getSingleResult();
+        if(student != null) {
+            student.getNotifications().size();
+            student.getPosts().size();
+            student.getComments().size();
+            student.getMemberSocieties().size();
+            student.getFollowedSocieties().size();
+            student.getEvents().size();
+            student.getEventsOrganised().size();
+            student.getAttendances().size();
+            return student;
+        } else {
+            throw new StudentNotFoundException("Student with username: " + username + " cannot be found!");
+        }
+    }
+    
+    @Override
     public void updateStudent(Student tempStudent) throws StudentNotFoundException {
         
         Student studentToUpdate = em.find(Student.class, tempStudent.getStudentId());
@@ -118,5 +149,32 @@ public class StudentSessionBean implements StudentSessionBeanLocal {
             studentToUpdate.setProfilePicture(tempStudent.getProfilePicture());
         if (tempStudent.getAccessRightEnum()!= null)
             studentToUpdate.setAccessRightEnum(tempStudent.getAccessRightEnum());
+    }
+    
+    @Override
+    public Student studentLogin(String username, String password) throws InvalidLoginCredentialException, StudentNotFoundException {
+        
+        try {
+            Student student = retrieveStudentByUsername(username);
+//            String passwordHash = CryptographicHelper.getInstance().byteArrayToHexString(CryptographicHelper.getInstance().doMD5Hashing(password + staffEntity.getSalt()));
+            
+            if (student.getPassword().equals(password)) {
+                student.getMemberSocieties().size();
+                student.getFollowedSocieties().size();
+                student.getEvents().size();
+                student.getEventsOrganised().size();
+                student.getNotifications().size();
+                student.getAttendances().size();
+                student.getComments().size();
+                student.getPosts().size();
+                return student;
+            }
+            else
+            {
+                throw new InvalidLoginCredentialException("Username does not exist or invalid password!");
+            }
+        } catch (StudentNotFoundException ex) {
+            throw new InvalidLoginCredentialException("Username does not exist or invalid password!");
+        }
     }
 }
