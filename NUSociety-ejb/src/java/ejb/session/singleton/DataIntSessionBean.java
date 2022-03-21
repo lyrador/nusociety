@@ -31,6 +31,7 @@ import util.exception.CreateSocietyCategoryException;
 import util.exception.CreateSocietyException;
 import util.exception.SocietyCategoryNotFoundException;
 import util.exception.SocietyNotFoundException;
+import util.exception.StudentNotFoundException;
 import util.exception.UnknownPersistenceException;
 
 /**
