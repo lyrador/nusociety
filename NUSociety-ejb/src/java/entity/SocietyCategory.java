@@ -89,7 +89,7 @@ public class SocietyCategory implements Serializable {
 
     @Override
     public String toString() {
-        return "entity.SocietyCategory[ id=" + societyCategoryId + " ]";
+        return societyCategoryName;
     }
     
 }

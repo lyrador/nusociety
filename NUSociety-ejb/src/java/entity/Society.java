@@ -45,25 +45,27 @@ public class Society implements Serializable {
     @OneToMany(mappedBy = "society", orphanRemoval = false, cascade = {}, fetch = FetchType.LAZY)
     private List<Announcement> announcements;
     
-    @ManyToMany
+    @ManyToMany(cascade = {}, fetch = FetchType.LAZY)
     private List<SocietyCategory> societyCategories;
     @OneToMany(mappedBy = "society", cascade = {}, fetch = FetchType.LAZY)
     private List<Post> posts;
-    @ManyToMany(mappedBy = "societies")
+    @ManyToMany(mappedBy = "societies", cascade = {}, fetch = FetchType.LAZY)
     private List<Staff> staffs;   
-    @ManyToMany
-    private List<Student> students;
+    @ManyToMany(mappedBy = "memberSocieties", cascade = {}, fetch = FetchType.LAZY)
+    private List<Student> memberStudents;
+    @ManyToMany(cascade = {}, fetch = FetchType.LAZY)
+    private List<Student> followedStudents;
     @OneToMany(mappedBy = "society", orphanRemoval = false, cascade = {}, fetch = FetchType.LAZY)
     private List<Event> events;
-//    
-//    @OneToMany(mappedBy = "society")
-//    private List<Event> events;
 
     public Society() {
         this.announcements = new ArrayList<>();
         this.societyCategories = new ArrayList<>();
         this.posts = new ArrayList<>();
         this.staffs = new ArrayList<>();
+        this.events = new ArrayList<>();
+        this.memberStudents = new ArrayList<>();
+        this.followedStudents = new ArrayList<>();
     }
 
     public Society(String name, String description, Date dateCreated) {
@@ -147,12 +149,20 @@ public class Society implements Serializable {
         this.staffs = staffs;
     }
 
-    public List<Student> getStudents() {
-        return students;
+    public List<Student> getMemberStudents() {
+        return memberStudents;
     }
 
-    public void setStudents(List<Student> students) {
-        this.students = students;
+    public void setMemberStudents(List<Student> memberStudents) {
+        this.memberStudents = memberStudents;
+    }
+
+    public List<Student> getFollowedStudents() {
+        return followedStudents;
+    }
+
+    public void setFollowedStudents(List<Student> followedStudents) {
+        this.followedStudents = followedStudents;
     }
     
     @Override

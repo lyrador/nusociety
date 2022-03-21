@@ -9,6 +9,7 @@ import entity.Student;
 import java.util.List;
 import javax.ejb.Local;
 import util.enumeration.AccessRightEnum;
+import util.exception.InvalidLoginCredentialException;
 import util.exception.StudentNotFoundException;
 
 /**
@@ -28,6 +29,9 @@ public interface StudentSessionBeanLocal {
 
     public void updateStudent(Student tempStudent) throws StudentNotFoundException;
 
+    public Student retrieveStudentByUsername(String username) throws StudentNotFoundException;
+
+    public Student studentLogin(String username, String password) throws InvalidLoginCredentialException, StudentNotFoundException;
     public List<Student> retrieveAllStudentsFromSocietyId(Long societyId);
   
 }

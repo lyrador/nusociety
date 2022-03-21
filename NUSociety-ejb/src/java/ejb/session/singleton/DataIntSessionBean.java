@@ -69,6 +69,9 @@ public class DataIntSessionBean {
     public void postConstruct() {
         List<Long> staffIds = new ArrayList<>();
         List<Long> categoryIds = new ArrayList<>();
+        List<Long> categoryIds1 = new ArrayList<>();
+        List<Long> categoryIds2 = new ArrayList<>();
+        List<Long> categoryIds3 = new ArrayList<>();
 
         if (em.find(Student.class, 1l) == null) {
             studentSessionBeanLocal.createNewStudent(new Student("Alex", "alex@gmail.com", "password", "alex", "www.profilepic/alex", AccessRightEnum.MEMBER));
@@ -87,11 +90,13 @@ public class DataIntSessionBean {
         if (em.find(SocietyCategory.class, 1l) == null) {
 
             try {
-                SocietyCategory category1 = societyCategorySessionBeanLocal.createNewSocietyCategory(new SocietyCategory("Sports"));
-                SocietyCategory category2 = societyCategorySessionBeanLocal.createNewSocietyCategory(new SocietyCategory("Clubs"));
-                SocietyCategory category3 = societyCategorySessionBeanLocal.createNewSocietyCategory(new SocietyCategory("Performing Arts"));
-                categoryIds.add(category1.getSocietyCategoryId());
-                categoryIds.add(category2.getSocietyCategoryId());
+               SocietyCategory category1 = societyCategorySessionBeanLocal.createNewSocietyCategory(new SocietyCategory("Sports"));
+               SocietyCategory category2 = societyCategorySessionBeanLocal.createNewSocietyCategory(new SocietyCategory("Clubs"));
+               SocietyCategory category3 = societyCategorySessionBeanLocal.createNewSocietyCategory(new SocietyCategory("Performing Arts"));
+               categoryIds1.add(category1.getSocietyCategoryId());
+               categoryIds2.add(category2.getSocietyCategoryId());
+               categoryIds2.add(category3.getSocietyCategoryId());
+               categoryIds3.add(category3.getSocietyCategoryId());
             } catch (CreateSocietyCategoryException | SocietyCategoryNotFoundException e) {
                 e.printStackTrace();
             }
@@ -105,8 +110,24 @@ public class DataIntSessionBean {
         if (em.find(Society.class, 1l) == null) {
 
             try {
-                societySessionBeanLocal.createNewSociety(new Society("Floorball", "Sticks and Balls", new Date()), categoryIds, staffIds);
-            } catch (CreateSocietyException | UnknownPersistenceException e) {
+                societySessionBeanLocal.createNewSociety(new Society("Floorball","Sticks and Balls",new Date()), categoryIds1, staffIds);
+                
+                Student alex = studentSessionBeanLocal.retrieveStudentByUsername("alex");
+                Society floorball = societySessionBeanLocal.retrieveSocietyById(1l);
+
+                List<Student> fbStuList = new ArrayList<>();
+                fbStuList.add(alex);
+                floorball.setMemberStudents(fbStuList);
+                
+                List<Society> alexSocList = new ArrayList<>();
+                alexSocList.add(floorball);
+                alex.setMemberSocieties(alexSocList);
+                
+                societySessionBeanLocal.createNewSociety(new Society("Choir Club","We love singing",new Date()), categoryIds2, staffIds);
+                societySessionBeanLocal.createNewSociety(new Society("NUS Band","Banging the drums as hard as we can",new Date()), categoryIds3, staffIds);      
+        
+
+            } catch (CreateSocietyException | UnknownPersistenceException | StudentNotFoundException | SocietyNotFoundException e) {
                 e.printStackTrace();
             }
         }
@@ -117,7 +138,7 @@ public class DataIntSessionBean {
                 Society floorball = societySessionBeanLocal.retrieveSocietyById((long) 1);
                 List<Student> studentsToAdd = studentSessionBeanLocal.retrieveAllStudents();
                 for (Student student : studentsToAdd) {
-                    floorball.getStudents().add(student);
+                    floorball.getMemberStudents().add(student);
                     student.getMemberSocieties().add(floorball);
 
                     Attendance tempAttendance = new Attendance(1, 1);

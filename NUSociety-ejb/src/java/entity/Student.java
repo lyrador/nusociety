@@ -16,6 +16,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import util.enumeration.AccessRightEnum;
@@ -57,14 +58,20 @@ public class Student implements Serializable {
     private List<Event> events;
     @OneToMany(mappedBy = "student", orphanRemoval = false, cascade = {}, fetch = FetchType.LAZY)
     private List<Event> eventsOrganised;
-    @ManyToMany(mappedBy = "students", cascade = {}, fetch = FetchType.LAZY)
+    @ManyToMany(cascade = {}, fetch = FetchType.LAZY)
     private List<Society> memberSocieties;
+    @ManyToMany(mappedBy = "followedStudents", cascade = {}, fetch = FetchType.LAZY)
+    private List<Society> followedSocieties;
 
     public Student() {
         attendances = new ArrayList<>();
+        notifications = new ArrayList<>();
         comments = new ArrayList<>();
         posts = new ArrayList<>();
+        events = new ArrayList<>();
+        eventsOrganised = new ArrayList<>();
         memberSocieties = new ArrayList<>();
+        followedSocieties = new ArrayList<>();
     }
 
     public Student(String name, String email, String password, String userName, String profilePicture, AccessRightEnum accessRightEnum) {
@@ -214,4 +221,17 @@ public class Student implements Serializable {
     public void setMemberSocieties(List<Society> memberSocieties) {
         this.memberSocieties = memberSocieties;
     }
+
+    public List<Society> getFollowedSocieties() {
+        return followedSocieties;
+    }
+
+    public void setFollowedSocieties(List<Society> followedSocieties) {
+        this.followedSocieties = followedSocieties;
+    }
+
+
+    
+    
+    
 }

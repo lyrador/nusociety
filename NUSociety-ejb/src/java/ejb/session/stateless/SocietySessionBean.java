@@ -80,6 +80,13 @@ public class SocietySessionBean implements SocietySessionBeanLocal {
         Society society = em.find(Society.class, societyId);
         
         try {
+            society.getAnnouncements().size();
+            society.getSocietyCategories().size();
+            society.getStaffs().size();
+            society.getPosts().size();
+            society.getMemberStudents().size();
+            society.getFollowedStudents().size();
+            society.getEvents().size();
             return society;
         } catch(NoResultException | NonUniqueResultException ex) {
             throw new SocietyNotFoundException("Society Id " + societyId + " does not exist!");
@@ -87,12 +94,23 @@ public class SocietySessionBean implements SocietySessionBeanLocal {
     }
     
     @Override
+    public List<Society> retrieveSocietiesForMember(Long memberId) {
+        Query query = em.createQuery("SELECT s FROM Society s WHERE s.");
+        List<Society> societies = query.getResultList();
+        
+        for (Society society : societies) {
+            society.getSocietyCategories().size();
+            society.getStaffs().size();
+        }
+        return query.getResultList();
+    }
+    
     public void removeStudentFromSociety(Long societyId, Long studentId) throws SocietyNotFoundException, StudentNotFoundException {
         Society society = em.find(Society.class, societyId);
         Student student = em.find(Student.class, studentId);
         try {
-            society.getStudents().size();
-            society.getStudents().remove(student);
+            society.getMemberStudents().size();
+            society.getMemberStudents().remove(student);
             student.getMemberSocieties().remove(society);
         } catch(NoResultException | NonUniqueResultException ex) {
             throw new SocietyNotFoundException("Society Id " + societyId + " does not exist!");
@@ -174,12 +192,17 @@ public class SocietySessionBean implements SocietySessionBeanLocal {
             societyToDelete.getPosts().clear();
         }
         
-        
-        //Student
-        for (Student student : societyToDelete.getStudents()) {
-//            student.getSocieties().remove(societyToDelete);
+        //Followed Students
+        for (Student student : societyToDelete.getFollowedStudents()) {
+            student.getMemberSocieties().remove(societyToDelete);
         }
-        societyToDelete.getStudents().clear();
+        societyToDelete.getMemberStudents().clear();
+        
+        //Member Students
+        for (Student student : societyToDelete.getMemberStudents()) {
+            student.getFollowedSocieties().remove(societyToDelete);
+        }
+        societyToDelete.getMemberStudents().clear();
         
         //Event
 //        if (!societyToDelete.getEvents().isEmpty()) {
