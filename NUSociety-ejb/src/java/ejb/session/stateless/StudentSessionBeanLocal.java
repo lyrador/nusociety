@@ -27,5 +27,7 @@ public interface StudentSessionBeanLocal {
     public void deleteStudent(Long studentId) throws StudentNotFoundException;
 
     public void updateStudent(Student tempStudent) throws StudentNotFoundException;
+
+    public List<Student> retrieveAllStudentsFromSocietyId(Long societyId);
   
 }

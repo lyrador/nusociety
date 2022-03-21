@@ -12,6 +12,7 @@ import util.exception.CreateSocietyException;
 import util.exception.SocietyCategoryNotFoundException;
 import util.exception.SocietyNotFoundException;
 import util.exception.StaffNotFoundException;
+import util.exception.StudentNotFoundException;
 import util.exception.UnknownPersistenceException;
 
 /**
@@ -32,5 +33,7 @@ public interface SocietySessionBeanLocal {
     public void deleteSociety(Long societyId) throws SocietyNotFoundException;
 
     public List<Society> searchSocietyByName(String searchString);
+
+    public void removeStudentFromSociety(Long societyId, Long studentId) throws SocietyNotFoundException, StudentNotFoundException;
     
 }

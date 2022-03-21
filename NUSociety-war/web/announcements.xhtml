@@ -5,9 +5,38 @@
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:p="http://primefaces.org/ui">
 
-    <aside style="text-align: center;">
-        <h3>Announcement</h3>			
-        
+    <aside>
+        <div class="announcement sidebar">
+            <p:dataScroller id="dataScrollMyAnnouncements" value="#{announcementManagementManagedBean.allAnnouncementsSortedByMostRecent}" var="announcement" chunkSize="8">
+                <div class="announcement-list-item">
+
+                    <div class="announcement-list-detail">
+                        <div class="announcement-id">
+                            <h:outputText value="Announcement ID:" style="font-weight: bold"/>
+                            <span class="announcement-id">#{announcement.announcementId}</span>
+                        </div><br/>
+
+                        <div class="announcement-date">
+                            <h:outputText value="Date:" style="font-weight: bold"/>
+                            <span class="announcement-date">#{announcement.creationDate}</span>
+                        </div><br/>
+
+                        <div class="society-name">
+                            <h:outputText value="Society:" style="font-weight: bold"/>
+                            #{announcement.society.name}
+                        </div><br/> 
+
+                        <div class="announcement-content">
+                            <h:outputText value="Content:" style="font-weight: bold"/>
+                            #{announcement.announcementContent}
+                        </div><br/> 
+                        
+                        <p:separator style="width:500px"/>
+                    </div>
+
+                </div>
+            </p:dataScroller>
+        </div>
     </aside>
 
 </ui:composition>

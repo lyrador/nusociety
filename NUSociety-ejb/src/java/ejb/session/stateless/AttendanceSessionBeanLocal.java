@@ -6,6 +6,8 @@
 package ejb.session.stateless;
 
 import entity.Attendance;
+import entity.Student;
+import java.util.HashMap;
 import java.util.List;
 import javax.ejb.Local;
 import util.exception.AttendanceNotFoundException;
@@ -27,4 +29,7 @@ public interface AttendanceSessionBeanLocal {
 
     public void updateAttendance(Attendance tempAttendance) throws AttendanceNotFoundException;
 
+    public Attendance retrieveAttendanceFromStudentIdAndSocietyId(Long studentId, Long societyId);
+
+    public HashMap<Long, Attendance> retrieveMapAttendancesFromStudentListAndSocietyId(List<Student> students, Long societyId);
 }

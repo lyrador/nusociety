@@ -11,6 +11,8 @@ import entity.Announcement;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Date;
 import javax.annotation.PostConstruct;
@@ -143,4 +145,10 @@ public class AnnouncementManagementManagedBean implements Serializable {
         this.announcementToDelete = announcementToDelete;
     }
     
+    public List<Announcement> getAllAnnouncementsSortedByMostRecent() {
+        List<Announcement> temp = new ArrayList<Announcement>();
+        temp.addAll(allAnnouncements);
+        Collections.reverse(temp);
+        return temp;
+    }
 }

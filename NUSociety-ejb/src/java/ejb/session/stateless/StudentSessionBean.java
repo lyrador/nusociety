@@ -38,6 +38,13 @@ public class StudentSessionBean implements StudentSessionBeanLocal {
     }
     
     @Override
+    public List<Student> retrieveAllStudentsFromSocietyId(Long societyId) {
+        Query query = em.createQuery("SELECT s FROM Student s, IN (s.memberSocieties) m WHERE m.societyId = :societyId"); 
+        query.setParameter("societyId", societyId);
+        return query.getResultList();
+    }
+    
+    @Override
     public Student retrieveStudentByStudentId(Long studentId) throws StudentNotFoundException{
         Student student = em.find(Student.class, studentId);   
         if(student != null) {

@@ -22,6 +22,7 @@ import util.exception.CreateSocietyException;
 import util.exception.SocietyCategoryNotFoundException;
 import util.exception.SocietyNotFoundException;
 import util.exception.StaffNotFoundException;
+import util.exception.StudentNotFoundException;
 import util.exception.UnknownPersistenceException;
 
 /**
@@ -80,6 +81,19 @@ public class SocietySessionBean implements SocietySessionBeanLocal {
         
         try {
             return society;
+        } catch(NoResultException | NonUniqueResultException ex) {
+            throw new SocietyNotFoundException("Society Id " + societyId + " does not exist!");
+        }
+    }
+    
+    @Override
+    public void removeStudentFromSociety(Long societyId, Long studentId) throws SocietyNotFoundException, StudentNotFoundException {
+        Society society = em.find(Society.class, societyId);
+        Student student = em.find(Student.class, studentId);
+        try {
+            society.getStudents().size();
+            society.getStudents().remove(student);
+            student.getMemberSocieties().remove(society);
         } catch(NoResultException | NonUniqueResultException ex) {
             throw new SocietyNotFoundException("Society Id " + societyId + " does not exist!");
         }

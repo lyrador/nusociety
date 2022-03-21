@@ -57,11 +57,14 @@ public class Student implements Serializable {
     private List<Event> events;
     @OneToMany(mappedBy = "student", orphanRemoval = false, cascade = {}, fetch = FetchType.LAZY)
     private List<Event> eventsOrganised;
+    @ManyToMany(mappedBy = "students", cascade = {}, fetch = FetchType.LAZY)
+    private List<Society> memberSocieties;
 
     public Student() {
         attendances = new ArrayList<>();
         comments = new ArrayList<>();
         posts = new ArrayList<>();
+        memberSocieties = new ArrayList<>();
     }
 
     public Student(String name, String email, String password, String userName, String profilePicture, AccessRightEnum accessRightEnum) {
@@ -203,7 +206,12 @@ public class Student implements Serializable {
     public void setEventsOrganised(List<Event> eventsOrganised) {
         this.eventsOrganised = eventsOrganised;
     }
-    
-    
-    
+
+    public List<Society> getMemberSocieties() {
+        return memberSocieties;
+    }
+
+    public void setMemberSocieties(List<Society> memberSocieties) {
+        this.memberSocieties = memberSocieties;
+    }
 }
