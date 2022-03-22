@@ -118,7 +118,7 @@ public class DataIntSessionBean {
         if (em.find(Society.class, 1l) == null) {
 
             try {
-                societySessionBeanLocal.createNewSociety(new Society("Floorball", "Sticks and Balls", new Date()), categoryIds1, staffIds);
+                societySessionBeanLocal.createNewSociety(new Society("Floorball", "Sticks and Balls", new Date(), "/Users/raihan/glassfish-5.1.0-uploadedfiles/IMG_2962.jpeg"), categoryIds1, staffIds);
 
                 Student alex = studentSessionBeanLocal.retrieveStudentByUsername("alex");
                 Society floorball = societySessionBeanLocal.retrieveSocietyById(1l);

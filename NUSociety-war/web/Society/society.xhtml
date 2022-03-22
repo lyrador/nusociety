@@ -8,14 +8,61 @@
 
     <ui:define name="content">
         
-        <h:outputText value="#{societyManagedBean.society.name}" style="font-size:25px; font-weight: bold;"/>
-        <p:commandButton value="Follow" icon="pi pi-plus"/>
-        <br/>
-        <br/>
-        <h:outputText value="#{societyManagedBean.society.description}" />
+        <ui:insert name="societyHeader">
+            <ui:include src="/societyHeader.xhtml" />
+        </ui:insert>
         
-        <h3>Upcoming Events</h3>
-        
+        <h:form id="follow_form">
+            
+            <h:outputText value="#{societyManagedBean.society.name}" style="font-size:25px; font-weight: bold;"/>
+            <p:commandButton id="follow_button" rendered="#{!followManagedBean.followedSocieties.contains(societyManagedBean.society) and !followManagedBean.memberSocieties.contains(societyManagedBean.society)}" value="Follow" icon="pi pi-plus" 
+                             style="float: right;" actionListener="#{followManagedBean.follow}" update="@form">
+                <f:param name="societyId" value="#{societyManagedBean.society.societyId}" />
+            </p:commandButton>
+
+            <p:commandButton id="unfollow_button" rendered="#{followManagedBean.followedSocieties.contains(societyManagedBean.society) and !followManagedBean.memberSocieties.contains(societyManagedBean.society)}" value="Unfollow" icon="pi pi-minus" 
+                             style="float: right;" actionListener="#{followManagedBean.unfollow}" update="@form">
+                <f:param name="societyId" value="#{societyManagedBean.society.societyId}" />
+            </p:commandButton>
+            
+            <h:outputText rendered="#{followManagedBean.memberSocieties.contains(societyManagedBean.society)}" value="You are a member of this society" style="float: right;"/>
+            <br/>
+            <h:outputText value="#{followManagedBean.followerCount} followers" style="float: right;"/>
+            <br/>
+            <h:outputText value="#{societyManagedBean.society.description}" />
+            
+<!--            <h:graphicImage name="#{societyManagedBean.society.profilePicture}" />-->
+
+            <h3>Public Posts</h3>
+<!--            can modify this to whatever design-->
+            <div style="display:flex">
+                
+                <p:panel style="width:33%">
+                    <h:outputText value="first post"/>
+                </p:panel>
+                <p:panel style="width:33%">
+                    <h:outputText value="second post"/>
+                </p:panel>
+                <p:panel style="width:33%">
+                    <h:outputText value="third post"/>
+                </p:panel>
+            </div>
+
+            <h3>Upcoming Events</h3>
+<!--            can modify this to whatever design-->
+            <div style="display:flex">
+                
+                <p:panel style="width:33%">
+                    <h:outputText value="first event"/>
+                </p:panel>
+                <p:panel style="width:33%">
+                    <h:outputText value="second event"/>
+                </p:panel>
+                <p:panel style="width:33%">
+                    <h:outputText value="third event"/>
+                </p:panel>
+            </div><!-- comment -->
+        </h:form>
     </ui:define>
 
 </ui:composition>

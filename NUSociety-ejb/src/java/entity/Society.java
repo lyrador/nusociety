@@ -75,7 +75,13 @@ public class Society implements Serializable {
         this.dateCreated = dateCreated;
     }
     
-    
+    public Society(String name, String description, Date dateCreated, String profilePicture) {
+        this();
+        this.name = name;
+        this.description = description;
+        this.dateCreated = dateCreated;
+        this.profilePicture = profilePicture;
+    }
 
     public Long getSocietyId() {
         return societyId;
@@ -174,8 +180,8 @@ public class Society implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the societyCategoryId fields are not set
-        if (!(object instanceof SocietyCategory)) {
+        // TODO: Warning - this method won't work in the case the societyId fields are not set
+        if (!(object instanceof Society)) {
             return false;
         }
         Society other = (Society) object;

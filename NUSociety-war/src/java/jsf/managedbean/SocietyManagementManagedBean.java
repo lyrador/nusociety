@@ -62,6 +62,7 @@ public class SocietyManagementManagedBean implements Serializable {
     
     private Long memberId;
     private List<Society> memberSocieties;
+    private List<Society> followedSocieties;
     
     private Society newSociety;
     private List<Long> newCategoryIds;
@@ -72,9 +73,6 @@ public class SocietyManagementManagedBean implements Serializable {
     private List<Long> updatedStaffIds;
     
     private Society societyToDelete;
-    
-    private ServletRequest request;
-    private ServletResponse response;
     
     public SocietyManagementManagedBean() {
         newSociety = new Society();
@@ -91,6 +89,7 @@ public class SocietyManagementManagedBean implements Serializable {
         Student currentStudent = (Student) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("currentStudent");
         this.memberId = currentStudent.getStudentId();
         this.memberSocieties = currentStudent.getMemberSocieties();
+        this.followedSocieties = currentStudent.getFollowedSocieties();
     }
     
     public void createNewSociety(ActionEvent event) {
@@ -285,6 +284,14 @@ public class SocietyManagementManagedBean implements Serializable {
 
     public void setFilteredSocieties(List<Society> filteredSocieties) {
         this.filteredSocieties = filteredSocieties;
+    }
+
+    public List<Society> getFollowedSocieties() {
+        return followedSocieties;
+    }
+
+    public void setFollowedSocieties(List<Society> followedSocieties) {
+        this.followedSocieties = followedSocieties;
     }
     
     

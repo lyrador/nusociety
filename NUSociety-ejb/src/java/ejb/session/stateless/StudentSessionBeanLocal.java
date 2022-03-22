@@ -10,6 +10,7 @@ import java.util.List;
 import javax.ejb.Local;
 import util.enumeration.AccessRightEnum;
 import util.exception.InvalidLoginCredentialException;
+import util.exception.SocietyNotFoundException;
 import util.exception.StudentNotFoundException;
 
 /**
@@ -33,5 +34,9 @@ public interface StudentSessionBeanLocal {
 
     public Student studentLogin(String username, String password) throws InvalidLoginCredentialException, StudentNotFoundException;
     public List<Student> retrieveAllStudentsFromSocietyId(Long societyId);
+
+    public Student studentFollow(Long studentId, Long societyId) throws StudentNotFoundException, SocietyNotFoundException;
+
+    public Student studentUnfollow(Long studentId, Long societyId) throws StudentNotFoundException, SocietyNotFoundException;
   
 }

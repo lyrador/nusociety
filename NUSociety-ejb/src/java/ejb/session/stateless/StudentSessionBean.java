@@ -10,14 +10,17 @@ import entity.Comment;
 import entity.Event;
 import entity.Notification;
 import entity.Post;
+import entity.Society;
 import entity.Student;
 import java.util.List;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import util.enumeration.AccessRightEnum;
 import util.exception.InvalidLoginCredentialException;
+import util.exception.SocietyNotFoundException;
 import util.exception.StudentNotFoundException;
 //import util.security.CryptographicHelper;
 
@@ -28,8 +31,13 @@ import util.exception.StudentNotFoundException;
 @Stateless
 public class StudentSessionBean implements StudentSessionBeanLocal {
 
+    @EJB
+    private SocietySessionBeanLocal societySessionBeanLocal;
+
     @PersistenceContext(unitName = "NUSociety-ejbPU")
     private EntityManager em;
+    
+    
 
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")
@@ -183,5 +191,31 @@ public class StudentSessionBean implements StudentSessionBeanLocal {
         } catch (StudentNotFoundException ex) {
             throw new InvalidLoginCredentialException("Username does not exist or invalid password!");
         }
+    }
+    
+    @Override
+    public Student studentFollow(Long studentId, Long societyId) throws StudentNotFoundException, SocietyNotFoundException {
+        
+        Student student = retrieveStudentByStudentId(studentId);
+        Society societyToFollow = societySessionBeanLocal.retrieveSocietyById(societyId);
+
+        student.getFollowedSocieties().add(societyToFollow);
+        societyToFollow.getFollowedStudents().add(student);
+
+        System.out.println(studentId + " followed " + societyId + "!");
+        return student;
+    }
+    
+    @Override
+    public Student studentUnfollow(Long studentId, Long societyId) throws StudentNotFoundException, SocietyNotFoundException {
+        
+        Student student = retrieveStudentByStudentId(studentId);
+        Society societyToFollow = societySessionBeanLocal.retrieveSocietyById(societyId);
+
+        student.getFollowedSocieties().remove(societyToFollow);
+        societyToFollow.getFollowedStudents().remove(student);
+
+        System.out.println(studentId + " unfollowed " + societyId + "!");
+        return student;
     }
 }
