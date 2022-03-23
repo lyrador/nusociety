@@ -165,7 +165,7 @@ public class Society implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the societyCategoryId fields are not set
-        if (!(object instanceof SocietyCategory)) {
+        if (!(object instanceof Society)) {
             return false;
         }
         Society other = (Society) object;

@@ -40,7 +40,7 @@ public class UpdateEventManagedBean {
     public void doUpdateEvent(ActionEvent event) throws EventNotFoundException {
         try {
             //updateEvent = eventSessionBeanLocal.retrieveEventById(updateEventId); 
-            eventSessionBeanLocal.updateEvent(updateEvent, updateEventId);
+            eventSessionBeanLocal.updateEvent(updateEvent);
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Event updated: " + updateEvent,"Event updated: " + updateEvent));
         } catch (EventNotFoundException ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An error has occurred while updating Event: " + ex.getMessage(), null));

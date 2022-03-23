@@ -39,7 +39,7 @@ public class Event implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long eventId;
-    @Column(nullable = false, length = 128)
+    @Column(nullable = false,  unique = true, length = 128)
     private String eventName; 
     @Column(nullable = false, length = 128)
     private String eventDetails; 
@@ -63,7 +63,7 @@ public class Event implements Serializable {
     @JoinColumn(nullable = false)
     private Society society;
     
-    @ManyToMany(mappedBy = "events", cascade = {}, fetch = FetchType.LAZY)
+    @ManyToMany
     private List<EventCategory> categories;
     
     

@@ -57,6 +57,10 @@
                  <h:inputText id="society" value="#{createNewEventManagedBean.newSocietyId}" required="true"/>
                  <h:message for="society"/>
                  
+                 <h:outputLabel for="categories" value="Event Category Id: "/>
+                 <h:inputText id="categories" value="#{createNewEventManagedBean.newEventCategoryId}" required="true"/>
+                 <h:message for="categories"/>
+                 
                  <h:outputText value=""/>
                  <h:commandButton value="Create New Event" actionListener="#{createNewEventManagedBean.doCreateNewEvent}"/>
                  <h:outputText value=""/>

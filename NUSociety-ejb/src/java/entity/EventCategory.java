@@ -37,7 +37,7 @@ public class EventCategory implements Serializable {
     @Column(nullable = false, length = 128)
     private String categoryName; 
     
-    @ManyToMany(cascade = {}, fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "categories", cascade = {}, fetch = FetchType.LAZY)
     private List<Event> events;
 
     public Long getEventCategoryId() {

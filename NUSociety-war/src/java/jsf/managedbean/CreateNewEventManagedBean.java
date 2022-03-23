@@ -5,13 +5,17 @@
  */
 package jsf.managedbean;
 
+import ejb.session.stateless.EventCategorySessionBeanLocal;
 import ejb.session.stateless.SocietySessionBeanLocal;
 import ejb.session.stateless.StudentSessionBean;
 import ejb.session.stateless.StudentSessionBeanLocal;
 import ejb.session.stateless.EventSessionBeanLocal; 
 import entity.Event;
+import entity.EventCategory;
 import entity.Society;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import javax.ejb.EJB;
 import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
@@ -19,6 +23,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import util.exception.EventAlreadyExistsException;
+import util.exception.EventCategoryNotFoundException;
 import util.exception.SocietyNotFoundException;
 import util.exception.StudentNotFoundException;
 
@@ -30,7 +35,10 @@ import util.exception.StudentNotFoundException;
 @RequestScoped
 public class CreateNewEventManagedBean {
 
-    @EJB(name = "EventSessionBeanLocal")
+    @EJB
+    private EventCategorySessionBeanLocal eventCategorySessionBeanLocal;
+
+    @EJB
     private EventSessionBeanLocal eventSessionBeanLocal;
 
     @EJB
@@ -39,28 +47,32 @@ public class CreateNewEventManagedBean {
     @EJB
     private StudentSessionBeanLocal studentSessionBeanLocal;
     
-    
-
-    
-    
-    //need society bean, then can remove get society method in event bean
 
     private Event newEvent; 
     private Long newStudentId; 
     private Long newSocietyId; 
+    private Long newEventCategoryId; 
     
     
     public CreateNewEventManagedBean() {
         newEvent = new Event();
         newStudentId = this.newStudentId; 
-        newSocietyId = newSocietyId; 
+        newSocietyId = this.newSocietyId; 
+        newEventCategoryId = this.newEventCategoryId; 
     }
     
-    public void doCreateNewEvent(ActionEvent event) throws EventAlreadyExistsException, StudentNotFoundException, SocietyNotFoundException {
+    public void doCreateNewEvent(ActionEvent event) throws EventAlreadyExistsException, StudentNotFoundException, SocietyNotFoundException, EventCategoryNotFoundException {
         try {
         
         newEvent.setStudent(studentSessionBeanLocal.retrieveStudentByStudentId(getNewStudentId()));
         newEvent.setSociety(societySessionBeanLocal.retrieveSocietyById(newSocietyId));
+        if (newEvent.getCategories() != null) {
+        newEvent.getCategories().add(eventCategorySessionBeanLocal.retrieveEventCategoryById(getNewEventCategoryId()));
+        } else {
+            List<EventCategory> categories = new ArrayList<EventCategory>(); 
+            categories.add(eventCategorySessionBeanLocal.retrieveEventCategoryById(getNewEventCategoryId())); 
+            newEvent.setCategories(categories);
+        }
         //Society dummySociety = new Society("Flaggers", "We Love Flags!", new Date());
         //eventSessionBeanLocal.createNewSociety(dummySociety); 
         //newEvent.setSociety(dummySociety);
@@ -97,6 +109,15 @@ public class CreateNewEventManagedBean {
     public void setNewSocietyId(Long newSocietyId) {
         this.newSocietyId = newSocietyId;
     }
+
+    public Long getNewEventCategoryId() {
+        return newEventCategoryId;
+    }
+
+    public void setNewEventCategoryId(Long newEventCategoryId) {
+        this.newEventCategoryId = newEventCategoryId;
+    }
+    
     
     
 }

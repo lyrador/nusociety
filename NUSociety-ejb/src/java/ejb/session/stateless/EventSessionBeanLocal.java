@@ -27,7 +27,7 @@ public interface EventSessionBeanLocal {
 
     public Long createNewEvent(Event event) throws EventAlreadyExistsException;
 
-    public void updateEvent(Event event, Long updateEventId) throws EventNotFoundException;
+    public void updateEvent(Event event) throws EventNotFoundException;
 
     public void deleteEvent(Long eventId) throws EventNotFoundException;
 
