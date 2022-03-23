@@ -9,6 +9,7 @@ import ejb.session.stateless.PostSessionBeanLocal;
 import ejb.session.stateless.StudentSessionBeanLocal;
 import entity.Comment;
 import entity.Post;
+import entity.Student;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -18,6 +19,7 @@ import java.io.Serializable;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
@@ -66,21 +68,23 @@ public class PostManagementManagedBean implements Serializable {
 
     @PostConstruct
     public void PostConstruct() {
-        listOfPosts = postSessionBean.retrieveAllPostsInDatabase();
+        //Currently this is for student's OWN posts
+        Student currentStudent =  (Student) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("currentStudent");
+        listOfPosts = currentStudent.getPosts(); 
     }
 
     public void createNewPost(ActionEvent event) throws StudentNotFoundException {
         try {
             newPostEntity.setStudent(studentSessionBean.retrieveStudentByStudentId(newStudentId));
             newPostEntity.setSociety(postSessionBean.retrieveSocietyById(newSocietyId));
-            //System.out.println(fileUploadSessionBean.getUploadedFilePath());
-            // newPostEntity.setImage(fileUploadSessionBean.getUploadedFilePath());
 
             Long pId = postSessionBean.createNewPost(newPostEntity);
             newPostEntity = new Post();
             newSocietyId = null;
             newStudentId = null;
-            listOfPosts = postSessionBean.retrieveAllPostsInDatabase();
+            
+            Student currentStudent =  (Student) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("currentStudent");
+            listOfPosts = currentStudent.getPosts(); 
 
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "New Post created successfully (Post ID: " + pId + ")", null));
         } catch (StudentNotFoundException ex) {
@@ -102,8 +106,8 @@ public class PostManagementManagedBean implements Serializable {
         try {
             postSessionBean.updatePost(postToUpdate.getPostId(), postToUpdate);
 
-            //Need to change
-            listOfPosts = postSessionBean.retrieveAllPostsInDatabase();
+            Student currentStudent =  (Student) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("currentStudent");
+            listOfPosts = currentStudent.getPosts(); 
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Post updated successfully! ", null));
         } catch (PostNotFoundException ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An error has occurred while updating Post: " + ex.getMessage(), null));
@@ -117,8 +121,8 @@ public class PostManagementManagedBean implements Serializable {
             Post postToDelete = (Post) event.getComponent().getAttributes().get("postToDelete");
             postSessionBean.deletePost(postToDelete.getPostId());
 
-            //Need to change
-            listOfPosts = postSessionBean.retrieveAllPostsInDatabase();
+            Student currentStudent =  (Student) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("currentStudent");
+            listOfPosts = currentStudent.getPosts(); 
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Post Deleted successfully", null));
         } catch (PostNotFoundException ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An error has occurred while deleting Post: " + ex.getMessage(), null));

@@ -7,14 +7,16 @@ package ejb.session.singleton;
 
 import ejb.session.stateless.AnnouncementSessionBeanLocal;
 import ejb.session.stateless.AttendanceSessionBeanLocal;
+import ejb.session.stateless.CommentSessionBeanLocal;
 import ejb.session.stateless.EventSessionBeanLocal;
+import ejb.session.stateless.PostSessionBeanLocal;
 import ejb.session.stateless.SocietyCategorySessionBeanLocal;
 import ejb.session.stateless.SocietySessionBeanLocal;
 import ejb.session.stateless.StaffSessionBeanLocal;
 import ejb.session.stateless.StudentSessionBeanLocal;
 import entity.Attendance;
-import entity.Event;
-import entity.EventCategory;
+import entity.Comment;
+import entity.Post;
 import entity.Society;
 import entity.SocietyCategory;
 import entity.Staff;
@@ -32,8 +34,7 @@ import javax.persistence.PersistenceContext;
 import util.enumeration.AccessRightEnum;
 import util.exception.CreateSocietyCategoryException;
 import util.exception.CreateSocietyException;
-import util.exception.EventAlreadyExistsException;
-import util.exception.EventNotFoundException;
+import util.exception.PostNotFoundException;
 import util.exception.SocietyCategoryNotFoundException;
 import util.exception.SocietyNotFoundException;
 import util.exception.StudentNotFoundException;
@@ -48,6 +49,12 @@ import util.exception.UnknownPersistenceException;
 @Startup
 public class DataIntSessionBean {
 
+    @EJB(name = "CommentSessionBeanLocal")
+    private CommentSessionBeanLocal commentSessionBeanLocal;
+
+    @EJB
+    private PostSessionBeanLocal postSessionBeanLocal;
+
     @EJB
     private EventSessionBeanLocal eventSessionBeanLocal;
 
@@ -56,7 +63,7 @@ public class DataIntSessionBean {
 
     @EJB
     private AnnouncementSessionBeanLocal announcementSessionBeanLocal;
-    
+
     @EJB
     private AttendanceSessionBeanLocal attendanceSessionBeanLocal;
 
@@ -130,7 +137,6 @@ public class DataIntSessionBean {
 //                List<Society> alexSocList = new ArrayList<>();
 //                alexSocList.add(floorball);
 //                alex.setMemberSocieties(alexSocList);
-
                 societySessionBeanLocal.createNewSociety(new Society("Choir Club", "We love singing", new Date()), categoryIds2, staffIds);
                 societySessionBeanLocal.createNewSociety(new Society("NUS Band", "Banging the drums as hard as we can", new Date()), categoryIds3, staffIds);
 //                
@@ -151,7 +157,7 @@ public class DataIntSessionBean {
                 e.printStackTrace();
             }
         }
-        
+
         if (em.find(Attendance.class, 1l) == null) {
             //add all students to first society for testing
             try {
@@ -162,7 +168,7 @@ public class DataIntSessionBean {
                     student.getFollowedSocieties().size();
                     floorball.getFollowedStudents().size();
                     floorball.getMemberStudents().size();
-                    
+
                     floorball.getMemberStudents().add(student);
                     student.getMemberSocieties().add(floorball);
 
@@ -174,6 +180,29 @@ public class DataIntSessionBean {
             } catch (SocietyNotFoundException | NullPointerException e) {
                 e.printStackTrace();
             }
+        }
+
+        students = studentSessionBeanLocal.retrieveAllStudents();
+
+        if (em.find(Post.class, 1l) == null) {
+            for (int i = 0; i < students.size(); i++) {
+                Student s = students.get(i);
+
+                for (int j = 0; j < s.getMemberSocieties().size(); j++) {
+                    System.out.println(s.getMemberSocieties().get(j));
+                    try {
+                        Long pId = postSessionBeanLocal.createNewPost(new Post("Hi I'm " + students.get(i).getName(), "JPEG",
+                                s, s.getMemberSocieties().get(j)));
+                        Post p = postSessionBeanLocal.retrievePostById(pId);
+
+                        commentSessionBeanLocal.createComment(new Comment(new Date(), "Dummy Comment", p, s));
+                    } catch (PostNotFoundException ex) {
+                        System.out.println("Error");
+                    }
+                }
+            }
+
+            System.out.println("POST INIT SUCCESS!");
         }
     }
 }
