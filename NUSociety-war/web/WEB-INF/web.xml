@@ -26,7 +26,7 @@
     </context-param>
     <context-param>
         <param-name>alternatedocroot_1</param-name>
-        <param-value>C:/glassfish-5.1.0-uploadedfiles/uploadedFiles</param-value>
+        <param-value>/Users/raihan/glassfish-5.1.0-uploadedfiles</param-value>
     </context-param>
     <context-param>
         <param-name>uploadedFilesPath</param-name>
@@ -47,7 +47,7 @@
     </servlet-mapping>
     <session-config>
         <session-timeout>
-            30
+            120
         </session-timeout>
     </session-config>
     <welcome-file-list>

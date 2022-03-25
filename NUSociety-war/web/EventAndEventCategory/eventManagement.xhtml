@@ -210,24 +210,17 @@
                     
                     <h:outputText value="#{event.society.name}" />
                 </p:column>
-                
-                <p:column headerText="Category" sortBy="#{event.categories}" filterBy="#{event.categories}" filterMatchMode="contains">
-                    <f:facet name="filter">
-                        <p:selectOneMenu onchange="PF('dataTableEvents').filter()" converter="eventCategoryConverter">
-                            <f:selectItem itemLabel="Select One" itemValue="#{null}" noSelectionOption="true" />
-                            <f:selectItems value="#{eventManagementManagedBean.selectItemsCategoryName}" />
-                        </p:selectOneMenu>
-                    </f:facet>
-                    
-                    <h:outputText value="#{event.categories}" />
-                </p:column>
-                
+                                
                 <p:column headerText="Action" width="100" >
                     <p:commandButton update="formViewEvent" oncomplete="PF('dialogViewEvent').show()" icon="pi pi-file" title="View">
                         <f:setPropertyActionListener value="#{event}" target="#{eventManagementManagedBean.viewEvent}" />
                     </p:commandButton>
                     <p:commandButton update="formUpdateEvent" oncomplete="PF('dialogUpdateEvent').show()" icon="pi pi-pencil" title="Update">
                         <f:setPropertyActionListener value="#{event}" target="#{eventManagementManagedBean.updateEvent}" />
+                    </p:commandButton>
+                    <p:commandButton update="formJoinEvent" oncomplete="PF('dialogJoinEvent').show()" icon="pi pi-sign-in" title="Join">
+                        <f:setPropertyActionListener value="#{event}" target="#{eventManagementManagedBean.joinEvent}" />
+                        <p:confirm header="Confirmation" message="Are you sure you want to join #{event.eventName} (Event ID: #{event.eventId})?" icon="pi pi-exclamation-triangle" />
                     </p:commandButton>
                     <p:commandButton icon="pi pi-trash" actionListener="#{eventManagementManagedBean.doDeleteEvent}" update="formDataTable:dataTableEvents formDataTable:messages">
                         <f:attribute name="eventToDelete" value="#{event}" />
@@ -473,6 +466,40 @@
             </p:dialog>
 
         </h:form>
+        
+        <h:form id="formJoinEvent">                
+            
+            <p:dialog id="dialogJoinEvent" widgetVar="dialogJoinEvent" header="Join an Event" closable="true">
+
+                <p:messages id="messagesJoinEvent" redisplay="false" />
+
+                <p:panelGrid>
+                    
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="eventName" value="Event Name: " />
+                        </p:column>
+                        <p:column>
+                            <p:inputMask id="eventName" value="#{eventManagementManagedBean.joinEvent.eventName}" maxlength="128" required="true" requiredMessage="Event Name is required" />
+                        </p:column>
+                        <p:column>
+                            <p:message for="eventName" />
+                        </p:column>
+                    </p:row>
+                   
+                    <p:row>
+                        <p:column colspan="3">
+                            <p:commandButton id="joinEvent" value="Join" icon="pi pi-save"  actionListener="#{eventManagementManagedBean.doJoinEvent}" oncomplete="PF('dialogJoinEvent').show();" />
+                        </p:column>
+                    </p:row>
+
+                </p:panelGrid>
+
+            </p:dialog>
+            
+        </h:form>
+        
+        
         
     </ui:define>    
 

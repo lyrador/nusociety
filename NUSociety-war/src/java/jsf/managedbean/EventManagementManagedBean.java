@@ -42,7 +42,7 @@ import util.exception.StudentNotFoundException;
 @ViewScoped
 public class EventManagementManagedBean implements Serializable {
 
-    
+
     @EJB
     private EventCategorySessionBeanLocal eventCategorySessionBeanLocal1;
 
@@ -57,25 +57,16 @@ public class EventManagementManagedBean implements Serializable {
 
     @EJB
     private StudentSessionBeanLocal studentSessionBeanLocal;
-    
-    
 
     private List<Event> events;
     private List<Event> filteredEvents; 
-    //private List<EventCategory> categories; 
-    //private List<Society> societies; 
-    //private List<Student> students; 
 
     private Event newEvent;
-    private Long newStudentId;
-    private Long newSocietyId;
-    private Long newEventCategoryId;
-
     private Event updateEvent;
-    //private Long updateEventId;
-
-    //private Event eventDelete;
-    //private Long eventDeleteId;
+    private Event viewEvent; 
+    private Event joinEvent; 
+    private Event leaveEvent; 
+    
     
     private List<SelectItem> selectItemsSocietyObject; 
     private List<SelectItem> selectItemsSocietyName; 
@@ -86,14 +77,16 @@ public class EventManagementManagedBean implements Serializable {
     private List<SelectItem> selectItemsStudentObject; 
     private List<SelectItem> selectItemsStudentName; 
     
-    
-    private Event viewEvent; 
+    private Long studentId; 
+    private List<Event> registeredEvents; 
+   
 
     public EventManagementManagedBean() {
         newEvent = new Event();
         updateEvent = new Event();
-        //eventDelete = new Event();
         viewEvent = new Event(); 
+        joinEvent = new Event(); 
+        leaveEvent = new Event(); 
         selectItemsSocietyObject = new ArrayList<>(); 
         selectItemsSocietyName = new ArrayList<>();
         selectItemsCategoryObject = new ArrayList<>();
@@ -118,6 +111,10 @@ public class EventManagementManagedBean implements Serializable {
         List<Society> societies = societySessionBeanLocal.retrieveAllSocieties();
         //this.setSocieties(societies);
         FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("EventManagementManagedBean.societies", societies);
+        
+        Student currentStudent = (Student) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("currentStudent");
+        this.studentId = currentStudent.getStudentId(); 
+        this.registeredEvents = eventSessionBeanLocal.retrieveEventsForStudent(studentId); 
         
         for (Society society: societies) 
         {
@@ -204,6 +201,46 @@ public class EventManagementManagedBean implements Serializable {
 
     }
     
+    public void doJoinEvent(ActionEvent event) throws EventNotFoundException {
+        try {
+            for (Student student : joinEvent.getStudents()) {
+            System.out.println("******** there is " + student.getName() + " in this event******");
+            }
+            joinEvent.getStudents().add(studentSessionBeanLocal.retrieveStudentByStudentId(studentId)); 
+            Long joinEventId = eventSessionBeanLocal.joinEvent(joinEvent);
+            joinEvent.setEventId(joinEventId);
+            events.add(joinEvent);
+            registeredEvents.add(joinEvent);
+            //setRegisteredEvents(registeredEvents);
+            for (Event eventRegistered : registeredEvents) {
+                System.out.println("********** " + eventRegistered.getEventName());
+                if (registeredEvents.contains(eventSessionBeanLocal.retrieveEventById(joinEventId))) {
+                    System.out.println("**********  + Yes it already contain");
+                }
+            }
+        } catch (EventNotFoundException ex) {
+             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An error has occurred while updating Event: " + ex.getMessage(), null));
+        } catch (Exception ex) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An unexpected error has occurred: " + ex.getMessage(), null));
+        }
+        
+    }
+    
+    public void doLeaveEvent(ActionEvent event) throws EventNotFoundException {
+        try {
+            Student currentStudent = studentSessionBeanLocal.retrieveStudentByStudentId(studentId); 
+            Long leaveEventId = eventSessionBeanLocal.leaveEvent(getLeaveEvent(), currentStudent); 
+            getLeaveEvent().setEventId(leaveEventId);
+            events.add(getLeaveEvent()); 
+            registeredEvents.remove(getLeaveEvent()); 
+        }
+        catch(EventNotFoundException ex ) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An error has occurred while updating Event: " + ex.getMessage(), null));
+        } catch (Exception ex) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An unexpected error has occurred: " + ex.getMessage(), null));
+        }
+    }
+    
     public void onDateSelect(SelectEvent<Date> event) {
         FacesContext facesContext = FacesContext.getCurrentInstance(); 
         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy"); 
@@ -226,7 +263,7 @@ public class EventManagementManagedBean implements Serializable {
         this.newEvent = newEvent;
     }
 
-    public Long getNewStudentId() {
+  /*  public Long getNewStudentId() {
         return newStudentId;
     }
 
@@ -248,7 +285,7 @@ public class EventManagementManagedBean implements Serializable {
 
     public void setNewEventCategoryId(Long newEventCategoryId) {
         this.newEventCategoryId = newEventCategoryId;
-    }
+    }*/
 
     public Event getUpdateEvent() {
         return updateEvent;
@@ -370,7 +407,36 @@ public class EventManagementManagedBean implements Serializable {
         this.selectItemsStudentName = selectItemsStudentName;
     }
 
-    
+    public Event getJoinEvent() {
+        return joinEvent;
+    }
 
+    public void setJoinEvent(Event joinEvent) {
+        this.joinEvent = joinEvent;
+    }
+    
+    public Long getStudentId() {
+        return studentId;
+    }
+
+    public void setStudentId(Long studentId) {
+        this.studentId = studentId;
+    }
+
+    public List<Event> getRegisteredEvents() {
+        return registeredEvents;
+    }
+
+    public void setRegisteredEvents(List<Event> registeredEvents) {
+        this.registeredEvents = registeredEvents;
+    }
+
+    public Event getLeaveEvent() {
+        return leaveEvent;
+    }
+
+    public void setLeaveEvent(Event leaveEvent) {
+        this.leaveEvent = leaveEvent;
+    }
 
 }

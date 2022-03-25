@@ -7,6 +7,7 @@ package ejb.session.stateless;
 
 import entity.Event;
 import entity.Society;
+import entity.Student;
 import java.util.List;
 import javax.ejb.Local;
 import util.exception.EventAlreadyExistsException;
@@ -31,9 +32,14 @@ public interface EventSessionBeanLocal {
 
     public void deleteEvent(Long eventId) throws EventNotFoundException;
 
+    public Long joinEvent(Event joinEvent) throws EventNotFoundException;
+    
+    public List<Event> retrieveEventsForStudent(Long studentId); 
    // public Society retrieveSocietyById(Long societyId);
 
     //public Long createNewSociety(Society society);
+
+    public Long leaveEvent(Event leaveEvent, Student currentStudent) throws EventNotFoundException;
     
 }
 

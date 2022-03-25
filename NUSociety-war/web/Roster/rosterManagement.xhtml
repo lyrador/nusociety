@@ -1,0 +1,130 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">	
+
+    <h:head>
+        <h3>Roster Management</h3>
+    </h:head>
+
+    <h:body>
+
+        <h:form id="formAllStudents">
+
+            <p:messages id="messagesAllStudents" redisplay="false" />
+            <p:messages id="messages" redisplay="false" closable="true" />
+
+            <p:dataTable id="dataTableAllStudents"  value="#{rosterManagementManagedBean.students}" var="student" rowKey="#{student.studentId}" rowIndexVar="row"
+                         rows="10" paginator="true" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="10,20,50">
+
+                <p:column headerText="Student ID" sortBy="#{student.studentId}">
+                    <h:outputText value="#{student.studentId}" />
+                </p:column>
+
+                <p:column headerText="Name" sortBy="#{student.studentId}">
+                    <h:outputText value="#{student.name}" />
+                </p:column>
+
+                <p:column headerText="Email" sortBy="#{student.studentId}">
+                    <h:outputText value="#{student.email}" />
+                </p:column>
+
+                <p:column headerText="UserName" sortBy="#{student.studentId}">
+                    <h:outputText value="#{student.userName}" />
+                </p:column>
+
+                <p:column headerText="Profile Picture" sortBy="#{student.studentId}">
+                    <h:outputText value="#{student.profilePicture}" />
+                </p:column>
+
+                <p:column headerText="Access Right" sortBy="#{student.studentId}">
+                    <h:outputText value="#{student.accessRightEnum}" />
+                </p:column>
+
+                <p:column headerText="Attended Count" sortBy="#{student.studentId}">
+                    <h:outputText value="#{rosterManagementManagedBean.attendances[student.studentId].attendedCount}" />
+                </p:column>
+
+                <p:column headerText="Total Count" sortBy="#{student.studentId}">
+                    <h:outputText value="#{rosterManagementManagedBean.attendances[student.studentId].totalCount}" />
+                </p:column>
+
+                <p:column headerText="Attendance Rate" sortBy="#{student.studentId}">
+                    <h:outputText value="#{rosterManagementManagedBean.attendances[student.studentId].attendanceRate}%" />
+                </p:column>
+
+                <p:column headerText="Command Buttons" sortBy="#{student.studentId}">
+                    <p:commandButton value="Set Attendance" actionListener="#{rosterManagementManagedBean.setAttendance}" update="formAllStudents" oncomplete="PF('dialogUpdateAttendance').show()" icon="ui-icon-pencil" title="Update" style="margin-right:20px;" styleClass="ui-priority-primary" >
+                        <f:attribute name="studentToUpdate" value="#{student}" />
+                    </p:commandButton>
+                </p:column>          
+
+                <p:column headerText="Command Buttons" sortBy="#{student.studentId}">
+                    <p:commandButton value="Remove Student" icon="ui-icon-trash" actionListener="#{rosterManagementManagedBean.removeStudent}" update="formAllStudents" >
+                        <f:attribute name="studentToRemove" value="#{student}" />
+                        <p:confirm header="Confirmation" message="Are you sure you want to remove Student ID: #{student.studentId} from Society?" icon="ui-icon-alert" />
+                    </p:commandButton>
+
+                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" responsive="true" width="350">
+                        <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no ui-button-flat"/>
+                        <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" />
+                    </p:confirmDialog>
+                </p:column>
+
+            </p:dataTable>
+
+        </h:form>
+
+        <h:form id="formUpdateAttendance">
+            <p:dialog id="dialogUpdateAttendance" widgetVar="dialogUpdateAttendance" header="Update Attendance" closable="true">
+
+                <p:messages id="messagesUpdateAttendance" redisplay="false" />
+
+                <p:panelGrid>
+                    
+                    <p:row>
+                        <h:outputLabel value="Current: " style="font-weight: bold"/>
+                        <h:outputText value="#{rosterManagementManagedBean.currentValue}" />
+                    </p:row>
+
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="attendedCount" value="Attended Count: "/>
+                        </p:column>
+                        <p:column>
+                            <p:inputText id="attendedCount" value="#{rosterManagementManagedBean.tempAttendance.attendedCount}" placeholder="Attended Count" required="true" requiredMessage="Attended Count is required" />
+                        </p:column>
+                        <p:column>
+                            &nbsp;
+                        </p:column>
+                    </p:row>
+
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="totalCount" value="Total Count: "/>
+                        </p:column>
+                        <p:column>
+                            <p:inputText id="totalCount" value="#{rosterManagementManagedBean.tempAttendance.totalCount}" placeholder="Total Count" required="true" requiredMessage="Total Count is required" />
+                        </p:column>
+                        <p:column>
+                            &nbsp;
+                        </p:column>
+                    </p:row>
+
+                    <p:row>
+                        <p:column colspan="2">
+                            <p:commandButton value="Update Attendance" actionListener="#{rosterManagementManagedBean.updateAttendance}" update="@form formUpdateAttendance:dialogUpdateAttendance" oncomplete="PF('dialogUpdateAttendance').show();" />
+                        </p:column>
+                    </p:row>
+
+                </p:panelGrid>
+
+            </p:dialog>
+
+        </h:form>
+
+    </h:body>
+
+</ui:composition>

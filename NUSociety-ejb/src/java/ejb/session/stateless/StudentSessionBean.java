@@ -10,14 +10,19 @@ import entity.Comment;
 import entity.Event;
 import entity.Notification;
 import entity.Post;
+import entity.Society;
 import entity.Student;
 import java.util.List;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import util.enumeration.AccessRightEnum;
+import util.exception.InvalidLoginCredentialException;
+import util.exception.SocietyNotFoundException;
 import util.exception.StudentNotFoundException;
+//import util.security.CryptographicHelper;
 
 /**
  *
@@ -26,8 +31,13 @@ import util.exception.StudentNotFoundException;
 @Stateless
 public class StudentSessionBean implements StudentSessionBeanLocal {
 
+    @EJB
+    private SocietySessionBeanLocal societySessionBeanLocal;
+
     @PersistenceContext(unitName = "NUSociety-ejbPU")
     private EntityManager em;
+    
+    
 
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")
@@ -38,10 +48,24 @@ public class StudentSessionBean implements StudentSessionBeanLocal {
     }
     
     @Override
+    public List<Student> retrieveAllStudentsFromSocietyId(Long societyId) {
+        Query query = em.createQuery("SELECT s FROM Student s, IN (s.memberSocieties) m WHERE m.societyId = :societyId"); 
+        query.setParameter("societyId", societyId);
+        return query.getResultList();
+    }
+    
+    @Override
     public Student retrieveStudentByStudentId(Long studentId) throws StudentNotFoundException{
         Student student = em.find(Student.class, studentId);   
         if(student != null) {
             student.getNotifications().size();
+            student.getPosts().size();
+            student.getComments().size();
+            student.getMemberSocieties().size();
+            student.getFollowedSocieties().size();
+            student.getEvents().size();
+            student.getEventsOrganised().size();
+            student.getAttendances().size();
             return student;
         } else {
             throw new StudentNotFoundException("Student with Id: " + studentId + " cannot be found!");
@@ -102,6 +126,28 @@ public class StudentSessionBean implements StudentSessionBeanLocal {
     }
     
     @Override
+    public Student retrieveStudentByUsername(String username) throws StudentNotFoundException {
+        
+        Query query = em.createQuery("SELECT s FROM Student s WHERE s.userName = :inUsername");
+        query.setParameter("inUsername", username);
+        
+        Student student = (Student) query.getSingleResult();
+        if(student != null) {
+            student.getNotifications().size();
+            student.getPosts().size();
+            student.getComments().size();
+            student.getMemberSocieties().size();
+            student.getFollowedSocieties().size();
+            student.getEvents().size();
+            student.getEventsOrganised().size();
+            student.getAttendances().size();
+            return student;
+        } else {
+            throw new StudentNotFoundException("Student with username: " + username + " cannot be found!");
+        }
+    }
+    
+    @Override
     public void updateStudent(Student tempStudent) throws StudentNotFoundException {
         
         Student studentToUpdate = em.find(Student.class, tempStudent.getStudentId());
@@ -118,5 +164,58 @@ public class StudentSessionBean implements StudentSessionBeanLocal {
             studentToUpdate.setProfilePicture(tempStudent.getProfilePicture());
         if (tempStudent.getAccessRightEnum()!= null)
             studentToUpdate.setAccessRightEnum(tempStudent.getAccessRightEnum());
+    }
+    
+    @Override
+    public Student studentLogin(String username, String password) throws InvalidLoginCredentialException, StudentNotFoundException {
+        
+        try {
+            Student student = retrieveStudentByUsername(username);
+//            String passwordHash = CryptographicHelper.getInstance().byteArrayToHexString(CryptographicHelper.getInstance().doMD5Hashing(password + staffEntity.getSalt()));
+            
+            if (student.getPassword().equals(password)) {
+                student.getMemberSocieties().size();
+                student.getFollowedSocieties().size();
+                student.getEvents().size();
+                student.getEventsOrganised().size();
+                student.getNotifications().size();
+                student.getAttendances().size();
+                student.getComments().size();
+                student.getPosts().size();
+                return student;
+            }
+            else
+            {
+                throw new InvalidLoginCredentialException("Username does not exist or invalid password!");
+            }
+        } catch (StudentNotFoundException ex) {
+            throw new InvalidLoginCredentialException("Username does not exist or invalid password!");
+        }
+    }
+    
+    @Override
+    public Student studentFollow(Long studentId, Long societyId) throws StudentNotFoundException, SocietyNotFoundException {
+        
+        Student student = retrieveStudentByStudentId(studentId);
+        Society societyToFollow = societySessionBeanLocal.retrieveSocietyById(societyId);
+
+        student.getFollowedSocieties().add(societyToFollow);
+        societyToFollow.getFollowedStudents().add(student);
+
+        System.out.println(studentId + " followed " + societyId + "!");
+        return student;
+    }
+    
+    @Override
+    public Student studentUnfollow(Long studentId, Long societyId) throws StudentNotFoundException, SocietyNotFoundException {
+        
+        Student student = retrieveStudentByStudentId(studentId);
+        Society societyToFollow = societySessionBeanLocal.retrieveSocietyById(societyId);
+
+        student.getFollowedSocieties().remove(societyToFollow);
+        societyToFollow.getFollowedStudents().remove(student);
+
+        System.out.println(studentId + " unfollowed " + societyId + "!");
+        return student;
     }
 }

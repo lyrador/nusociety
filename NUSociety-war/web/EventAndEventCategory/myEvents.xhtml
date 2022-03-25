@@ -1,0 +1,88 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                template="/Template/defaultTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="content">
+        
+        <h3>My Events</h3>
+        
+         <h:form>
+             <p:messages id="messages" redisplay="false"  />
+             <p:dataTable var="event" value="#{eventManagementManagedBean.registeredEvents}" rowKey="#{event.eventId}" rowIndexVar="row"
+                             rows="10" paginator="true" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="10,20,50">
+                <p:column headerText="Event Name" colspan="3">
+                    <h:outputText value="#{event.eventName}" style="font-weight: bold;"/>
+                    <br/>
+                    <h:outputText value="#{event.eventDetails}" />
+                </p:column>
+                 
+                <p:column headerText="Registered Number" colspan="3">
+                    <h:outputText value="#{event.students.size()}" style="font-weight: bold;"/>
+                    <br/>
+                    <h:outputText value="Capacity of #{event.eventCapacity}" />
+                </p:column>
+                 
+               <p:column headerText="Society Name" colspan="3">
+                   <h:outputText value="#{event.society.name}" style="font-weight: bold;"/>
+                </p:column>
+                
+                <p:column headerText="Action" width="100">
+                    <p:commandButton update="formLeaveEvent" oncomplete="PF('dialogLeaveEvent').show()" icon="pi pi-sign-out" title="Leave">
+                        <f:setPropertyActionListener value="#{event}" target="#{eventManagementManagedBean.leaveEvent}" />
+                        <p:confirm header="Confirmation" message="Are you sure you want to leave #{event.eventName} (Event ID: #{event.eventId})?" icon="pi pi-exclamation-triangle" />
+                    </p:commandButton>
+                    
+                </p:column>
+
+            </p:dataTable>
+             
+              <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+            </p:confirmDialog>
+
+            <br/>
+
+        </h:form>
+        
+        <h:form id="formLeaveEvent">                
+            
+            <p:dialog id="dialogLeaveEvent" widgetVar="dialogLeaveEvent" header="Leave an Event" closable="true">
+
+                <p:messages id="messagesLeaveEvent" redisplay="false" />
+
+                <p:panelGrid>
+                    
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="eventName" value="Event Name: " />
+                        </p:column>
+                        <p:column>
+                            <p:inputMask id="eventName" value="#{eventManagementManagedBean.leaveEvent.eventName}" maxlength="128" required="true" requiredMessage="Event Name is required" />
+                        </p:column>
+                        <p:column>
+                            <p:message for="eventName" />
+                        </p:column>
+                    </p:row>
+                   
+                    <p:row>
+                        <p:column colspan="3">
+                            
+                            <p:commandButton id="leaveEvent" value="Leave" icon="pi pi-save"  actionListener="#{eventManagementManagedBean.doLeaveEvent}" oncomplete="PF('dialogLeaveEvent').show();" />
+                            
+                        </p:column>
+                    </p:row>
+
+                </p:panelGrid>
+
+            </p:dialog>
+            
+        </h:form>
+        
+    </ui:define>
+
+</ui:composition>

@@ -81,6 +81,7 @@ public class EventSessionBean implements EventSessionBeanLocal {
             try {
                 Society society = societySessionBeanLocal.retrieveSocietyById(event.getSociety().getSocietyId()); 
                 event.setSociety(society);
+                society.getEvents().add(event); 
             } 
             catch (SocietyNotFoundException ex) {
                 System.out.println(ex.getMessage());
@@ -89,6 +90,7 @@ public class EventSessionBean implements EventSessionBeanLocal {
             try {
                 Student student = studentSessionBeanLocal.retrieveStudentByStudentId(event.getStudent().getStudentId()); 
                 event.setStudent(student);
+                student.getEventsOrganised().add(event); 
             }
             catch (StudentNotFoundException ex) {
                 System.out.println(ex.getMessage());
@@ -101,6 +103,7 @@ public class EventSessionBean implements EventSessionBeanLocal {
                     categoryToSet = eventCategorySessionBeanLocal.retrieveEventCategoryById(category.getEventCategoryId());
                     if (!event.getCategories().contains(categoryToSet)){
                     event.getCategories().add(categoryToSet);
+                    categoryToSet.getEvents().add(event); 
                     }
                 } catch (EventCategoryNotFoundException ex) {
                     Logger.getLogger(EventSessionBean.class.getName()).log(Level.SEVERE, null, ex);
@@ -112,6 +115,7 @@ public class EventSessionBean implements EventSessionBeanLocal {
   
     }
     
+    @Override
     public void updateEvent(Event event) throws EventNotFoundException {
         System.out.println("******EVENT ID IS + " + event.getEventId() + " *******"); 
         Event e = retrieveEventById(event.getEventId()); 
@@ -138,12 +142,14 @@ public class EventSessionBean implements EventSessionBeanLocal {
         for (EventCategory categoryUpdated : event.getCategories()) {
             System.out.println("***** " + categoryUpdated.getCategoryName() + " *****"); 
             e.getCategories().add(categoryUpdated); 
+            categoryUpdated.getEvents().add(e); 
         }
         
         
         System.out.println("******EVENT Details IS + " + event.getEventDetails()+ " *******"); 
     }
     
+    @Override
     public void deleteEvent(Long eventId) throws EventNotFoundException {
         Event eventToBeDeleted = retrieveEventById(eventId); 
         
@@ -169,19 +175,77 @@ public class EventSessionBean implements EventSessionBeanLocal {
         em.remove(eventToBeDeleted);                
     }
     
-  /*  @Override
-    public Society retrieveSocietyById(Long societyId) {
-        return em.find(Society.class, societyId);
-    }*/
+    @Override
+    public Long joinEvent(Event joinEvent) throws EventNotFoundException {
+        Long joinEventId = joinEvent.getEventId(); 
+        try {
+             Event storedJoinEvent = retrieveEventById(joinEventId);
+              System.out.println("******** Stored Join Event name is " + storedJoinEvent.getEventName()); 
+              if (storedJoinEvent.getStudents().isEmpty()) {
+                  System.out.println("******** there are no students signed up for this event"); 
+              } else {
+                  for (Student student : storedJoinEvent.getStudents()) {
+                      System.out.println("****** " + student.getName()); 
+                  }
+              }
+             
+             if (storedJoinEvent.getStudents() != null || !storedJoinEvent.getStudents().isEmpty()) {
+                List<Student> studentsAlreadySignedUp = storedJoinEvent.getStudents();
+                Student studentWantsToJoin = joinEvent.getStudents().get(joinEvent.getStudents().size() - 1); 
+                System.out.println("******** Student wants to join name is " + studentWantsToJoin.getName()); 
+                studentsAlreadySignedUp.add(studentWantsToJoin); 
+                studentWantsToJoin.getEvents().add(storedJoinEvent); 
+                storedJoinEvent.setStudents(studentsAlreadySignedUp);
+                //em.persist(storedJoinEvent);
+             
+             }else {
+                Student studentWantsToJoin = joinEvent.getStudents().get(joinEvent.getStudents().size() - 1); 
+                storedJoinEvent.getStudents().add(studentWantsToJoin); 
+                studentWantsToJoin.getEvents().add(storedJoinEvent);
+                storedJoinEvent.setStudents(storedJoinEvent.getStudents()); 
+                //em.persist(storedJoinEvent);
+             }
+             
+             return storedJoinEvent.getEventId(); 
+        }
+        catch (EventNotFoundException ex) 
+        {
+          System.out.println(ex.getMessage());    
+        }
+        
+        return joinEvent.getEventId(); 
+    }
     
-/*    @Override
-     public Long createNewSociety(Society society) /*throws EventAlreadyExistsException*/ //{
-/*        em.persist(society);
-        em.flush();
-        return society.getSocietyId();
-     }
-*/
-
+    @Override
+    public Long leaveEvent (Event leaveEvent, Student currentStudent) throws EventNotFoundException {
+        Long leaveEventId = leaveEvent.getEventId(); 
+        try {
+            Event storedLeaveEvent = retrieveEventById(leaveEventId); 
+            List<Student> currentStudentsList = storedLeaveEvent.getStudents(); 
+            currentStudentsList.remove(currentStudent); 
+            currentStudent.getEvents().remove(storedLeaveEvent); 
+            storedLeaveEvent.setStudents(currentStudentsList);
+        }
+        catch (EventNotFoundException ex) 
+        {
+            System.out.println(ex.getMessage());
+        }
+        
+        return leaveEvent.getEventId(); 
+                
+    }
     
+    @Override
+    public List<Event> retrieveEventsForStudent(Long studentId) {
+        Query query = em.createQuery("SELECT e FROM Event e, IN (e.students) s WHERE s.studentId = :inStudentId"); 
+        query.setParameter("inStudentId", studentId); 
+        List<Event> eventsRegistered = query.getResultList(); 
+        
+        for (Event event : eventsRegistered) {
+            event.getCategories().size(); 
+        }
+        
+        return query.getResultList(); 
+    }
 }
 

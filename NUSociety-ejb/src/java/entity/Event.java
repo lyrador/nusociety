@@ -52,7 +52,7 @@ public class Event implements Serializable {
     @Column(nullable = false)
     private int eventCapacity; 
     
-    @ManyToMany(mappedBy = "events", cascade = {}, fetch = FetchType.LAZY)
+    @ManyToMany(cascade = {}, fetch = FetchType.LAZY)
     private List<Student> students;
     
     @ManyToOne(optional = false, cascade = {}, fetch = FetchType.EAGER)
