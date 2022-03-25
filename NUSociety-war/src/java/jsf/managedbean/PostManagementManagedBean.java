@@ -9,6 +9,7 @@ import ejb.session.stateless.PostSessionBeanLocal;
 import ejb.session.stateless.StudentSessionBeanLocal;
 import entity.Comment;
 import entity.Post;
+import entity.Society;
 import entity.Student;
 import java.io.File;
 import java.io.FileInputStream;
@@ -48,8 +49,9 @@ public class PostManagementManagedBean implements Serializable {
     //private FileUploadManagedBean fileUploadSessionBean;
     //Inject SocietyBean
     private Post newPostEntity;
-    private Long newStudentId;
-    private Long newSocietyId;
+    private List<Society> followedSociety;
+    private List<Society> memberSociety;
+
 
     private Post postToUpdate;
 
@@ -70,31 +72,55 @@ public class PostManagementManagedBean implements Serializable {
     public void PostConstruct() {
         //Currently this is for student's OWN posts
         Student currentStudent =  (Student) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("currentStudent");
+        
         listOfPosts = currentStudent.getPosts(); 
+        listOfPosts.sort((p1, p2) -> {
+            return p2.getCreationDate().compareTo(p1.getCreationDate());
+        });
+        
+        followedSociety = currentStudent.getFollowedSocieties();
+        
+        memberSociety = currentStudent.getMemberSocieties();
+        
+        for (int i = 0; i < memberSociety.size(); i++) {
+            if (!followedSociety.contains(memberSociety.get(i))) {
+                followedSociety.add(memberSociety.get(i));
+            }
+        }
+        
+        
+    }
+    
+    public void sortByLatest(ActionEvent event) {
+        listOfPosts.sort((p1, p2) -> {
+            return p2.getCreationDate().compareTo(p1.getCreationDate());
+        });
+    }
+    
+    public void sortByEarliest(ActionEvent event) {
+        listOfPosts.sort((p1, p2) -> {
+            return p1.getCreationDate().compareTo(p2.getCreationDate());
+        });
     }
 
     public void createNewPost(ActionEvent event) throws StudentNotFoundException {
-        try {
-            newPostEntity.setStudent(studentSessionBean.retrieveStudentByStudentId(newStudentId));
-            newPostEntity.setSociety(postSessionBean.retrieveSocietyById(newSocietyId));
+            Student currentStudent =  (Student) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("currentStudent");
+            newPostEntity.setStudent(currentStudent);
 
+           // String publicOrPriv = newPostEntity.ge
+            
             Long pId = postSessionBean.createNewPost(newPostEntity);
             newPostEntity = new Post();
-            newSocietyId = null;
-            newStudentId = null;
             
-            Student currentStudent =  (Student) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("currentStudent");
             listOfPosts = currentStudent.getPosts(); 
 
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "New Post created successfully (Post ID: " + pId + ")", null));
-        } catch (StudentNotFoundException ex) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An error has occurred while creating the new Post: " + ex.getMessage(), null));
-        }
 
     }
 
     public void doUpdatePost(ActionEvent event) {
         postToUpdate = (Post) event.getComponent().getAttributes().get("postToUpdate");
+        System.out.println("CONTENT = " + postToUpdate.getBodyContent());
 
     }
 
@@ -160,21 +186,6 @@ public class PostManagementManagedBean implements Serializable {
         this.newPostEntity = newPostEntity;
     }
 
-    public Long getNewStudentId() {
-        return newStudentId;
-    }
-
-    public void setNewStudentId(Long newStudentId) {
-        this.newStudentId = newStudentId;
-    }
-
-    public Long getNewSocietyId() {
-        return newSocietyId;
-    }
-
-    public void setNewSocietyId(Long newSocietyId) {
-        this.newSocietyId = newSocietyId;
-    }
 
     public Post getPostToUpdate() {
         return postToUpdate;
@@ -214,6 +225,22 @@ public class PostManagementManagedBean implements Serializable {
 
     public void setViewComments(boolean viewComments) {
         this.viewComments = viewComments;
+    }
+
+    public List<Society> getFollowedSociety() {
+        return followedSociety;
+    }
+
+    public void setFollowedSociety(List<Society> followedSociety) {
+        this.followedSociety = followedSociety;
+    }
+
+    public List<Society> getMemberSociety() {
+        return memberSociety;
+    }
+
+    public void setMemberSociety(List<Society> memberSociety) {
+        this.memberSociety = memberSociety;
     }
 
 }

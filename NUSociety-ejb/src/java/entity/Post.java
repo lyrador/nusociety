@@ -119,6 +119,14 @@ public class Post implements Serializable {
     public void setPostIsPublic(boolean postIsPublic) {
         this.postIsPublic = postIsPublic;
     }
+    
+    public String getPublicOrPrivate() {
+        if (postIsPublic) {
+            return "Public";
+        } else {
+            return "Private";
+        }
+    }
 
     public Long getPostId() {
         return postId;
