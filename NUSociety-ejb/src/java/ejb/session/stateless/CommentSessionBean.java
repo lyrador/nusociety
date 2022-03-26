@@ -68,6 +68,7 @@ public class CommentSessionBean implements CommentSessionBeanLocal {
         
         //Only update content, Date shouldn't be updated
         c.setContent(newContent);
+        
     }
     
     //Delete Comment

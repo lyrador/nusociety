@@ -45,16 +45,16 @@
         </h:panelGroup>
 
         <h:panelGroup rendered="#{sessionScope.isLogin == true}">
-            <h:outputText value="Welcome #{sessionScope.currentStudent.userName}" />
+            <h:outputText value="Welcome Back #{sessionScope.currentStudent.userName}!" style="font-weight: bold"/>
             <br/> <br/>
-            <p:commandButton value="Create a Post!">
+
+            <p:linkButton value="Create a Post" style="margin-right:20px;" outcome="/Post/createPost.xhtml">
+            </p:linkButton>
+            <br/> <br/>
+            <p:commandButton value="Sort by Latest" actionListener="#{homePagePostManagedBean.sortByLatest}" update="formAllPosts:dataTableAllPosts">
 
             </p:commandButton>
-            <br/> <br/>
-            <p:commandButton value="Sort by Latest" >
-
-            </p:commandButton>
-            <p:commandButton value="Sort by Oldest" >
+            <p:commandButton value="Sort by Oldest" actionListener="#{homePagePostManagedBean.sortByEarliest}" update="formAllPosts:dataTableAllPosts">
 
             </p:commandButton>
             <br/> <br/>
@@ -66,15 +66,14 @@
                 <p:dataTable id="dataTableAllPosts" widgetVar="dataTableAllPosts" value="#{homePagePostManagedBean.postList}" var="post" rowKey="#{post.postId}" rowIndexVar="row"
                              rows="10" paginator="true" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="10,20,50">
 
-
                     <p:column> 
-                        <h:outputText value="Society: " style="font-weight: bold"/>        #{post.society.name}
+                        <h:outputText value="Society: " style="font-weight: bold"/>#{post.society.name} (#{post.publicOrPrivate})
                         <br/> <br/>
 
+                        <h:outputText value="Author: " style="font-weight: bold"/>#{post.student.name}
+                        <br/> <br/>
 
                         <h:outputText value="Post Content: " style="font-weight: bold"/>#{post.bodyContent}
-
-
                         <br/><br/>
 
                         <h:outputText value="Image:" style="font-weight: bold"/>
@@ -85,14 +84,221 @@
 
                         <h:outputText value="Post Creation Date:" style="font-weight: bold"/>
                         <span class="product-category">#{post.creationDate}</span>
+
+                        <p:commandButton value="Delete Post" rendered="#{post.student == sessionScope.currentStudent}" update="formAllPosts:dataTableAllPosts" style="float:right;" actionListener="#{homePagePostManagedBean.deleteHomePagePost}">
+                            <f:attribute name="postToDelete" value="#{post}" />
+                        </p:commandButton>
+
+                        <p:commandButton value="Edit Post" rendered="#{post.student == sessionScope.currentStudent}" update="formUpdatePost" style="float:right;" oncomplete="PF('dialogUpdatePost').show()" actionListener="#{homePagePostManagedBean.doUpdateHomePagePost}">
+                            <f:attribute name="postToUpdate" value="#{post}" />
+                        </p:commandButton>
+
+                        <p:commandButton value="View Post" style="float:right;" update="formViewPost" oncomplete="PF('dialogViewPost').show()" actionListener="#{homePagePostManagedBean.doViewHomePagePost}" >
+                            <f:attribute name="postToView" value="#{post}" />
+                        </p:commandButton>
                     </p:column>
-                    
-                    </p:dataTable>
 
-
+                </p:dataTable>
             </h:form>
-
         </h:panelGroup>
+
+        <h:form id="formUpdatePost" rendered="#{sessionScope.isLogin == true}">
+
+            <p:dialog id="dialogUpdatePost" widgetVar="dialogUpdatePost" header="Update Post" closable="true">
+
+                <p:messages id="messagesUpdatePost" redisplay="false" />
+
+                <p:panelGrid>
+
+                    <p:row>
+                        <p:column>
+                            <h:outputLabel value="Post ID: " />
+                        </p:column>
+                        <p:column>
+                            <h:outputText value="#{homePagePostManagedBean.postToUpdate.postId}" />
+                        </p:column>
+                        <p:column>
+                            &nbsp;
+                        </p:column>
+                    </p:row>
+
+                    <p:row>
+                        <p:column>
+                            <h:outputLabel value="Post Creation Date: " />
+                        </p:column>
+                        <p:column>
+                            <h:outputText value="#{homePagePostManagedBean.postToUpdate.creationDate}" />
+                        </p:column>
+                        <p:column>
+                            &nbsp;
+                        </p:column>
+                    </p:row>
+
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="content" value="Content: " />
+                        </p:column>
+                        <p:column>
+                            <p:inputText id="content" value="#{homePagePostManagedBean.postToUpdate.bodyContent}" placeholder="#{homePagePostManagedBean.postToUpdate.bodyContent}" required="true" requiredMessage="Content is required" />
+                        </p:column>
+                        <p:column>
+                            <p:message for="content" />
+                        </p:column>
+                    </p:row>
+
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="imageURL" value="Upload Image " style="font-weight: bold;"/>
+                        </p:column>
+                        <p:column>
+                            <p:fileUpload id="imageURL" listener="#{fileUploadManagedBean.handleFileUploadForUpdate}" multiple="true" update="@this" />
+                            <p:panel header="Uploaded File" visible="#{fileUploadManagedBean.showUploadedFile}">
+                                <p:graphicImage value="#{fileUploadManagedBean.uploadedFilePath}" height="50%" />
+                            </p:panel>
+                        </p:column>
+                        <p:column>
+                            <p:message for="imageURL"/>
+                        </p:column>
+                    </p:row>
+
+
+
+                    <p:row>
+                        <p:column colspan="3">
+                            <p:commandButton value="Update Post" update="formAllPosts" actionListener="#{homePagePostManagedBean.updateHomePagePost}" oncomplete="PF('dialogUpdatePost').show();" />
+                        </p:column>
+                    </p:row>
+
+                </p:panelGrid>
+
+            </p:dialog>
+
+        </h:form>
+
+
+
+        <h:form id="formViewPost" rendered="#{sessionScope.isLogin == true}">
+
+            <p:dialog id="dialogViewPost" widgetVar="dialogViewPost" header="View Post" closable="true">
+
+                <p:messages id="messagesViewPost" redisplay="false" />
+                <p:panelGrid id="viewPanelGrid1">
+                    <p:row>
+
+                        <h:outputLabel value="Post ID: " style="font-weight: bold"/>
+                        <h:outputText value="#{homePagePostManagedBean.postToView.postId}" />
+                        <br/> <br/>
+                        <h:outputLabel value="Society Name: " style="font-weight: bold"/>
+                        <h:outputText value="#{homePagePostManagedBean.postToView.society.name}" />
+                        <br/> <br/>
+                        <p:graphicImage value="#{homePagePostManagedBean.postToView.image}"/>
+                        <h:outputText value="#{homePagePostManagedBean.postToView.bodyContent}"/>  
+                        <br/> <br/>
+                        <h:outputLabel value="Post Creation Date: " style="font-weight: bold"/>
+                        <h:outputText value="#{homePagePostManagedBean.postToView.creationDate}" />
+                        <br/> <br/>
+
+                    </p:row>
+
+
+                </p:panelGrid>
+                <div>
+                    <br/> <br/>
+
+                    <p:dataScroller id="dataScrollMyComments" value="#{homePagePostManagedBean.commentsOfPost}" var="comment"  chunkSize="3">
+                        <f:facet name="header">
+                            Comments
+                        </f:facet>
+
+                        <f:facet name="loader">
+                            <div class="p-text-center">
+                                <p:commandButton type="button" value="More" icon="pi pi-refresh"/>
+                            </div>
+                        </f:facet>
+
+                        <div class="product">
+                            <div class="product-list-item p-p-5">
+
+                                <div class="product-list-detail">
+                                    <h:outputText value="Student Name: " style="font-weight: bold"/>
+                                    <h:outputText value="#{comment.student.name}" />
+                                    <br/><br/>
+
+                                    <h:outputText value="Comment: " style="font-weight: bold"/>
+                                    <h:outputText value="#{comment.content}" />
+                                    <br/><br/>
+
+                                    <h:outputText value="Date: " style="font-weight: bold"/>
+                                    <h:outputText value="#{comment.creationDate}" />
+                                    <br/> <br/>
+
+                                    <p:commandButton value="Edit" rendered="#{comment.student == sessionScope.currentStudent}" update="dataScrollMyComments formViewPost:messagesViewPost" actionListener="#{createNewCommentManagedBean.doUpdateComment}" oncomplete="PF('dialogEditComment').show()">
+                                        <f:attribute name="commentToBeUpdated" value="#{comment}" />
+                                    </p:commandButton>
+
+                                    <p:commandButton value="Delete" rendered="#{comment.student == sessionScope.currentStudent || homePagePostManagedBean.postToView == sessionScope.currentStudent}" actionListener="#{createNewCommentManagedBean.deleteCommentForHome}" update="dataScrollMyComments formViewPost:messagesViewPost">
+                                        <f:attribute name="commentToDelete" value="#{comment}" />
+                                    </p:commandButton>
+
+                                </div>
+                                <div class="product-list-action">
+
+
+                                    <br/> <br/>
+                                </div>
+                            </div>
+                        </div>
+                    </p:dataScroller>
+                    <p:commandButton value="Post A Comment" oncomplete="PF('dialogCreateAComment').show()">
+
+                    </p:commandButton>
+                </div>
+            </p:dialog>
+
+        </h:form>
+        
+        <h:form id="formCreateAComment">
+
+            <p:dialog id="dialogCreateAComment" widgetVar="dialogCreateAComment" header="Post a Comment" closable="true">
+                <p:messages id="messagesCreateAComment" redisplay="false" />
+                <p:panelGrid>
+
+                    <row>
+                        <p:inputTextarea rows="6" cols="100" id="newCommentContent" value="#{createNewCommentManagedBean.newCommentEntity.content}" placeholder="Write a Comment!" required="true" requiredMessage="Content is required"/>
+
+                    </row>
+                    <br/>
+                    <p:commandButton actionListener="#{createNewCommentManagedBean.createNewCommentOnHome}" update="formCreateAComment formViewPost:dataScrollMyComments formViewPost:messagesViewPost formCreateAComment:messagesCreateAComment" value="Post Comment"  styleClass="ui-confirmdialog-yes">
+                        <f:attribute name="postOfNewComment" value="#{homePagePostManagedBean.postToView}" />
+                    </p:commandButton>
+
+                </p:panelGrid>
+            </p:dialog>
+
+        </h:form>
+        
+        <h:form id="formEditComment">
+
+            <p:dialog id="dialogEditComment" widgetVar="dialogEditComment" header="Edit Comment" closable="true">
+                <p:messages id="messagesEditCommnet" redisplay="false" />
+                <p:panelGrid>
+
+                    <p:row>
+                        <p:column>
+                            <h:outputLabel value="New Comment Body: " />
+                        </p:column>
+                        <p:column>
+                            <p:inputText id="body" value="#{createNewCommentManagedBean.commentToBeUpdated.content}" placeholder="#{createNewCommentManagedBean.commentToBeUpdated.content}" required="true" requiredMessage="Content is required" />
+                        </p:column>
+                        <p:commandButton value="Confirm" actionListener="${createNewCommentManagedBean.updateComment}" update="formViewPost:dataScrollMyComments formEditComment">
+                        </p:commandButton>
+                    </p:row>
+
+                </p:panelGrid>
+            </p:dialog>
+
+        </h:form>
+
 
     </ui:define>
 
