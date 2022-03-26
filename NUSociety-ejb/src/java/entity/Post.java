@@ -7,6 +7,7 @@ package entity;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,6 +18,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Temporal;
 
 /**
  *
@@ -33,6 +35,10 @@ public class Post implements Serializable {
     private String bodyContent;
     @Column(nullable = false)
     private String image;
+    @Temporal(javax.persistence.TemporalType.DATE)
+    private Date creationDate;
+    @Column(nullable = false)
+    private boolean postIsPublic;
     
     @OneToMany(mappedBy = "post", cascade = {}, fetch = FetchType.EAGER)
     private List<Comment> comments;  
@@ -54,6 +60,8 @@ public class Post implements Serializable {
         this.image = image;
         this.student = student;
         this.society = society;
+        this.creationDate = new Date();
+        this.postIsPublic = true;
     }
 
     public Student getStudent() {
@@ -95,8 +103,22 @@ public class Post implements Serializable {
     public void setComments(List<Comment> comments) {
         this.comments = comments;
     }
-    
-    
+
+    public Date getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public boolean isPostIsPublic() {
+        return postIsPublic;
+    }
+
+    public void setPostIsPublic(boolean postIsPublic) {
+        this.postIsPublic = postIsPublic;
+    }
 
     public Long getPostId() {
         return postId;

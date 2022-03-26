@@ -50,6 +50,11 @@
                                     <f:param name="filename" value="filename.ext" />
                                 </p:graphicImage>
                                 <br/> <br/>
+                                
+                                <h:outputText value="Post Creation Date:" style="font-weight: bold"/>
+                                <span class="product-category">#{post.creationDate}</span>
+
+                                <br/><br/>
 
                             </div>
                             <div class="product-list-action">
@@ -57,7 +62,7 @@
                                 <p:commandButton value="View Post" actionListener="#{postManagementManagedBean.viewPost}" oncomplete="PF('dialogViewPost').show()" icon="ui-icon-document" title="View" update="formViewPost" style="margin-right:20px;" styleClass="ui-priority-primary" >
                                     <f:attribute name="selectedPost" value="#{post}" />
                                 </p:commandButton>
-                                <p:commandButton value="Update Post" actionListener="#{postManagementManagedBean.doUpdatePost}" update="formViewMyPosts" oncomplete="PF('dialogUpdatePost').show()" icon="ui-icon-pencil" title="Update" style="margin-right:20px;" styleClass="ui-priority-primary" >
+                                <p:commandButton value="Update Post" actionListener="#{postManagementManagedBean.doUpdatePost}" update="formUpdatePost" oncomplete="PF('dialogUpdatePost').show()" icon="ui-icon-pencil" title="Update" style="margin-right:20px;" styleClass="ui-priority-primary" >
                                     <f:attribute name="postToUpdate" value="#{post}" />
                                 </p:commandButton>
                                 <p:commandButton value="Delete Post" icon="ui-icon-trash" actionListener="#{postManagementManagedBean.deletePost}" update="formViewMyPosts" >
@@ -96,12 +101,20 @@
                         <p:graphicImage value="#{postManagementManagedBean.postToView.image}"/>
                         <h:outputText value="#{postManagementManagedBean.postToView.bodyContent}"/>  
                         <br/> <br/>
+                        <h:outputLabel value="Post Creation Date: " style="font-weight: bold"/>
+                        <h:outputText value="#{postManagementManagedBean.postToView.creationDate}" />
+                        <br/> <br/>
+
                     </p:row>
 
 
                 </p:panelGrid>
                 <div>
                     <br/> <br/>
+
+                    <p:column>
+                        <p:message for="newCommentContent"/>
+                    </p:column>
 
                     <p:dataScroller id="dataScrollMyComments" value="#{postManagementManagedBean.commentsOfPost}" var="comment"  chunkSize="3">
                         <f:facet name="header">
@@ -139,9 +152,12 @@
                             </div>
                         </div>
                     </p:dataScroller>
-                    <p:inputTextarea rows="6" cols="100" id="newCommentContent" value="#{createNewCommentManagedBean.newCommentEntity.content}"/>
+                    <row>
+                        <p:inputTextarea  rows="6" cols="100" id="newCommentContent" value="#{createNewCommentManagedBean.newCommentEntity.content}" required="true" requiredMessage="Content is required"/>
+
+                    </row>
                     <br/>
-                    <p:commandButton actionListener="#{createNewCommentManagedBean.createNewComment}" update="@form formViewPost:dataScrollMyComments" value="Post Comment"  styleClass="ui-confirmdialog-yes">
+                    <p:commandButton actionListener="#{createNewCommentManagedBean.createNewComment}" update="dataScrollMyComments" value="Post Comment"  styleClass="ui-confirmdialog-yes">
                         <f:attribute name="postOfNewComment" value="#{postManagementManagedBean.postToView}" />
                     </p:commandButton>
                 </div>
@@ -165,6 +181,18 @@
                         </p:column>
                         <p:column>
                             <h:outputText value="#{postManagementManagedBean.postToUpdate.postId}" />
+                        </p:column>
+                        <p:column>
+                            &nbsp;
+                        </p:column>
+                    </p:row>
+                    
+                    <p:row>
+                        <p:column>
+                            <h:outputLabel value="Post Creation Date: " />
+                        </p:column>
+                        <p:column>
+                            <h:outputText value="#{postManagementManagedBean.postToUpdate.creationDate}" />
                         </p:column>
                         <p:column>
                             &nbsp;

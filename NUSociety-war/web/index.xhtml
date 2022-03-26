@@ -6,11 +6,11 @@
                 template="/Template/defaultTemplate.xhtml"
                 xmlns:ez="http://xmlns.jcp.org/jsf/composite/ezcomp"
                 xmlns:p="http://primefaces.org/ui">
-    
-    <ui:define name="content">
-        
 
-        <h:panelGroup>
+    <ui:define name="content">
+
+
+        <h:panelGroup rendered="#{sessionScope.isLogin == false}">
             <article>
                 <h3>Welcome</h3>
                 <p>
@@ -39,13 +39,61 @@
                         <li><h:link outcome="/Roster/rosterManagement.xhtml">Roster</h:link></li>
                     </ul>
                 </p>
-                
+
                 &nbsp;
             </article>
         </h:panelGroup>
 
-        
-        
+        <h:panelGroup rendered="#{sessionScope.isLogin == true}">
+            <h:outputText value="Welcome #{sessionScope.currentStudent.userName}" />
+            <br/> <br/>
+            <p:commandButton value="Create a Post!">
+
+            </p:commandButton>
+            <br/> <br/>
+            <p:commandButton value="Sort by Latest" >
+
+            </p:commandButton>
+            <p:commandButton value="Sort by Oldest" >
+
+            </p:commandButton>
+            <br/> <br/>
+
+            <h:form id="formAllPosts">
+
+                <p:messages id="messages" redisplay="false" closable="true" />
+
+                <p:dataTable id="dataTableAllPosts" widgetVar="dataTableAllPosts" value="#{homePagePostManagedBean.postList}" var="post" rowKey="#{post.postId}" rowIndexVar="row"
+                             rows="10" paginator="true" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="10,20,50">
+
+
+                    <p:column> 
+                        <h:outputText value="Society: " style="font-weight: bold"/>        #{post.society.name}
+                        <br/> <br/>
+
+
+                        <h:outputText value="Post Content: " style="font-weight: bold"/>#{post.bodyContent}
+
+
+                        <br/><br/>
+
+                        <h:outputText value="Image:" style="font-weight: bold"/>
+                        <p:graphicImage value="#{post.image}">
+                            <f:param name="filename" value="filename.ext" />
+                        </p:graphicImage>
+                        <br/> <br/>
+
+                        <h:outputText value="Post Creation Date:" style="font-weight: bold"/>
+                        <span class="product-category">#{post.creationDate}</span>
+                    </p:column>
+                    
+                    </p:dataTable>
+
+
+            </h:form>
+
+        </h:panelGroup>
+
     </ui:define>
 
 </ui:composition>
