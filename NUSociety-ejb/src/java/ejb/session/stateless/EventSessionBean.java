@@ -247,5 +247,18 @@ public class EventSessionBean implements EventSessionBeanLocal {
         
         return query.getResultList(); 
     }
+    
+    @Override
+    public List<Event> retrieveEventsForSociety(Long societyId) {
+        Query query = em.createQuery("SELECT e FROM Event e WHERE e.society.societyId = :inSocietyId"); 
+        query.setParameter("inSocietyId", societyId); 
+        List<Event> societyEvents = query.getResultList(); 
+        
+        for (Event event: societyEvents) {
+            event.getCategories().size(); 
+        }
+        
+        return query.getResultList(); 
+    }
 }
 

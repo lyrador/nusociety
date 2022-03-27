@@ -5,10 +5,13 @@
  */
 package jsf.managedbean;
 
+import ejb.session.stateless.EventSessionBeanLocal;
 import ejb.session.stateless.SocietySessionBeanLocal;
+import entity.Event;
 import entity.Society;
 import entity.Student;
 import java.io.Serializable;
+import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.inject.Named;
@@ -26,10 +29,15 @@ import util.exception.SocietyNotFoundException;
 public class SocietyManagedBean implements Serializable {
 
     @EJB
+    private EventSessionBeanLocal eventSessionBeanLocal;
+
+    @EJB
     private SocietySessionBeanLocal societySessionBeanLocal;
+    
+    
 
     private Student student;
-    private Society society;
+    private Society society; 
     
     public SocietyManagedBean() {
     }
@@ -59,5 +67,5 @@ public class SocietyManagedBean implements Serializable {
     public void setStudent(Student student) {
         this.student = student;
     }
-    
+
 }

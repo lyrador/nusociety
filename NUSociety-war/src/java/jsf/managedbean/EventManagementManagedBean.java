@@ -79,6 +79,9 @@ public class EventManagementManagedBean implements Serializable {
     
     private Long studentId; 
     private List<Event> registeredEvents; 
+    
+ /* private Long societyId; 
+    private List<Event> societyEvents; */
    
 
     public EventManagementManagedBean() {
@@ -115,6 +118,10 @@ public class EventManagementManagedBean implements Serializable {
         Student currentStudent = (Student) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("currentStudent");
         this.studentId = currentStudent.getStudentId(); 
         this.registeredEvents = eventSessionBeanLocal.retrieveEventsForStudent(studentId); 
+        
+   /*   Society currentSociety = (Society) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("currentSociety");
+        this.societyId = currentSociety.getSocietyId(); 
+        this.societyEvents = eventSessionBeanLocal.retrieveEventsForSociety(societyId); */
         
         for (Society society: societies) 
         {
@@ -438,5 +445,23 @@ public class EventManagementManagedBean implements Serializable {
     public void setLeaveEvent(Event leaveEvent) {
         this.leaveEvent = leaveEvent;
     }
+
+ /*   public Long getSocietyId() {
+        return societyId;
+    }
+
+    public void setSocietyId(Long societyId) {
+        this.societyId = societyId;
+    }
+
+    public List<Event> getSocietyEvents() {
+        return societyEvents;
+    }
+
+    public void setSocietyEvents(List<Event> societyEvents) {
+        this.societyEvents = societyEvents;
+    }*/
+    
+    
 
 }

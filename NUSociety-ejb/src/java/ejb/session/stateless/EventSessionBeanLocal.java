@@ -40,6 +40,8 @@ public interface EventSessionBeanLocal {
     //public Long createNewSociety(Society society);
 
     public Long leaveEvent(Event leaveEvent, Student currentStudent) throws EventNotFoundException;
+
+    public List<Event> retrieveEventsForSociety(Long societyId);
     
 }
 
