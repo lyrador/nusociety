@@ -9,7 +9,6 @@
 
     <ui:define name="content">
 
-
         <h:panelGroup rendered="#{sessionScope.isLogin == false}">
             <article>
                 <h3>Welcome</h3>
@@ -27,7 +26,7 @@
                         <li><h:link outcome="/Post/post.xhtml">Post CRUD</h:link></li>
 
                         <li><h:link outcome="/EventAndEventCategory/eventManagement.xhtml">Events CRUD</h:link></li>
-                        
+
                         <li><h:link outcome="/EventAndEventCategory/viewAllEventCategories">View All Event Categories</h:link></li>
                         <li><h:link outcome="/EventAndEventCategory/createNewEventCategory">Create New Event Category</h:link></li>
                         <li><h:link outcome="/EventAndEventCategory/updateEventCategory">Update an Event Category</h:link></li>
@@ -73,14 +72,13 @@
                         <h:outputText value="Author: " style="font-weight: bold"/>#{post.student.name}
                         <br/> <br/>
 
+
+                        <p:graphicImage value="#{FacesContext.getCurrentInstance().getExternalContext()}/resources/Images/#{post.image}" width="600px" height="600px"/>
+                        <br/> <br/>
+
                         <h:outputText value="Post Content: " style="font-weight: bold"/>#{post.bodyContent}
                         <br/><br/>
 
-                        <h:outputText value="Image:" style="font-weight: bold"/>
-                        <p:graphicImage value="#{post.image}">
-                            <f:param name="filename" value="filename.ext" />
-                        </p:graphicImage>
-                        <br/> <br/>
 
                         <h:outputText value="Post Creation Date:" style="font-weight: bold"/>
                         <span class="product-category">#{post.creationDate}</span>
@@ -148,7 +146,7 @@
 
                     <p:row>
                         <p:column>
-                            <p:outputLabel for="imageURL" value="Upload Image " style="font-weight: bold;"/>
+                            <p:outputLabel for="imageURL" value="Upload Image " style="font-weight: bold;" />
                         </p:column>
                         <p:column>
                             <p:fileUpload id="imageURL" listener="#{fileUploadManagedBean.handleFileUploadForUpdate}" multiple="true" update="@this" />
@@ -189,9 +187,12 @@
                         <h:outputText value="#{homePagePostManagedBean.postToView.postId}" />
                         <br/> <br/>
                         <h:outputLabel value="Society Name: " style="font-weight: bold"/>
-                        <h:outputText value="#{homePagePostManagedBean.postToView.society.name}" />
+                        <h:outputText value="#{homePagePostManagedBean.postToView.society.name} (#{homePagePostManagedBean.postToView.publicOrPrivate})" />
                         <br/> <br/>
-                        <p:graphicImage value="#{homePagePostManagedBean.postToView.image}"/>
+
+                        <p:graphicImage value="#{FacesContext.getCurrentInstance().getExternalContext()}/resources/Images/#{homePagePostManagedBean.postToView.image}"  width="600px" height="600px"/>
+                        <br/><br/>
+                        <h:outputLabel value="Post Content: " style="font-weight: bold"/>
                         <h:outputText value="#{homePagePostManagedBean.postToView.bodyContent}"/>  
                         <br/> <br/>
                         <h:outputLabel value="Post Creation Date: " style="font-weight: bold"/>
@@ -256,7 +257,7 @@
             </p:dialog>
 
         </h:form>
-        
+
         <h:form id="formCreateAComment">
 
             <p:dialog id="dialogCreateAComment" widgetVar="dialogCreateAComment" header="Post a Comment" closable="true">
@@ -276,7 +277,7 @@
             </p:dialog>
 
         </h:form>
-        
+
         <h:form id="formEditComment">
 
             <p:dialog id="dialogEditComment" widgetVar="dialogEditComment" header="Edit Comment" closable="true">

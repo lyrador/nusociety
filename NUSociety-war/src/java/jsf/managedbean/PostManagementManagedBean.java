@@ -51,6 +51,7 @@ public class PostManagementManagedBean implements Serializable {
     private Post newPostEntity;
     private List<Society> followedSociety;
     private List<Society> memberSociety;
+    private Society newS;
 
 
     private Post postToUpdate;
@@ -66,6 +67,7 @@ public class PostManagementManagedBean implements Serializable {
         newPostEntity = new Post();
         postToUpdate = new Post();
         viewComments = false;
+        newS = new Society();
     }
 
     @PostConstruct
@@ -107,10 +109,12 @@ public class PostManagementManagedBean implements Serializable {
             Student currentStudent =  (Student) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("currentStudent");
             newPostEntity.setStudent(currentStudent);
 
+            newPostEntity.setSociety(newS);
            // String publicOrPriv = newPostEntity.ge
             
             Long pId = postSessionBean.createNewPost(newPostEntity);
             newPostEntity = new Post();
+            newS = new Society();
             
             listOfPosts = currentStudent.getPosts(); 
 
@@ -241,6 +245,14 @@ public class PostManagementManagedBean implements Serializable {
 
     public void setMemberSociety(List<Society> memberSociety) {
         this.memberSociety = memberSociety;
+    }
+
+    public Society getNewS() {
+        return newS;
+    }
+
+    public void setNewS(Society newS) {
+        this.newS = newS;
     }
 
 }

@@ -54,10 +54,7 @@
 
 
 
-                                <h:outputText value="Image:" style="font-weight: bold"/>
-                                <p:graphicImage value="#{post.image}">
-                                    <f:param name="filename" value="filename.ext" />
-                                </p:graphicImage>
+                                <p:graphicImage value="#{FacesContext.getCurrentInstance().getExternalContext()}/resources/Images/#{post.image}" width="600px" height="600px"/>
                                 <br/> <br/>
 
                                 <h:outputText value="Post Creation Date:" style="font-weight: bold"/>
@@ -106,12 +103,18 @@
                         <h:outputLabel value="Post ID: " style="font-weight: bold"/>
                         <h:outputText value="#{postManagementManagedBean.postToView.postId}" />
                         <br/> <br/>
+                        
                         <h:outputLabel value="Society Name: " style="font-weight: bold"/>
-                        <h:outputText value="#{postManagementManagedBean.postToView.society.name}" />
+                        <h:outputText value="#{postManagementManagedBean.postToView.society.name} (#{postManagementManagedBean.postToView.publicOrPrivate})" />
                         <br/> <br/>
-                        <p:graphicImage value="#{postManagementManagedBean.postToView.image}"/>
-                        <h:outputText value="#{postManagementManagedBean.postToView.bodyContent}"/>  
+                        
+                        <p:graphicImage value="#{FacesContext.getCurrentInstance().getExternalContext()}/resources/Images/#{postManagementManagedBean.postToView.image}" width="600px" height="600px"/>
+                        <br/><br/>
+                        
+                        <h:outputLabel value="Post Content: " style="font-weight: bold"/>
+                        <h:outputText value="#{postManagementManagedBean.postToView.bodyContent}"/>
                         <br/> <br/>
+                        
                         <h:outputLabel value="Post Creation Date: " style="font-weight: bold"/>
                         <h:outputText value="#{postManagementManagedBean.postToView.creationDate}" />
                         <br/> <br/>

@@ -28,15 +28,12 @@
                         <p:outputLabel value="Society ID: " style="font-weight: bold;"/>
                     </p:column>
                     <p:column>
-                        <p:selectOneListbox id="basic" value="#{postManagementManagedBean.newPostEntity.society}">
-                            <f:selectItem itemValue="0" itemLabel="[Select One]" noSelectionOption="true" />
-                            <!-- Remember to find a way to diff -->
-                            <f:selectItems value="#{postManagementManagedBean.memberSociety}" var="s" itemValue="#{s}" itemLabel="#{s.name} (Private)" />
-                            <f:selectItems value="#{postManagementManagedBean.followedSociety}" var="s" itemValue="#{s}" itemLabel="#{s.name} (Public)" />
-                        </p:selectOneListbox>
+                        <p:selectOneButton value="#{postManagementManagedBean.newS}" required="true" requiredMessage="Society is required">
+                            <f:selectItems value="#{postManagementManagedBean.followedSociety}" var="s" itemLabel="#{s.name}" itemValue="#{s}" />
+                        </p:selectOneButton>
                     </p:column>
                 </p:row>
-                
+
 
                 <p:row>
                     <p:column>
@@ -69,12 +66,13 @@
                 <p:row>
                     <p:column colspan="3">
                         <p:commandButton type="reset" value="Clear" />&nbsp;
-                        <p:commandButton  value="Create New Post" actionListener="#{postManagementManagedBean.createNewPost(event)}" />
+                        <p:commandButton  value="Create New Post" actionListener="#{postManagementManagedBean.createNewPost}" update="@this messagesCreateNewpost" />
                     </p:column>
                 </p:row>
             </p:panelGrid>
 
         </h:form>
+
 
     </ui:define>
 

@@ -28,7 +28,7 @@
                         <p:menuitem value="Find a Society" outcome="/Society/findSociety.xhtml" icon="pi pi-search" />
                     </p:submenu>
                     
-                    <p:submenu label="My Events">
+                    <p:submenu label="My Events" rendered="#{sessionScope.isLogin == true}">
                         <p:menuitem value="View My Events" outcome="/EventAndEventCategory/myEvents.xhtml" icon="pi pi-users" />
                         <p:menuitem value="Find an Event" outcome="/EventAndEventCategory/eventManagement.xhtml" icon="pi pi-users" />
                     </p:submenu>   

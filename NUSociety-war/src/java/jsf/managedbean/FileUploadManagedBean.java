@@ -75,7 +75,7 @@ public class FileUploadManagedBean {
             System.out.println("link = " + uploadedFilePath);
             showUploadedFile = true;
             
-            postManagementSessionBean.getNewPostEntity().setImage(newFilePath);
+            postManagementSessionBean.getNewPostEntity().setImage(event.getFile().getFileName());
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,  "File uploaded successfully", ""));
         }
         catch(IOException ex)
@@ -122,7 +122,7 @@ public class FileUploadManagedBean {
             System.out.println("link = " + uploadedFilePath);
             showUploadedFile = true;
             
-            postManagementSessionBean.getPostToUpdate().setImage(newFilePath);
+            postManagementSessionBean.getPostToUpdate().setImage(event.getFile().getFileName());
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,  "File uploaded successfully", ""));
         }
         catch(IOException ex)
