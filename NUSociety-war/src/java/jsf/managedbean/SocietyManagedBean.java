@@ -33,8 +33,8 @@ public class SocietyManagedBean implements Serializable {
 
     @EJB
     private SocietySessionBeanLocal societySessionBeanLocal;
-    
-    
+
+    private RosterManagementManagedBean rosterManagementManagedBean;
 
     private Student student;
     private Society society; 

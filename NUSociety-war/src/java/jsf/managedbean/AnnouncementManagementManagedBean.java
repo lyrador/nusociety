@@ -8,6 +8,7 @@ package jsf.managedbean;
 import ejb.session.stateless.AnnouncementSessionBeanLocal;
 import ejb.session.stateless.SocietySessionBeanLocal;
 import entity.Announcement;
+import entity.Student;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
@@ -41,6 +42,7 @@ public class AnnouncementManagementManagedBean implements Serializable {
     
     private Announcement announcementToUpdate;
     private Announcement announcementToDelete;
+    private Student currentStudent;
     
     public AnnouncementManagementManagedBean() {
         newAnnouncement = new Announcement();
@@ -50,7 +52,9 @@ public class AnnouncementManagementManagedBean implements Serializable {
     
     @PostConstruct
     public void postConstruct() {
-        allAnnouncements = announcementSessionBeanLocal.retrieveAllAnnouncements();
+          allAnnouncements = announcementSessionBeanLocal.retrieveAllAnnouncements();
+//        currentStudent = (Student) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("currentStudent");
+//        allAnnouncements = announcementSessionBeanLocal.retrieveAllAnnouncementsFromStudent();
     }
     
     public void createNewAnnouncement(ActionEvent event) {

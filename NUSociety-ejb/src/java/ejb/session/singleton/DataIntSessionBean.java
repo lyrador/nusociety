@@ -89,11 +89,11 @@ public class DataIntSessionBean {
         List<Long> categoryIds3 = new ArrayList<>();
 
         if (em.find(Student.class, 1l) == null) {
-            studentSessionBeanLocal.createNewStudent(new Student("Alex", "alex@gmail.com", "password", "alex", "www.profilepic/alex", AccessRightEnum.MEMBER));
-            studentSessionBeanLocal.createNewStudent(new Student("Betty", "betty@gmail.com", "password", "betty", "www.profilepic/betty", AccessRightEnum.MEMBER));
-            studentSessionBeanLocal.createNewStudent(new Student("Carl", "carl@gmail.com", "password", "carl", "www.profilepic/carl", AccessRightEnum.MEMBER));
-            studentSessionBeanLocal.createNewStudent(new Student("David", "david@gmail.com", "password", "david", "www.profilepic/david", AccessRightEnum.MEMBER));
-            studentSessionBeanLocal.createNewStudent(new Student("Elaine", "elaine@gmail.com", "password", "elaine", "www.profilepic/elaine", AccessRightEnum.MEMBER));
+            studentSessionBeanLocal.createNewStudent(new Student("Alex", "alex@gmail.com", "password", "alex", "alexPic.png", AccessRightEnum.MEMBER));
+            studentSessionBeanLocal.createNewStudent(new Student("Betty", "betty@gmail.com", "password", "betty", "bettyPic.png", AccessRightEnum.MEMBER));
+            studentSessionBeanLocal.createNewStudent(new Student("Carl", "carl@gmail.com", "password", "carl", "carlPic.png", AccessRightEnum.MEMBER));
+            studentSessionBeanLocal.createNewStudent(new Student("David", "david@gmail.com", "password", "david", "davidPic.png", AccessRightEnum.MEMBER));
+            studentSessionBeanLocal.createNewStudent(new Student("Elaine", "elaine@gmail.com", "password", "elaine", "elainePic.png", AccessRightEnum.LEADER));
         }
 
         List<Student> students = studentSessionBeanLocal.retrieveAllStudents();

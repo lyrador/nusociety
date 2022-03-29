@@ -23,7 +23,9 @@ import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
+import util.enumeration.AccessRightEnum;
 import util.exception.AttendanceNotFoundException;
+import util.exception.SocietyNotFoundException;
 import util.exception.StudentNotFoundException;
 import util.exception.UnknownPersistenceException;
 
@@ -51,19 +53,28 @@ public class RosterManagementManagedBean implements Serializable {
     private Attendance viewedAttendance;
     private HashMap<Long, Attendance> attendances;
     private String currentValue;
+    private AccessRightEnum leaderAccessRightEnum;
     
     public RosterManagementManagedBean() {
         newStudent = new Student();
         studentToUpdate = new Student();
         studentToDelete = new Student();
+        leaderAccessRightEnum = AccessRightEnum.LEADER;
     }
     
     @PostConstruct
     public void postConstruct() {  
-        Long currentSocietyId = (long)1;
-        this.students = studentSessionBeanLocal.retrieveAllStudentsFromSocietyId(currentSocietyId);
+//        Long currentSocietyId = (long)1;
+        String societyId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("societyId");
+//        currentSociety.setSocietyId(Long.parseLong(societyId));
+        try {
+            currentSociety = societySessionBeanLocal.retrieveSocietyById(Long.parseLong(societyId));
+        } catch (SocietyNotFoundException ex) {
+            ex.getMessage();
+        }
+        this.students = studentSessionBeanLocal.retrieveAllStudentsFromSocietyId(currentSociety.getSocietyId());
         System.out.println("HELLO WORLD");
-        attendances = attendanceSessionBeanLocal.retrieveMapAttendancesFromStudentListAndSocietyId(students, currentSocietyId);
+        attendances = attendanceSessionBeanLocal.retrieveMapAttendancesFromStudentListAndSocietyId(students, currentSociety.getSocietyId());
         System.out.println("HELLO WORLD 22");
     }
     
@@ -114,10 +125,36 @@ public class RosterManagementManagedBean implements Serializable {
         System.out.println("IOGFHEQPIG EPW");
         try {
             Student studentToRemove = (Student) event.getComponent().getAttributes().get("studentToRemove");
-            Society currentSociety = societySessionBeanLocal.retrieveSocietyById((long) 1);
+            Society currentSociety = societySessionBeanLocal.retrieveSocietyById(this.currentSociety.getSocietyId());
             societySessionBeanLocal.removeStudentFromSociety(currentSociety.getSocietyId(), studentToRemove.getStudentId());
             
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Student removed successfully", null));
+        } catch (Exception ex) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An unexpected error has occurred: " + ex.getMessage(), null));
+        }
+    }
+    
+    public void incrementEveryonesAttendedCountByOne(ActionEvent event) {
+        try {
+            for (Student student: students) {
+                Attendance currentAttendance = attendanceSessionBeanLocal.retrieveAttendanceFromStudentIdAndSocietyId(student.getStudentId(), currentSociety.getSocietyId());
+                currentAttendance.setAttendedCount(currentAttendance.getAttendedCount() + 1);
+                attendanceSessionBeanLocal.updateAttendance(currentAttendance);
+            }       
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "All attended counts incremented successfully", null));
+        } catch (Exception ex) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An unexpected error has occurred: " + ex.getMessage(), null));
+        }
+    }
+    
+    public void incrementEveryonesTotalCountByOne(ActionEvent event) {
+        try {
+            for (Student student: students) {
+                Attendance currentAttendance = attendanceSessionBeanLocal.retrieveAttendanceFromStudentIdAndSocietyId(student.getStudentId(), currentSociety.getSocietyId());
+                currentAttendance.setTotalCount(currentAttendance.getTotalCount() + 1);
+                attendanceSessionBeanLocal.updateAttendance(currentAttendance);
+            }       
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "All total counts incremented successfully", null));
         } catch (Exception ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An unexpected error has occurred: " + ex.getMessage(), null));
         }
@@ -128,7 +165,7 @@ public class RosterManagementManagedBean implements Serializable {
         try {
             Student tempStudentToUpdate = (Student) event.getComponent().getAttributes().get("studentToUpdate");
             System.out.println(tempStudentToUpdate.getEmail());
-            Society currentSociety = societySessionBeanLocal.retrieveSocietyById((long) 1);
+            Society currentSociety = societySessionBeanLocal.retrieveSocietyById(this.currentSociety.getSocietyId());
             tempAttendance = attendanceSessionBeanLocal.retrieveAttendanceFromStudentIdAndSocietyId(tempStudentToUpdate.getStudentId(), currentSociety.getSocietyId());
             currentValue = tempAttendance.getAttendedCount() + " / " + tempAttendance.getTotalCount() + " (" + tempAttendance.getAttendanceRate() + "%)";
      
@@ -206,4 +243,16 @@ public class RosterManagementManagedBean implements Serializable {
     public void setCurrentValue(String currentValue) {
         this.currentValue = currentValue;
     }
+    
+    public AccessRightEnum getLeaderAccessRightEnum() {
+        return leaderAccessRightEnum;
+    }
+    
+//    public void setCurrentSociety(Society currentSociety) {
+//        this.currentSociety = currentSociety;
+//        this.students = studentSessionBeanLocal.retrieveAllStudentsFromSocietyId(currentSociety.getSocietyId());
+//        System.out.println("HELLO WORLD");
+//        attendances = attendanceSessionBeanLocal.retrieveMapAttendancesFromStudentListAndSocietyId(students, currentSociety.getSocietyId());
+//        System.out.println("HELLO WORLD 22");
+//    }
 }

@@ -65,6 +65,18 @@ public class AnnouncementSessionBean implements AnnouncementSessionBeanLocal {
         return announcements;
     }
     
+//    @Override
+//    public List<Announcement> retrieveAllAnnouncementsFromStudentId() {
+//        Query query = em.createQuery("SELECT a FROM Announcement a WHERE a.");
+//        List<Announcement> announcements = query.getResultList();
+//        
+//        for (Announcement announcement : announcements) {
+//            announcement.getSociety();
+//        }
+//        
+//        return announcements;
+//    }
+    
     @Override
     public List<Announcement> retrieveAnnouncementsForSociety(Long id) {
         Query query = em.createQuery("SELECT a FROM Announcement a WHERE a.society.societyId = :inSocietyId");
