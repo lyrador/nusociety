@@ -125,7 +125,7 @@ public class DataIntSessionBean {
         if (em.find(Society.class, 1l) == null) {
 
             try {
-                societySessionBeanLocal.createNewSociety(new Society("Floorball", "Sticks and Balls", new Date(), "/Users/raihan/glassfish-5.1.0-uploadedfiles/IMG_2962.jpeg"), categoryIds1, staffIds);
+                societySessionBeanLocal.createNewSociety(new Society("Floorball", "Sticks and Balls", new Date(), "Harry-Maguire-2-1.jpg"), categoryIds1, staffIds);
 
                 Student alex = studentSessionBeanLocal.retrieveStudentByUsername("alex");
                 Society floorball = societySessionBeanLocal.retrieveSocietyById(1l);
@@ -137,8 +137,8 @@ public class DataIntSessionBean {
 //                List<Society> alexSocList = new ArrayList<>();
 //                alexSocList.add(floorball);
 //                alex.setMemberSocieties(alexSocList);
-                societySessionBeanLocal.createNewSociety(new Society("Choir Club", "We love singing", new Date()), categoryIds2, staffIds);
-                societySessionBeanLocal.createNewSociety(new Society("NUS Band", "Banging the drums as hard as we can", new Date()), categoryIds3, staffIds);
+                societySessionBeanLocal.createNewSociety(new Society("Choir Club", "We love singing", new Date(), "220327-chris-rock-will-smith-3-ew-1052p-acc676.jpg"), categoryIds2, staffIds);
+                societySessionBeanLocal.createNewSociety(new Society("NUS Band", "Banging the drums as hard as we can", new Date(), "1030_two-students-looking-at-tablet-1028x579.jpg"), categoryIds3, staffIds);
 //                
 //                if (em.find(Event.class, 1l) == null) {
 //            

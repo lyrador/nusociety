@@ -42,19 +42,31 @@ public class FollowManagedBean implements Serializable {
     private Long societyId; 
     private List<Society> followedSocieties;
     private List<Society> memberSocieties;
+    
     private String followerCount;
+    private String memberCount;
     
     public FollowManagedBean() {    
     }
     
     @PostConstruct
     public void postConstruct() {
-        this.currentStudent = (Student) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("currentStudent");
-        String id = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("societyId");
-        this.societyId = Long.valueOf(id);
-        this.followedSocieties = currentStudent.getFollowedSocieties();
-        this.memberSocieties = currentStudent.getMemberSocieties();
-        this.followerCount = String.valueOf(followedSocieties.size());
+        
+        try {
+            this.currentStudent = (Student) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("currentStudent");
+            String id = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("societyId");
+            this.societyId = Long.valueOf(id);
+            Society society = societySessionBeanLocal.retrieveSocietyById(societyId);
+            this.followedSocieties = currentStudent.getFollowedSocieties();
+            this.memberSocieties = currentStudent.getMemberSocieties();
+            
+            this.followerCount = String.valueOf(society.getFollowedStudents().size());
+            this.memberCount = String.valueOf(society.getMemberStudents().size());
+        } 
+        catch(SocietyNotFoundException ex)
+        {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Unable to follow: " + ex.getMessage(), null));
+        }
     }
     
     public void follow(ActionEvent e) {
@@ -126,6 +138,14 @@ public class FollowManagedBean implements Serializable {
 
     public void setFollowerCount(String followerCount) {
         this.followerCount = followerCount;
+    }
+
+    public String getMemberCount() {
+        return memberCount;
+    }
+
+    public void setMemberCount(String memberCount) {
+        this.memberCount = memberCount;
     }
 
     

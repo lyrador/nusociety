@@ -16,6 +16,10 @@
                 <p:menuitem value="Events" outcome="/EventAndEventCategory/eventSociety.xhtml" icon="pi pi-fw pi-calendar" style="font-size: 14px; width:70px" />
                 <p:menuitem value="Roster" icon="pi pi-fw pi-user" style="font-size: 14px; width:70px" />
             </p:menubar>
+            <h:outputLink value="#{application.contextPath}/Society/viewSociety/#{society.societyId}-#{society.name.replaceAll(' ', '-')}">
+                <f:param name="societyId" value="#{societyManagedBean.society.societyId}" />
+                View
+            </h:outputLink>
         </h:form>
         
     </header>

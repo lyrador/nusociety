@@ -8,11 +8,16 @@
 
     <ui:define name="content">
         
-        <ui:insert name="societyHeader">
-            <ui:include src="/societyHeader.xhtml" />
-        </ui:insert>
-        
-        <h:form id="follow_form">
+        <h:form>
+            
+            <p:growl id="messages"/>
+
+            <p:menubar>
+                <p:menuitem value="Society Home" icon="pi pi-fw pi-home" style="font-size: 14px; width:120px"/>
+                <p:menuitem value="Posts" icon="pi pi-fw pi-pencil" style="font-size: 14px; width:70px" />
+                <p:menuitem value="Events" url="#{request.contextPath}/Society/viewSociety/#{societyManagedBean.society.societyId}-#{societyManagedBean.society.name.replaceAll(' ', '-')}/Events" icon="pi pi-fw pi-calendar" style="font-size: 14px; width:70px" />
+                <p:menuitem value="Roster" icon="pi pi-fw pi-user" style="font-size: 14px; width:70px" />
+            </p:menubar>
             
             <h:outputText value="#{societyManagedBean.society.name}" style="font-size:25px; font-weight: bold;"/>
             <p:commandButton id="follow_button" rendered="#{!followManagedBean.followedSocieties.contains(societyManagedBean.society) and !followManagedBean.memberSocieties.contains(societyManagedBean.society)}" value="Follow" icon="pi pi-plus" 
@@ -27,11 +32,14 @@
             
             <h:outputText rendered="#{followManagedBean.memberSocieties.contains(societyManagedBean.society)}" value="You are a member of this society" style="float: right;"/>
             <br/>
+            <h:outputText value="#{followManagedBean.memberCount} members" style="float: right;"/>
+            <br/>
             <h:outputText value="#{followManagedBean.followerCount} followers" style="float: right;"/>
             <br/>
             <h:outputText value="#{societyManagedBean.society.description}" />
-            
-<!--            <h:graphicImage name="#{societyManagedBean.society.profilePicture}" />-->
+            <br/>
+            <br/>
+            <p:graphicImage value="#{FacesContext.getCurrentInstance().getExternalContext()}/resources/Images/#{societyManagedBean.society.profilePicture}" width="300px" height="300px"/> 
 
             <h3>Public Posts</h3>
 <!--            can modify this to whatever design-->
