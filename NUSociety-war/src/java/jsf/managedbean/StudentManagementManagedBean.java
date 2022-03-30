@@ -36,6 +36,7 @@ public class StudentManagementManagedBean implements Serializable {
     private Student newStudent;
     private Student studentToUpdate;
     private Student studentToDelete;
+    private List<Student> filteredStudents;
     
     public StudentManagementManagedBean() {
         newStudent = new Student();
@@ -122,5 +123,12 @@ public class StudentManagementManagedBean implements Serializable {
     public void setNewStudent(Student newStudent) {
         this.newStudent = newStudent;
     }  
-    
+
+    public List<Student> getFilteredStudents() {
+        return filteredStudents;
+    }
+
+    public void setFilteredStudents(List<Student> filteredStudents) {
+        this.filteredStudents = filteredStudents;
+    }
 }

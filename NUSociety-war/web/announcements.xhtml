@@ -6,37 +6,37 @@
                 xmlns:p="http://primefaces.org/ui">
 
     <aside>
-        <div class="announcement sidebar">
-            <p:dataScroller id="dataScrollMyAnnouncements" value="#{announcementManagementManagedBean.allAnnouncementsSortedByMostRecent}" var="announcement" chunkSize="8">
-                <div class="announcement-list-item">
-
-                    <div class="announcement-list-detail">
+        <style type="text/css">
+            .ui-panel .ui-panel-content {
+                padding: 5px;
+            }
+        </style>
+        
+            <h:form id="formAnnouncements">
+                <p:dataScroller id="dataScrollMyAnnouncements" value="#{announcementManagementManagedBean.allMyAnnouncementsSortedByMostRecent}" var="announcement" chunkSize="8" rendered="#{sessionScope.isLogin == true}">
+                    <p:panel style="text-align: left">
                         <div class="announcement-id">
-                            <h:outputText value="Announcement ID:" style="font-weight: bold"/>
-                            <span class="announcement-id">#{announcement.announcementId}</span>
-                        </div><br/>
+                            <h:outputText value="#{announcement.announcementTitle}" style="font-weight: bold; color: #045491; font-size: 16px" />
+                        </div>
+
+                        <div class="tinySpacer" style="line-height: 5px">
+                            <h:outputText value="&nbsp;" style="font-size: xx-small"/>
+                        </div>
 
                         <div class="announcement-date">
-                            <h:outputText value="Date:" style="font-weight: bold"/>
-                            <span class="announcement-date">#{announcement.creationDate}</span>
-                        </div><br/>
+                            <h:outputText value="#{announcement.creationDate}" style="font-size: x-small"/>
+                        </div>
 
                         <div class="society-name">
-                            <h:outputText value="Society:" style="font-weight: bold"/>
-                            #{announcement.society.name}
+                            <h:outputText value="By: #{announcement.society.name}" style="font-size: x-small"/>
                         </div><br/> 
 
                         <div class="announcement-content">
-                            <h:outputText value="Content:" style="font-weight: bold"/>
-                            #{announcement.announcementContent}
+                            <h:outputText value="#{announcement.announcementContent}" style="font-weight: 300; font-size: 12px; line-height: 15px"/>
                         </div><br/> 
-                        
-                        <p:separator style="width:500px"/>
-                    </div>
-
-                </div>
-            </p:dataScroller>
-        </div>
+                    </p:panel>
+                </p:dataScroller>
+            </h:form>
     </aside>
 
 </ui:composition>

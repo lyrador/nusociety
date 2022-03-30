@@ -73,8 +73,6 @@ public class AttendanceSessionBean implements AttendanceSessionBeanLocal {
             Attendance tempAttendance = retrieveAttendanceFromStudentIdAndSocietyId(student.getStudentId(), societyId);
             hashMap.put(student.getStudentId(), tempAttendance);
         }
-        System.out.println(hashMap.get((long) 1));
-        System.out.println(hashMap.get((long) 2));
         return hashMap;
     }
 

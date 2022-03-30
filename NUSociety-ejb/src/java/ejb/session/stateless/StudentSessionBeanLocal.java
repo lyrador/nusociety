@@ -38,5 +38,7 @@ public interface StudentSessionBeanLocal {
     public Student studentFollow(Long studentId, Long societyId) throws StudentNotFoundException, SocietyNotFoundException;
 
     public Student studentUnfollow(Long studentId, Long societyId) throws StudentNotFoundException, SocietyNotFoundException;
+
+    public Student retrieveStudentByEmail(String email) throws StudentNotFoundException;
   
 }

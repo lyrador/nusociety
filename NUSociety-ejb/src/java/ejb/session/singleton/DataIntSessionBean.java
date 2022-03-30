@@ -158,7 +158,7 @@ public class DataIntSessionBean {
             }
         }
 
-        if (em.find(Attendance.class, 1l) == null) {
+        if (em.find(Attendance.class, 1l) == null && em.find(Attendance.class, 2l) == null && em.find(Attendance.class, 3l) == null && em.find(Attendance.class, 4l) == null && em.find(Attendance.class, 5l) == null) {
             //add all students to first society for testing
             try {
                 Society floorball = societySessionBeanLocal.retrieveSocietyById((long) 1);

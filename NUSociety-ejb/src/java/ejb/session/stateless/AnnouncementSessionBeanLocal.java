@@ -10,6 +10,7 @@ import java.util.List;
 import javax.ejb.Local;
 import util.exception.AnnouncementNotFoundException;
 import util.exception.SocietyNotFoundException;
+import util.exception.StudentNotFoundException;
 
 /**
  *
@@ -29,5 +30,7 @@ public interface AnnouncementSessionBeanLocal {
     public void deleteAnnouncement(Long announcementId) throws AnnouncementNotFoundException;
 
     public List<Announcement> retrieveAnnouncementsForSociety(Long id);
+
+    public List<Announcement> retrieveAllMyAnnouncements(Long studentId) throws StudentNotFoundException ;
     
 }

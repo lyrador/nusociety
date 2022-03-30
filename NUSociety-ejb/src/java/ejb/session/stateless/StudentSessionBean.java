@@ -148,6 +148,28 @@ public class StudentSessionBean implements StudentSessionBeanLocal {
     }
     
     @Override
+    public Student retrieveStudentByEmail(String email) throws StudentNotFoundException {
+        
+        Query query = em.createQuery("SELECT s FROM Student s WHERE s.email = :inEmail");
+        query.setParameter("inEmail", email);
+        
+        Student student = (Student) query.getSingleResult();
+        if(student != null) {
+            student.getNotifications().size();
+            student.getPosts().size();
+            student.getComments().size();
+            student.getMemberSocieties().size();
+            student.getFollowedSocieties().size();
+            student.getEvents().size();
+            student.getEventsOrganised().size();
+            student.getAttendances().size();
+            return student;
+        } else {
+            throw new StudentNotFoundException("Student with email: " + email + " cannot be found!");
+        }
+    }
+    
+    @Override
     public void updateStudent(Student tempStudent) throws StudentNotFoundException {
         
         Student studentToUpdate = em.find(Student.class, tempStudent.getStudentId());

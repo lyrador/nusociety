@@ -18,6 +18,7 @@ import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
+import util.enumeration.AccessRightEnum;
 import util.exception.SocietyNotFoundException;
 
 /**
@@ -39,6 +40,8 @@ public class SocietyManagedBean implements Serializable {
     private Student student;
     private Society society; 
     
+    private AccessRightEnum leaderAccessRightEnum;
+    
     public SocietyManagedBean() {
     }
     @PostConstruct
@@ -50,6 +53,7 @@ public class SocietyManagedBean implements Serializable {
         } catch (SocietyNotFoundException ex) {
             ex.getMessage();
         }
+        leaderAccessRightEnum = AccessRightEnum.LEADER;
     }
 
     public Society getSociety() {
@@ -68,4 +72,7 @@ public class SocietyManagedBean implements Serializable {
         this.student = student;
     }
 
+    public AccessRightEnum getLeaderAccessRightEnum() {
+        return leaderAccessRightEnum;
+    }
 }

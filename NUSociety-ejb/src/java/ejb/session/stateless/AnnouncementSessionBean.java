@@ -7,6 +7,8 @@ package ejb.session.stateless;
 
 import entity.Announcement;
 import entity.Society;
+import entity.Student;
+import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -15,6 +17,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import util.exception.AnnouncementNotFoundException;
 import util.exception.SocietyNotFoundException;
+import util.exception.StudentNotFoundException;
 
 /**
  *
@@ -25,6 +28,9 @@ public class AnnouncementSessionBean implements AnnouncementSessionBeanLocal {
 
     @EJB
     private SocietySessionBeanLocal societySessionBeanLocal;
+    
+    @EJB
+    private StudentSessionBeanLocal studentSessionBeanLocal;
 
     @PersistenceContext(unitName = "NUSociety-ejbPU")
     private EntityManager em;
@@ -63,6 +69,34 @@ public class AnnouncementSessionBean implements AnnouncementSessionBeanLocal {
         }
         
         return announcements;
+    }
+    
+    @Override
+    public List<Announcement> retrieveAllMyAnnouncements(Long studentId) throws StudentNotFoundException {  
+        List<Announcement> allMyAnnouncements = new ArrayList<Announcement>();
+        Student student = studentSessionBeanLocal.retrieveStudentByStudentId(studentId);
+        List<Society> memberSocieties = student.getMemberSocieties();
+        List<Society> followingSocieties = student.getFollowedSocieties();
+
+        for (Society society: memberSocieties) {
+            for (Announcement announcement : society.getAnnouncements()) {
+                System.out.println("HELLO");
+                if (announcement.isOnlyForMembers() == true) {
+                    allMyAnnouncements.add(announcement);
+                }
+            }
+        }
+
+        for (Society society: followingSocieties) {
+            for (Announcement announcement : society.getAnnouncements()) {
+                System.out.println("BYE");
+                if (announcement.isOnlyForMembers() == false) {
+                    allMyAnnouncements.add(announcement);
+                }
+            }
+        }
+        
+        return allMyAnnouncements;
     }
     
 //    @Override

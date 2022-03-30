@@ -30,10 +30,14 @@ public class Announcement implements Serializable {
     private Long announcementId;
     
     @Column(nullable = false)
+    private String announcementTitle;
+    @Column(nullable = false, length = 5000)
     private String announcementContent;
     @Column(nullable = false)
     @Temporal(TemporalType.DATE)
     private Date creationDate;
+    @Column(nullable = false)
+    private boolean isOnlyForMembers;
     
     @ManyToOne(optional = false)
     @JoinColumn(nullable = false)
@@ -78,6 +82,22 @@ public class Announcement implements Serializable {
     public void setSociety(Society society) {
         this.society = society;
     }
+    
+    public String getAnnouncementTitle() {
+        return announcementTitle;
+    }
+
+    public void setAnnouncementTitle(String announcementTitle) {
+        this.announcementTitle = announcementTitle;
+    }
+    
+    public boolean isOnlyForMembers() {
+        return isOnlyForMembers;
+    }
+
+    public void setIsOnlyForMembers(boolean isOnlyForMembers) {
+        this.isOnlyForMembers = isOnlyForMembers;
+    }
 
     @Override
     public int hashCode() {
@@ -98,10 +118,9 @@ public class Announcement implements Serializable {
         }
         return true;
     }
-
+    
     @Override
     public String toString() {
         return "entity.Announcement[ id=" + announcementId + " ]";
     }
-    
 }
