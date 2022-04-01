@@ -35,13 +35,13 @@ public class CreateNewEventCategoryBean {
         newEventCategory = new EventCategory(); 
     }
     
-     public void doCreateNewEventCategory(ActionEvent event) throws EventCategoryAlreadyExistsException {
-         try {
+     public void doCreateNewEventCategory(ActionEvent event) {
+ //        try {
              eventCategorySessionBeanLocal.createNewEventCategory(getNewEventCategory()); 
              FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "New event category created ID: " + getNewEventCategory().getEventCategoryId(),"New event created ID: " + getNewEventCategory().getEventCategoryId()));
-         } catch (EventCategoryAlreadyExistsException ex) {
-             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An error has occurred while creating the new Event Category: " + ex.getMessage(), null));
-         }
+//         } catch (EventCategoryAlreadyExistsException ex) {
+//             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An error has occurred while creating the new Event Category: " + ex.getMessage(), null));
+//         }
      }
 
     public EventCategory getNewEventCategory() {

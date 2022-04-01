@@ -20,7 +20,7 @@ public interface EventCategorySessionBeanLocal {
 
     public void deleteEventCategory(Long eventCategoryId) throws EventCategoryNotFoundException;
 
-    public Long createNewEventCategory(EventCategory eventCategory) throws EventCategoryAlreadyExistsException;
+    public Long createNewEventCategory(EventCategory eventCategory);
 
     public EventCategory retrieveEventCategoryByName(String eventCategoryName) throws EventCategoryNotFoundException;
 

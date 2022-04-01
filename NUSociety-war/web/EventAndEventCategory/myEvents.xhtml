@@ -10,9 +10,9 @@
         
         <h3>My Events</h3>
         
-         <h:form>
+         <h:form id="formDataTable">
              <p:messages id="messages" redisplay="false"  />
-             <p:dataTable var="event" value="#{eventManagementManagedBean.registeredEvents}" rowKey="#{event.eventId}" rowIndexVar="row"
+             <p:dataTable id="dataTableEvents" var="event" value="#{eventManagementManagedBean.registeredEvents}" rowKey="#{event.eventId}" rowIndexVar="row"
                              rows="10" paginator="true" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="10,20,50">
                 <p:column headerText="Event Name" colspan="3">
                     <h:outputText value="#{event.eventName}" style="font-weight: bold;"/>
@@ -31,9 +31,11 @@
                 </p:column>
                 
                 <p:column headerText="Action" width="100">
-                    <p:commandButton update="formLeaveEvent" oncomplete="PF('dialogLeaveEvent').show()" icon="pi pi-sign-out" title="Leave">
+                    <p:commandButton value="Leave" update="formLeaveEvent" oncomplete="PF('dialogLeaveEvent').show()" icon="pi pi-sign-out" >
                         <f:setPropertyActionListener value="#{event}" target="#{eventManagementManagedBean.leaveEvent}" />
-                        <p:confirm header="Confirmation" message="Are you sure you want to leave #{event.eventName} (Event ID: #{event.eventId})?" icon="pi pi-exclamation-triangle" />
+                    </p:commandButton>
+                    <p:commandButton value="View" update="formViewEvent" oncomplete="PF('dialogViewEvent').show()" icon="pi pi-file" >
+                        <f:setPropertyActionListener value="#{event}" target="#{eventManagementManagedBean.viewEvent}" />
                     </p:commandButton>
                     
                 </p:column>
@@ -62,18 +64,15 @@
                             <p:outputLabel for="eventName" value="Event Name: " />
                         </p:column>
                         <p:column>
-                            <p:inputMask id="eventName" value="#{eventManagementManagedBean.leaveEvent.eventName}" maxlength="128" required="true" requiredMessage="Event Name is required" />
-                        </p:column>
-                        <p:column>
-                            <p:message for="eventName" />
+                            <h:outputText id="eventName" value="#{eventManagementManagedBean.leaveEvent.eventName}" />
                         </p:column>
                     </p:row>
                    
                     <p:row>
                         <p:column colspan="3">
                             
-                            <p:commandButton id="leaveEvent" value="Leave" icon="pi pi-save"  actionListener="#{eventManagementManagedBean.doLeaveEvent}" oncomplete="PF('dialogLeaveEvent').show();" />
-                            
+                            <p:commandButton id="leaveEvent" value="Leave" icon="pi pi-save" update="@form formDataTable:dataTableEvents formLeaveEvent:dialogLeaveEvent" actionListener="#{eventManagementManagedBean.doLeaveEvent}" oncomplete="PF('dialogSuccessfullyLeft').show();"  />
+                             
                         </p:column>
                     </p:row>
 
@@ -81,6 +80,104 @@
 
             </p:dialog>
             
+             <p:dialog id="dialogSuccessfullyLeft" widgetVar="dialogSuccessfullyLeft" closable="true">
+                <p:outputLabel value="Left Successfully!"/>
+            </p:dialog>
+            
+        </h:form>
+        
+        <h:form id="formViewEvent">
+
+            <p:dialog id="dialogViewEvent" widgetVar="dialogViewEvent" header="View Event" closable="true">
+                
+                <p:panelGrid>
+                    
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="eventId" value="Event ID: " />
+                        </p:column>
+                        <p:column>
+                            <h:outputText id="eventId" value="#{eventManagementManagedBean.viewEvent.eventId}" />
+                        </p:column>                 
+                    </p:row>
+                    
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="eventName" value="Event Name: " />
+                        </p:column>
+                        <p:column>
+                            <h:outputText id="eventName" value="#{eventManagementManagedBean.viewEvent.eventName}" />
+                        </p:column>                 
+                    </p:row>
+                    
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="eventDetails" value="Event Details: " />
+                        </p:column>
+                        <p:column>
+                            <h:outputText id="eventDetails" value="#{eventManagementManagedBean.viewEvent.eventDetails}" />
+                        </p:column>                 
+                    </p:row>
+
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="eventLocation" value="Event Location: " />
+                        </p:column>
+                        <p:column>
+                            <h:outputText id="eventLocation" value="#{eventManagementManagedBean.viewEvent.eventLocation}" />
+                        </p:column>                 
+                    </p:row>
+
+                   <p:row>
+                        <p:column>
+                            <p:outputLabel for="eventStartDate" value="Event Start Date: " />
+                        </p:column>
+                        <p:column>
+                            <h:outputText id="eventStartDate" value="#{eventManagementManagedBean.viewEvent.eventDateStart}" />
+                        </p:column>                 
+                    </p:row>
+                    
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="eventEndDate" value="Event End Date: " />
+                        </p:column>
+                        <p:column>
+                            <h:outputText id="eventEndDate" value="#{eventManagementManagedBean.viewEvent.eventDateEnd}" />
+                        </p:column>                 
+                    </p:row>
+                    
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="eventCapacity" value="Event Capacity: " />
+                        </p:column>
+                        <p:column>
+                            <h:outputText id="eventCapacity" value="#{eventManagementManagedBean.viewEvent.eventCapacity}" />
+                        </p:column>                 
+                    </p:row>
+                    
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="eventSociety" value="Event Society: " />
+                        </p:column>
+                        <p:column>
+                            <h:outputText id="eventSociety" value="#{eventManagementManagedBean.viewEvent.society.name}" />
+                        </p:column>                 
+                    </p:row>
+                    
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="eventOrganiser" value="Event Organiser: " />
+                        </p:column>
+                        <p:column>
+                            <h:outputText id="eventOrganiser" value="#{eventManagementManagedBean.viewEvent.student.email}" />
+                        </p:column>                 
+                    </p:row>
+                    
+
+                </p:panelGrid>
+
+            </p:dialog>
+
         </h:form>
         
     </ui:define>

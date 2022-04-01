@@ -7,15 +7,12 @@
                 template="./../Template/defaultTemplate.xhtml">
 
     <ui:define name="content">
-        <h1>Event Management</h1>
-    </ui:define>
-    
-    <ui:define name="content">
+        <h3>Event Management</h3>
         
         <h:form id="formCreateNewEvent">                
             
-            <p:panel header="Create New Event" toggleable="true" collapsed="true">
-
+            <p:panel header="Create New Event" toggleable="true" collapsed="true" rendered="#{sessionScope.currentStudent.accessRightEnum == eventManagementManagedBean.leaderAccessRightEnum}">
+                
                 <p:messages id="messagesCreateNewEvent" redisplay="false" />
 
                 <p:panelGrid>
@@ -25,7 +22,7 @@
                             <p:outputLabel for="eventName" value="Event Name: " />
                         </p:column>
                         <p:column>
-                            <p:inputMask id="eventName" value="#{eventManagementManagedBean.newEvent.eventName}" maxlength="128" required="true" requiredMessage="Event Name is required" />
+                            <p:inputMask id="eventName" value="#{eventManagementManagedBean.newEvent.eventName}" placeholder="eg. NUS Bonaza" maxlength="128" required="true" requiredMessage="Event Name is required" />
                         </p:column>
                         <p:column>
                             <p:message for="eventName" />
@@ -37,7 +34,7 @@
                             <p:outputLabel for="eventDetails" value="Event Details: " />
                         </p:column>
                         <p:column>
-                            <p:inputText id="eventDetails" value="#{eventManagementManagedBean.newEvent.eventDetails}" maxlength="256" required="true" requiredMessage="Event Details is required" />
+                            <p:inputTextarea id="eventDetails" value="#{eventManagementManagedBean.newEvent.eventDetails}" placeholder="eg. Are you for a day of extreme coding? Join us at our annual NUS Bonaza where teams get 24 hours to code out the best solution possible and stand a chance to win atractive prizes!" maxlength="256" required="true" requiredMessage="Event Details is required" />
                         </p:column>
                         <p:column>
                             <p:message for="eventDetails" />
@@ -49,7 +46,7 @@
                             <p:outputLabel for="eventLocation" value="Event Location: " />
                         </p:column>
                         <p:column>
-                            <p:inputText id="eventLocation" value="#{eventManagementManagedBean.newEvent.eventLocation}" maxlength="64" required="true" requiredMessage="Event Location is required" />
+                            <p:inputText id="eventLocation" value="#{eventManagementManagedBean.newEvent.eventLocation}" placeholder="Location of the event" maxlength="64" required="true" requiredMessage="Event Location is required" />
                         </p:column>
                         <p:column>
                             <p:message for="eventLocation" />
@@ -61,7 +58,7 @@
                             <p:outputLabel for="eventDateStart" value="Event Date Start: " />
                         </p:column>
                         <p:column>
-                            <p:datePicker id="eventDateStart" value="#{eventManagementManagedBean.newEvent.eventDateStart}">
+                            <p:datePicker id="eventDateStart" value="#{eventManagementManagedBean.newEvent.eventDateStart}" showTime="true" >
                                 <p:ajax event="dateSelect" listener="#{eventManagementManagedBean.onDateSelect}" update="messagesCreateNewEvent" />
                             </p:datePicker>
                         </p:column>
@@ -75,7 +72,7 @@
                             <p:outputLabel for="eventDateEnd" value="Event Date End: " />
                         </p:column>
                         <p:column>
-                            <p:datePicker id="eventDateEnd" value="#{eventManagementManagedBean.newEvent.eventDateEnd}">
+                            <p:datePicker id="eventDateEnd" value="#{eventManagementManagedBean.newEvent.eventDateEnd}" showTime="true" >
                                 <p:ajax event="dateSelect" listener="#{eventManagementManagedBean.onDateSelect}" update="messagesCreateNewEvent" />
                             </p:datePicker>
                         </p:column>
@@ -89,7 +86,7 @@
                             <p:outputLabel for="eventCapacity" value="Event Capacity: " />
                         </p:column>
                         <p:column>
-                            <p:inputText id="eventCapacity" value="#{eventManagementManagedBean.newEvent.eventCapacity}" required="true" requiredMessage="Event Capacity is required" />
+                            <p:inputText id="eventCapacity" value="#{eventManagementManagedBean.newEvent.eventCapacity}"  required="true" requiredMessage="Event Capacity is required" />
                         </p:column>
                         <p:column>
                             <p:message for="eventCapacity" />
@@ -108,21 +105,6 @@
                         </p:column>
                         <p:column>
                             <p:message for="society" />
-                        </p:column>
-                    </p:row>
-                    
-                    <p:row>
-                        <p:column>
-                            <p:outputLabel for="eventOrganiser" value="Event Organiser: " />
-                        </p:column>
-                        <p:column>
-                            <p:selectOneMenu id="eventOrganiser" value="#{eventManagementManagedBean.newEvent.student}" required="true" requiredMessage="Event Organiser is required" converter="studentConverter">
-                                <f:selectItem itemValue="#{null}" itemLabel="[Select One]" noSelectionOption="true"/>
-                                <f:selectItems value="#{eventManagementManagedBean.selectItemsStudentObject}" />
-                            </p:selectOneMenu>
-                        </p:column>
-                        <p:column>
-                            <p:message for="eventOrganiser" />
                         </p:column>
                     </p:row>
                     
@@ -154,7 +136,7 @@
         
         <h:form id="formDataTable">
             
-            <p:messages id="messages" redisplay="false" closable="true" />
+            <p:messages id="messages" redisplay="false" closable="true" style=""/>
         
             <p:dataTable id="dataTableEvents" widgetVar="dataTableEvents" value="#{eventManagementManagedBean.events}" var="event" rowKey="#{event.eventId}" rowIndexVar="row"
                          filteredValue="#{eventManagementManagedBean.filteredEvents}"
@@ -212,17 +194,19 @@
                 </p:column>
                                 
                 <p:column headerText="Action" width="100" >
-                    <p:commandButton update="formViewEvent" oncomplete="PF('dialogViewEvent').show()" icon="pi pi-file" title="View">
+                    <p:commandButton value="View" update="formViewEvent" oncomplete="PF('dialogViewEvent').show()" icon="pi pi-file" >
                         <f:setPropertyActionListener value="#{event}" target="#{eventManagementManagedBean.viewEvent}" />
                     </p:commandButton>
-                    <p:commandButton update="formUpdateEvent" oncomplete="PF('dialogUpdateEvent').show()" icon="pi pi-pencil" title="Update">
+                    <p:commandButton value="Update" update="formUpdateEvent" oncomplete="PF('dialogUpdateEvent').show()" rendered="#{sessionScope.currentStudent.studentId == event.student.studentId}" icon="pi pi-pencil" title="Update">
                         <f:setPropertyActionListener value="#{event}" target="#{eventManagementManagedBean.updateEvent}" />
                     </p:commandButton>
-                    <p:commandButton update="formJoinEvent" oncomplete="PF('dialogJoinEvent').show()" icon="pi pi-sign-in" title="Join">
+                    <p:commandButton value="Join" rendered="#{!event.students.contains(sessionScope.currentStudent)}" update="formJoinEvent" oncomplete="PF('dialogJoinEvent').show()" icon="pi pi-sign-in" >
                         <f:setPropertyActionListener value="#{event}" target="#{eventManagementManagedBean.joinEvent}" />
-                        <p:confirm header="Confirmation" message="Are you sure you want to join #{event.eventName} (Event ID: #{event.eventId})?" icon="pi pi-exclamation-triangle" />
                     </p:commandButton>
-                    <p:commandButton icon="pi pi-trash" actionListener="#{eventManagementManagedBean.doDeleteEvent}" update="formDataTable:dataTableEvents formDataTable:messages">
+                    <p:commandButton value="Leave" rendered="#{event.students.contains(sessionScope.currentStudent)}" update="formLeaveEvent" oncomplete="PF('dialogLeaveEvent').show()" icon="pi pi-sign-in" >
+                        <f:setPropertyActionListener value="#{event}" target="#{eventManagementManagedBean.leaveEvent}" />
+                    </p:commandButton>
+                    <p:commandButton value="Delete" rendered="#{sessionScope.currentStudent.studentId == event.student.studentId}" icon="pi pi-trash" actionListener="#{eventManagementManagedBean.doDeleteEvent}" update="formDataTable:dataTableEvents formDataTable:messages">
                         <f:attribute name="eventToDelete" value="#{event}" />
                         <p:confirm header="Confirmation" message="Are you sure you want to delete #{event.eventName} (Event ID: #{event.eventId})?" icon="pi pi-exclamation-triangle" />
                     </p:commandButton>
@@ -317,6 +301,15 @@
                         </p:column>
                         <p:column>
                             <h:outputText id="eventSociety" value="#{eventManagementManagedBean.viewEvent.society.name}" />
+                        </p:column>                 
+                    </p:row>
+                    
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="eventOrganiser" value="Event Organiser: " />
+                        </p:column>
+                        <p:column>
+                            <h:outputText id="eventOrganiser" value="#{eventManagementManagedBean.viewEvent.student.email}" />
                         </p:column>                 
                     </p:row>
                     
@@ -425,22 +418,7 @@
                             <p:message for="society" />
                         </p:column>
                     </p:row>
-                    
-                    <p:row>
-                        <p:column>
-                            <p:outputLabel for="eventOrganiser" value="Event Organiser: " />
-                        </p:column>
-                        <p:column>
-                            <p:selectOneMenu id="eventOrganiser" value="#{eventManagementManagedBean.updateEvent.student}" required="true" requiredMessage="Event Organiser is required" converter="studentConverter">
-                                <f:selectItem itemValue="#{null}" itemLabel="[Select One]" noSelectionOption="true"/>
-                                <f:selectItems value="#{eventManagementManagedBean.selectItemsStudentObject}" />
-                            </p:selectOneMenu>
-                        </p:column>
-                        <p:column>
-                            <p:message for="eventOrganiser" />
-                        </p:column>
-                    </p:row>
-                    
+                   
                     <p:row>
                         <p:column>
                             <p:outputLabel for="categories" value="Event Category: " />
@@ -457,12 +435,16 @@
 
                     <p:row>
                         <p:column colspan="3">
-                            <p:commandButton id="updateEvent" value="Save" icon="pi pi-save" update="@form formDataTable:dataTableEvents" actionListener="#{eventManagementManagedBean.doUpdateEvent}" oncomplete="PF('dialogUpdateEvent').show();" />
+                            <p:commandButton id="updateEvent" value="Save" icon="pi pi-save" update="@form formDataTable:dataTableEvents" actionListener="#{eventManagementManagedBean.doUpdateEvent}" oncomplete="PF('dialogSuccessfullyUpdated').show();" />
                         </p:column>
                     </p:row>
 
                 </p:panelGrid>
 
+            </p:dialog>
+            
+            <p:dialog id="dialogSuccessfullyUpdated" widgetVar="dialogSuccessfullyUpdated" closable="true">
+                <p:outputLabel value="Updated Successfully!"/>
             </p:dialog>
 
         </h:form>
@@ -480,16 +462,15 @@
                             <p:outputLabel for="eventName" value="Event Name: " />
                         </p:column>
                         <p:column>
-                            <p:inputMask id="eventName" value="#{eventManagementManagedBean.joinEvent.eventName}" maxlength="128" required="true" requiredMessage="Event Name is required" />
-                        </p:column>
-                        <p:column>
-                            <p:message for="eventName" />
+                            <h:outputText id="eventName" value="#{eventManagementManagedBean.joinEvent.eventName}" />
                         </p:column>
                     </p:row>
                    
                     <p:row>
                         <p:column colspan="3">
-                            <p:commandButton id="joinEvent" value="Join" icon="pi pi-save"  actionListener="#{eventManagementManagedBean.doJoinEvent}" oncomplete="PF('dialogJoinEvent').show();" />
+                            
+                            <p:commandButton id="joinEvent" value="Join" icon="pi pi-save" update="formJoinEvent:dialogJoinEvent" actionListener="#{eventManagementManagedBean.doJoinEvent}" oncomplete="PF('dialogSuccessfullyJoined').show();" />
+                             
                         </p:column>
                     </p:row>
 
@@ -497,9 +478,46 @@
 
             </p:dialog>
             
+            <p:dialog id="dialogSuccessfullyJoined" widgetVar="dialogSuccessfullyJoined" closable="true">
+                <p:outputLabel value="Joined Successfully!"/>
+            </p:dialog>
+            
         </h:form>
         
-        
+        <h:form id="formLeaveEvent">                
+            
+            <p:dialog id="dialogLeaveEvent" widgetVar="dialogLeaveEvent" header="Leave an Event" closable="true">
+
+                <p:messages id="messagesLeaveEvent" redisplay="false" />
+
+                <p:panelGrid>
+                    
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="eventName" value="Event Name: " />
+                        </p:column>
+                        <p:column>
+                            <h:outputText id="eventName" value="#{eventManagementManagedBean.leaveEvent.eventName}" />
+                        </p:column>
+                    </p:row>
+                   
+                    <p:row>
+                        <p:column colspan="3">
+                            
+                            <p:commandButton id="leaveEvent" value="Leave" icon="pi pi-save" update="@form formLeaveEvent:dialogLeaveEvent" actionListener="#{eventManagementManagedBean.doLeaveEvent}" oncomplete="PF('dialogSuccessfullyLeft').show();"  />
+                             
+                        </p:column>
+                    </p:row>
+
+                </p:panelGrid>
+
+            </p:dialog>
+            
+             <p:dialog id="dialogSuccessfullyLeft" widgetVar="dialogSuccessfullyLeft" closable="true">
+                <p:outputLabel value="Left Successfully!"/>
+            </p:dialog>
+            
+        </h:form>
         
     </ui:define>    
 

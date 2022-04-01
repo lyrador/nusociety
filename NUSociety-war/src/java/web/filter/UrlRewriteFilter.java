@@ -144,6 +144,7 @@ public class UrlRewriteFilter implements Filter {
                 String[] requestServletPathElements = requestServletPath.split("/");
                 String societyName = requestServletPathElements[3];            
                 String societyId = societyName.split("-")[0];
+                System.out.println("********** Society ID IS NUMBER " + societyId);
                 
                 httpServletRequest.getRequestDispatcher("/Society/society.xhtml?societyId=" + societyId).forward(request, response);
             }

@@ -57,21 +57,128 @@
                 </p:panel>
             </div>
 
-            <h3>Upcoming Events</h3>
-<!--            can modify this to whatever design-->
-            <div style="display:flex">
-                
-                <p:panel style="width:33%">
-                    <h:outputText value="first event"/>
-                </p:panel>
-                <p:panel style="width:33%">
-                    <h:outputText value="second event"/>
-                </p:panel>
-                <p:panel style="width:33%">
-                    <h:outputText value="third event"/>
-                </p:panel>
-            </div><!-- comment -->
         </h:form>
+        
+        <h:form id="form">
+
+            
+            <div class="card">
+                <h3>Events</h3>
+                <p:carousel value="#{carouselViewManagedBean.events}" var="event" circular="true" numVisible="3" autoPlayInterval="3000" responsive="true" >
+
+                    <div class="event" style="width:70%">
+                        <div class="event-content">
+                            <div>
+                                <h3>#{event.eventName}</h3>
+                                <h5 style="font-style: oblique">#{event.eventDetails}</h5>
+                                <h5 style="font-style: oblique">Location: #{event.eventLocation}</h5>
+                                <div class="p-mt-5">
+                                     <p:commandButton value="View" update="formViewEvent" oncomplete="PF('dialogViewEvent').show()" icon="pi pi-file" >
+                                        <f:setPropertyActionListener value="#{event}" target="#{eventManagementManagedBean.viewEvent}" />
+                                    </p:commandButton>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </p:carousel>
+            </div>
+        </h:form>
+        
+        <h:form id="formViewEvent">
+
+            <p:dialog id="dialogViewEvent" widgetVar="dialogViewEvent" header="View Event" closable="true">
+                
+                <p:panelGrid>
+                    
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="eventId" value="Event ID: " />
+                        </p:column>
+                        <p:column>
+                            <h:outputText id="eventId" value="#{eventManagementManagedBean.viewEvent.eventId}" />
+                        </p:column>                 
+                    </p:row>
+                    
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="eventName" value="Event Name: " />
+                        </p:column>
+                        <p:column>
+                            <h:outputText id="eventName" value="#{eventManagementManagedBean.viewEvent.eventName}" />
+                        </p:column>                 
+                    </p:row>
+                    
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="eventDetails" value="Event Details: " />
+                        </p:column>
+                        <p:column>
+                            <h:outputText id="eventDetails" value="#{eventManagementManagedBean.viewEvent.eventDetails}" />
+                        </p:column>                 
+                    </p:row>
+
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="eventLocation" value="Event Location: " />
+                        </p:column>
+                        <p:column>
+                            <h:outputText id="eventLocation" value="#{eventManagementManagedBean.viewEvent.eventLocation}" />
+                        </p:column>                 
+                    </p:row>
+
+                   <p:row>
+                        <p:column>
+                            <p:outputLabel for="eventStartDate" value="Event Start Date: " />
+                        </p:column>
+                        <p:column>
+                            <h:outputText id="eventStartDate" value="#{eventManagementManagedBean.viewEvent.eventDateStart}" />
+                        </p:column>                 
+                    </p:row>
+                    
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="eventEndDate" value="Event End Date: " />
+                        </p:column>
+                        <p:column>
+                            <h:outputText id="eventEndDate" value="#{eventManagementManagedBean.viewEvent.eventDateEnd}" />
+                        </p:column>                 
+                    </p:row>
+                    
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="eventCapacity" value="Event Capacity: " />
+                        </p:column>
+                        <p:column>
+                            <h:outputText id="eventCapacity" value="#{eventManagementManagedBean.viewEvent.eventCapacity}" />
+                        </p:column>                 
+                    </p:row>
+                    
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="eventSociety" value="Event Society: " />
+                        </p:column>
+                        <p:column>
+                            <h:outputText id="eventSociety" value="#{eventManagementManagedBean.viewEvent.society.name}" />
+                        </p:column>                 
+                    </p:row>
+                    
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="eventOrganiser" value="Event Organiser: " />
+                        </p:column>
+                        <p:column>
+                            <h:outputText id="eventOrganiser" value="#{eventManagementManagedBean.viewEvent.student.email}" />
+                        </p:column>                 
+                    </p:row>
+                    
+
+                </p:panelGrid>
+
+            </p:dialog>
+
+        </h:form>
+        
     </ui:define>
 
 </ui:composition>

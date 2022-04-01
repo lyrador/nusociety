@@ -28,6 +28,8 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.model.SelectItem;
 import org.primefaces.event.SelectEvent;
+import org.primefaces.model.ScheduleModel;
+import util.enumeration.AccessRightEnum;
 import util.exception.EventAlreadyExistsException;
 import util.exception.EventCategoryNotFoundException;
 import util.exception.EventNotFoundException;
@@ -74,11 +76,17 @@ public class EventManagementManagedBean implements Serializable {
     private List<SelectItem> selectItemsCategoryObject; 
     private List<SelectItem> selectItemsCategoryName; 
     
-    private List<SelectItem> selectItemsStudentObject; 
-    private List<SelectItem> selectItemsStudentName; 
+    //private List<SelectItem> selectItemsStudentObject; 
+    //private List<SelectItem> selectItemsStudentName; 
     
     private Long studentId; 
     private List<Event> registeredEvents; 
+    
+    private AccessRightEnum leaderAccessRightEnum; 
+    
+   /* private Date minDateTime; 
+    private Date maxDateTime; 
+    private Date today; 
     
  /* private Long societyId; 
     private List<Event> societyEvents; */
@@ -94,9 +102,10 @@ public class EventManagementManagedBean implements Serializable {
         selectItemsSocietyName = new ArrayList<>();
         selectItemsCategoryObject = new ArrayList<>();
         selectItemsCategoryName = new ArrayList<>();
-        selectItemsStudentObject = new ArrayList<>();
-        selectItemsStudentName = new ArrayList<>();
-        
+        leaderAccessRightEnum = AccessRightEnum.LEADER;
+        //selectItemsStudentObject = new ArrayList<>();
+        //selectItemsStudentName = new ArrayList<>();
+
     }
 
     @PostConstruct
@@ -111,35 +120,32 @@ public class EventManagementManagedBean implements Serializable {
         //this.setStudents(students);
         FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("EventManagementManagedBean.students", students);
         
-        List<Society> societies = societySessionBeanLocal.retrieveAllSocieties();
-        //this.setSocieties(societies);
-        FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("EventManagementManagedBean.societies", societies);
-        
         Student currentStudent = (Student) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("currentStudent");
         this.studentId = currentStudent.getStudentId(); 
         this.registeredEvents = eventSessionBeanLocal.retrieveEventsForStudent(studentId); 
         
+        List<Society> societiesForStudent = societySessionBeanLocal.retrieveSocietiesForMember(this.studentId);
+        //this.setSocieties(societies);
+        FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("EventManagementManagedBean.societies", societiesForStudent);
    /*   Society currentSociety = (Society) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("currentSociety");
         this.societyId = currentSociety.getSocietyId(); 
         this.societyEvents = eventSessionBeanLocal.retrieveEventsForSociety(societyId); */
         
-        for (Society society: societies) 
+        for (Society society: societiesForStudent) 
         {
             selectItemsSocietyObject.add(new SelectItem(society, society.getName()));
             selectItemsSocietyName.add(new SelectItem(society.getName(), society.getName()));
         }
         
-        for (Student student: students) 
-        {
-            selectItemsStudentObject.add(new SelectItem(student, student.getName()));
-            selectItemsStudentName.add(new SelectItem(student.getName(), student.getName()));
-        }
         
         for (EventCategory category: categories) 
         {
             selectItemsCategoryObject.add(new SelectItem(category, category.getCategoryName()));
             selectItemsCategoryName.add(new SelectItem(category.getCategoryName(), category.getCategoryName()));
         }
+        
+        
+
     }
     
     @PreDestroy
@@ -167,7 +173,7 @@ public class EventManagementManagedBean implements Serializable {
                 categories.add(eventCategorySessionBeanLocal.retrieveEventCategoryById(getNewEventCategoryId()));
                 getNewEvent().setCategories(categories);
             }*/
-            
+            newEvent.setStudent(studentSessionBeanLocal.retrieveStudentByStudentId(this.studentId));
             Long newEventId = eventSessionBeanLocal.createNewEvent(newEvent);
             newEvent.setEventId(newEventId);
             events.add(newEvent); 
@@ -250,7 +256,7 @@ public class EventManagementManagedBean implements Serializable {
     
     public void onDateSelect(SelectEvent<Date> event) {
         FacesContext facesContext = FacesContext.getCurrentInstance(); 
-        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy"); 
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss"); 
         facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Date Selected", format.format((event.getObject()))));
     }
 
@@ -398,7 +404,7 @@ public class EventManagementManagedBean implements Serializable {
         this.selectItemsCategoryName = selectItemsCategoryName;
     }
 
-    public List<SelectItem> getSelectItemsStudentObject() {
+   /* public List<SelectItem> getSelectItemsStudentObject() {
         return selectItemsStudentObject;
     }
 
@@ -412,7 +418,7 @@ public class EventManagementManagedBean implements Serializable {
 
     public void setSelectItemsStudentName(List<SelectItem> selectItemsStudentName) {
         this.selectItemsStudentName = selectItemsStudentName;
-    }
+    }*/
 
     public Event getJoinEvent() {
         return joinEvent;
@@ -446,22 +452,12 @@ public class EventManagementManagedBean implements Serializable {
         this.leaveEvent = leaveEvent;
     }
 
- /*   public Long getSocietyId() {
-        return societyId;
+    public AccessRightEnum getLeaderAccessRightEnum() {
+        return leaderAccessRightEnum;
     }
 
-    public void setSocietyId(Long societyId) {
-        this.societyId = societyId;
+    public void setLeaderAccessRightEnum(AccessRightEnum leaderAccessRightEnum) {
+        this.leaderAccessRightEnum = leaderAccessRightEnum;
     }
-
-    public List<Event> getSocietyEvents() {
-        return societyEvents;
-    }
-
-    public void setSocietyEvents(List<Event> societyEvents) {
-        this.societyEvents = societyEvents;
-    }*/
-    
-    
 
 }

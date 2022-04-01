@@ -8,6 +8,7 @@ package ejb.session.singleton;
 import ejb.session.stateless.AnnouncementSessionBeanLocal;
 import ejb.session.stateless.AttendanceSessionBeanLocal;
 import ejb.session.stateless.CommentSessionBeanLocal;
+import ejb.session.stateless.EventCategorySessionBeanLocal;
 import ejb.session.stateless.EventSessionBeanLocal;
 import ejb.session.stateless.PostSessionBeanLocal;
 import ejb.session.stateless.SocietyCategorySessionBeanLocal;
@@ -16,6 +17,7 @@ import ejb.session.stateless.StaffSessionBeanLocal;
 import ejb.session.stateless.StudentSessionBeanLocal;
 import entity.Attendance;
 import entity.Comment;
+import entity.EventCategory;
 import entity.Post;
 import entity.Society;
 import entity.SocietyCategory;
@@ -34,6 +36,7 @@ import javax.persistence.PersistenceContext;
 import util.enumeration.AccessRightEnum;
 import util.exception.CreateSocietyCategoryException;
 import util.exception.CreateSocietyException;
+import util.exception.EventCategoryAlreadyExistsException;
 import util.exception.PostNotFoundException;
 import util.exception.SocietyCategoryNotFoundException;
 import util.exception.SocietyNotFoundException;
@@ -48,6 +51,9 @@ import util.exception.UnknownPersistenceException;
 @LocalBean
 @Startup
 public class DataIntSessionBean {
+
+    @EJB
+    private EventCategorySessionBeanLocal eventCategorySessionBeanLocal;
 
     @EJB(name = "CommentSessionBeanLocal")
     private CommentSessionBeanLocal commentSessionBeanLocal;
@@ -84,6 +90,7 @@ public class DataIntSessionBean {
     @PostConstruct
     public void postConstruct() {
         List<Long> staffIds = new ArrayList<>();
+        List<Long> eventCategoryIds = new ArrayList<>(); 
         List<Long> categoryIds1 = new ArrayList<>();
         List<Long> categoryIds2 = new ArrayList<>();
         List<Long> categoryIds3 = new ArrayList<>();
@@ -120,6 +127,12 @@ public class DataIntSessionBean {
         if (em.find(Staff.class, 1l) == null) {
             Long staffId = staffSessionBeanLocal.createNewStaff(new Staff("staff@gmail.com", "password", "staff", "www.staff.com/profilepic"));
             staffIds.add(staffId);
+        }
+        
+        if(em.find(EventCategory.class, 1l) == null) {
+            Long eventCategoryId1 = eventCategorySessionBeanLocal.createNewEventCategory(new EventCategory("Sports")); 
+            Long eventCategoryId2 = eventCategorySessionBeanLocal.createNewEventCategory(new EventCategory("Interest Groups"));
+            eventCategoryIds.add(eventCategoryId1); 
         }
 
         if (em.find(Society.class, 1l) == null) {

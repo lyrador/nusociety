@@ -17,7 +17,7 @@
     <ui:define name="content">
         
         <h:form id="formDataTable">
-            
+            <p:panel header="Society's Table of Events" toggleable="true" collapsed="true" > 
             <p:messages id="messages" redisplay="false" closable="true" />
         
             <p:dataTable id="dataTableEvents" widgetVar="dataTableEvents" value="#{societyManagedBean.society.events}" var="event" rowKey="#{event.eventId}" rowIndexVar="row"
@@ -65,7 +65,7 @@
                 </p:column>
                                 
                 <p:column headerText="Action" width="100" >
-                    <p:commandButton update="formViewEvent" oncomplete="PF('dialogViewEvent').show()" icon="pi pi-file" title="View">
+                    <p:commandButton value="View" update="formViewEvent" oncomplete="PF('dialogViewEvent').show()" icon="pi pi-file" >
                         <f:setPropertyActionListener value="#{event}" target="#{eventManagementManagedBean.viewEvent}" />
                     </p:commandButton>
                 </p:column>
@@ -80,7 +80,7 @@
                 <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
                 <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="pi pi-times" />
             </p:confirmDialog>
-            
+           </p:panel>  
         </h:form>
         
          <h:form id="formViewEvent">
@@ -166,6 +166,42 @@
 
             </p:dialog>
 
+         </h:form>
+        
+        <h:form>
+            <p:growl id="messages" showDetail="true" />
+
+            <h:panelGrid columnClasses="value">
+                <h3 style="margin-top: 0">Society's Schedule</h3>
+                <p:schedule id="schedule" value="#{societyManagedBean.scheduleModel}" widgetVar="myschedule" timeZone="GMT+8">
+
+                    <p:ajax event="dateSelect" listener="#{societyManagedBean.onDateSelect}" update="eventDetails" oncomplete="PF('eventDialog').show();" />
+                    <p:ajax event="eventSelect" listener="#{societyManagedBean.onEventSelect}" update="eventDetails" oncomplete="PF('eventDialog').show();" />
+                    <p:ajax event="eventMove" listener="#{societyManagedBean.onEventMove}" update="messages" />
+                    <p:ajax event="eventResize" listener="#{societyManagedBean.onEventResize}" update="messages" />
+
+                </p:schedule>
+
+            </h:panelGrid>
+
+            <p:dialog widgetVar="eventDialog" header="Event Details" showEffect="clip" hideEffect="clip">
+                <h:panelGrid id="eventDetails" columns="2">
+                    <p:outputLabel for="title" value="Titles:" />
+                    <p:inputText id="title" value="#{societyManagedBean.scheduleEvent.title}" required="true" />
+
+                    <p:outputLabel for="from" value="From:" />
+                    <p:calendar id="from" value="#{societyManagedBean.scheduleEvent.startDate}" timeZone="GMT+8" pattern="dd/MM/yyyy HH:mm"/>
+
+                    <p:outputLabel for="to" value="To:" />
+                    <p:calendar id="to" value="#{societyManagedBean.scheduleEvent.endDate}" timeZone="GMT+8" pattern="dd/MM/yyyy HH:mm"/>
+
+                    <p:outputLabel for="allDay" value="All Day:" />
+                    <h:selectBooleanCheckbox id="allDay" value="#{societyManagedBean.scheduleEvent.allDay}" />
+
+                    <p:commandButton type="reset" value="Reset" />
+                    <p:commandButton id="addButton" value="Save" actionListener="#{societyManagedBean.addEvent}" oncomplete="PF('myschedule').update();PF('eventDialog').hide();" />
+                </h:panelGrid>
+            </p:dialog>    
         </h:form>
     
     </ui:define>

@@ -96,12 +96,17 @@ public class SocietySessionBean implements SocietySessionBeanLocal {
 
     @Override
     public List<Society> retrieveSocietiesForMember(Long memberId) {
-        Query query = em.createQuery("SELECT s FROM Society s WHERE s.");
+        Query query = em.createQuery("SELECT s FROM Society s, IN (s.memberStudents) m WHERE m.studentId = :inStudentId");
+        query.setParameter("inStudentId", memberId);
         List<Society> societies = query.getResultList();
 
         for (Society society : societies) {
             society.getSocietyCategories().size();
             society.getStaffs().size();
+        }
+        if (societies.isEmpty()) {
+        System.out.println("**** The society is empty"); 
+        System.out.println("**** The student id is " + memberId); 
         }
         return query.getResultList();
     }

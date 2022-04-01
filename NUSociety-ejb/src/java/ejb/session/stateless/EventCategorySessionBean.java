@@ -57,14 +57,14 @@ public class EventCategorySessionBean implements EventCategorySessionBeanLocal {
     }
     
     @Override
-    public Long createNewEventCategory(EventCategory eventCategory) throws EventCategoryAlreadyExistsException {
-        if (eventCategory.getEventCategoryId()== null || em.find(EventCategory.class, eventCategory.getEventCategoryId()) == null) {
+    public Long createNewEventCategory(EventCategory eventCategory) {
+        //if (eventCategory.getEventCategoryId()== null || em.find(EventCategory.class, eventCategory.getEventCategoryId()) == null) {
             em.persist(eventCategory);
             em.flush();
             return eventCategory.getEventCategoryId();
-        } else {
-            throw new EventCategoryAlreadyExistsException("Error, Event with ID: " + eventCategory.getEventCategoryId() + " already exists!"); 
-        }
+        //} else {
+        //    throw new EventCategoryAlreadyExistsException("Error, Event with ID: " + eventCategory.getEventCategoryId() + " already exists!"); 
+        //}
         
     }
     
