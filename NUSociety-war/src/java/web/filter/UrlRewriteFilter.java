@@ -148,6 +148,14 @@ public class UrlRewriteFilter implements Filter {
                 
                 httpServletRequest.getRequestDispatcher("/Society/society.xhtml?societyId=" + societyId).forward(request, response);
             }
+            
+            if(requestServletPath.startsWith("/Posts")) {
+                String[] requestServletPathElements = requestServletPath.split("/");
+                String societyName = requestServletPathElements[3];            
+                String societyId = societyName.split("-")[0];
+                
+                httpServletRequest.getRequestDispatcher("/Post/viewSocietyPosts.xhtml?societyId=" + societyId).forward(request, response);
+            }
             else
             {
                 chain.doFilter(request, response);

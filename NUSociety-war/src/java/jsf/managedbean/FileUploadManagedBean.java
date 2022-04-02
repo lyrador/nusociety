@@ -30,13 +30,19 @@ public class FileUploadManagedBean {
     @Inject
     private PostManagementManagedBean postManagementSessionBean;
     
+    @Inject
+    private HomePagePostManagedBean homePagePostManagedBean;
+    
+    @Inject
+    private societyPostsManagedBean societyPostsManagedBean;
+    
     public FileUploadManagedBean() 
     {
         showUploadedFile = false;
     }
     
     
-    
+    //Specifically for Create Post
     public void handleFileUpload(FileUploadEvent event)
     {
         try
@@ -75,7 +81,7 @@ public class FileUploadManagedBean {
             System.out.println("link = " + uploadedFilePath);
             showUploadedFile = true;
             
-            postManagementSessionBean.getNewPostEntity().setImage(event.getFile().getFileName());
+            postManagementSessionBean.getPostToUpdate().setImage(event.getFile().getFileName());
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,  "File uploaded successfully", ""));
         }
         catch(IOException ex)
@@ -84,6 +90,7 @@ public class FileUploadManagedBean {
         }
     }
 
+     //Specifically for Post Update
     public void handleFileUploadForUpdate(FileUploadEvent event)
     {
         try
@@ -122,7 +129,101 @@ public class FileUploadManagedBean {
             System.out.println("link = " + uploadedFilePath);
             showUploadedFile = true;
             
-            postManagementSessionBean.getPostToUpdate().setImage(event.getFile().getFileName());
+            homePagePostManagedBean.getPostToUpdate().setImage(event.getFile().getFileName());
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,  "File uploaded successfully", ""));
+        }
+        catch(IOException ex)
+        {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,  "File upload error: " + ex.getMessage(), ""));
+        }
+    }
+    
+    public void handleFileUploadForSocietyUpdate(FileUploadEvent event)
+    {
+        try
+        {
+            String newFilePath = FacesContext.getCurrentInstance().getExternalContext().getInitParameter("alternatedocroot_1") + System.getProperty("file.separator") + event.getFile().getFileName();
+
+            System.err.println("********** Demo03ManagedBean.handleFileUpload(): File name: " + event.getFile().getFileName());
+            System.err.println("********** Demo03ManagedBean.handleFileUpload(): newFilePath: " + newFilePath);
+
+            File file = new File(newFilePath);
+            FileOutputStream fileOutputStream = new FileOutputStream(file);
+
+            int a;
+            int BUFFER_SIZE = 8192;
+            byte[] buffer = new byte[BUFFER_SIZE];
+
+            InputStream inputStream = event.getFile().getInputStream();
+
+            while (true)
+            {
+                a = inputStream.read(buffer);
+
+                if (a < 0)
+                {
+                    break;
+                }
+
+                fileOutputStream.write(buffer, 0, a);
+                fileOutputStream.flush();
+            }
+
+            fileOutputStream.close();
+            inputStream.close();
+            
+            setUploadedFilePath(FacesContext.getCurrentInstance().getExternalContext().getInitParameter("uploadedFilesPath") + "/" + event.getFile().getFileName());
+            System.out.println("link = " + uploadedFilePath);
+            showUploadedFile = true;
+            
+            societyPostsManagedBean.getPostToUpdate().setImage(event.getFile().getFileName());
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,  "File uploaded successfully", ""));
+        }
+        catch(IOException ex)
+        {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,  "File upload error: " + ex.getMessage(), ""));
+        }
+    }
+    
+    public void handleFileUploadForCreate(FileUploadEvent event)
+    {
+        try
+        {
+            String newFilePath = FacesContext.getCurrentInstance().getExternalContext().getInitParameter("alternatedocroot_1") + System.getProperty("file.separator") + event.getFile().getFileName();
+
+            System.err.println("********** Demo03ManagedBean.handleFileUpload(): File name: " + event.getFile().getFileName());
+            System.err.println("********** Demo03ManagedBean.handleFileUpload(): newFilePath: " + newFilePath);
+
+            File file = new File(newFilePath);
+            FileOutputStream fileOutputStream = new FileOutputStream(file);
+
+            int a;
+            int BUFFER_SIZE = 8192;
+            byte[] buffer = new byte[BUFFER_SIZE];
+
+            InputStream inputStream = event.getFile().getInputStream();
+
+            while (true)
+            {
+                a = inputStream.read(buffer);
+
+                if (a < 0)
+                {
+                    break;
+                }
+
+                fileOutputStream.write(buffer, 0, a);
+                fileOutputStream.flush();
+            }
+
+            fileOutputStream.close();
+            inputStream.close();
+            
+            setUploadedFilePath(FacesContext.getCurrentInstance().getExternalContext().getInitParameter("uploadedFilesPath") + "/" + event.getFile().getFileName());
+            System.out.println("link = " + uploadedFilePath);
+            showUploadedFile = true;
+            
+            postManagementSessionBean.getNewPostEntity().setImage(event.getFile().getFileName());
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,  "File uploaded successfully", ""));
         }
         catch(IOException ex)

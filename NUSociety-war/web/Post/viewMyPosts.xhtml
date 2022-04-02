@@ -10,15 +10,32 @@
     <ui:define name="content">
 
 
+        <h3 style="font-size: 32pt" align="center">My Posts!</h3>
+        <h2 style="color: darkblue; text-decoration: underline; font-size: 20pt">Whats on your mind?</h2>
+        <p:linkButton value="Create a Public Post!" style="margin-right:20px; background-color: lightblue" outcome="/Post/createPost.xhtml">
+        </p:linkButton>
+        <p:linkButton value="Create a Private Post!" style="margin-right:20px; background-color: lightblue" outcome="/Post/createPrivatePost.xhtml">
+        </p:linkButton>
+        <br/><br/>
+
+        <h:form id="filter">
+            <p:messages id="messages" redisplay="false" closable="true" />
+            <h2 style="color: yellowgreen; text-decoration: underline; font-size: 20pt">Filter</h2>
+            <p:commandButton value="Sort by Latest" style="margin-right:20px;" actionListener="#{postManagementManagedBean.sortByLatest}" update="formViewMyPosts:dataScrollMyPosts filter:messages">
+            </p:commandButton>
+            <p:commandButton value="Sort by Oldest" style="margin-right:20px;" actionListener="#{postManagementManagedBean.sortByEarliest}" update="formViewMyPosts:dataScrollMyPosts filter:messages">
+            </p:commandButton>
+
+            <p:commandButton value="Show Private Posts Only " style="margin-right:20px;" actionListener="#{postManagementManagedBean.sortByPrivate}" update="formViewMyPosts:dataScrollMyPosts filter:messages"/>
+            <p:commandButton value="Show Public Posts Only" style="margin-right:20px;" actionListener="#{postManagementManagedBean.sortByPublic}" update="formViewMyPosts:dataScrollMyPosts filter:messages"/>
+            <p:commandButton value="Filter by Society" style="margin-right:20px;" oncomplete="PF('dialogFilterSociety').show()"/>
+            <br/><br/>
+            <p:commandButton value="Reset filters" style="margin-right:20px; background-color: greenyellow" actionListener="#{postManagementManagedBean.resetFilter}" update="formViewMyPosts:dataScrollMyPosts filter:messages"/>
+        </h:form>
 
         <div class="product card">
             <h:form id="formViewMyPosts">
-                <p:commandButton value="Sort by Latest" actionListener="#{postManagementManagedBean.sortByLatest}" update="formViewMyPosts:dataScrollMyPosts">
 
-                </p:commandButton>
-                <p:commandButton value="Sort by Oldest" actionListener="#{postManagementManagedBean.sortByEarliest}" update="formViewMyPosts:dataScrollMyPosts">
-
-                </p:commandButton>
 
                 <br/><br/>
                 <p:messages id="messages" redisplay="false" closable="true" />
@@ -40,6 +57,11 @@
                                 <h:outputText value="Post ID:" style="font-weight: bold"/>
                                 <span class="product-category">#{post.postId}</span>
                                 <br/><br/>
+
+                                <h:outputText value="#{post.student.name} " style="font-weight: bold"/>
+                                <br/>
+                                <p:graphicImage value="#{FacesContext.getCurrentInstance().getExternalContext()}/resources/Images/#{post.student.profilePicture}" width="50px" height="50px"/>
+                                <br/> <br/>
 
                                 <div class="product-name">
                                     <h:outputText value="Society:" style="font-weight: bold"/>
@@ -71,11 +93,12 @@
                                 <p:commandButton value="Update Post" actionListener="#{postManagementManagedBean.doUpdatePost}" update="formUpdatePost" oncomplete="PF('dialogUpdatePost').show()" icon="ui-icon-pencil" title="Update" style="margin-right:20px;" styleClass="ui-priority-primary" >
                                     <f:attribute name="postToUpdate" value="#{post}" />
                                 </p:commandButton>
-                                <p:commandButton value="Delete Post" icon="ui-icon-trash" actionListener="#{postManagementManagedBean.deletePost}" update="formViewMyPosts" >
+                                <p:commandButton value="Delete Post" icon="ui-icon-trash" actionListener="#{postManagementManagedBean.deletePost}" update="formViewMyPosts formViewMyPosts:dataScrollMyPosts" >
                                     <f:attribute name="postToDelete" value="#{post}" />
                                     <p:confirm header="Confirmation" message="Are you sure you want to delete POST ID: #{post.postId} ?" icon="ui-icon-alert" />
                                 </p:commandButton>
                                 <br/> <br/>
+                                <hr></hr>
                             </div>
                         </div>
                     </div>
@@ -91,9 +114,10 @@
 
 
 
+
         <h:form id="formViewPost">
 
-            <p:dialog id="dialogViewPost" widgetVar="dialogViewPost" header="View Post" closable="true">
+            <p:dialog id="dialogViewPost" widgetVar="dialogViewPost" header="View Post" closable="true" width="1000" height="850">
 
                 <p:messages id="messagesViewPost" redisplay="false" />
 
@@ -103,18 +127,18 @@
                         <h:outputLabel value="Post ID: " style="font-weight: bold"/>
                         <h:outputText value="#{postManagementManagedBean.postToView.postId}" />
                         <br/> <br/>
-                        
+
                         <h:outputLabel value="Society Name: " style="font-weight: bold"/>
                         <h:outputText value="#{postManagementManagedBean.postToView.society.name} (#{postManagementManagedBean.postToView.publicOrPrivate})" />
                         <br/> <br/>
-                        
+
                         <p:graphicImage value="#{FacesContext.getCurrentInstance().getExternalContext()}/resources/Images/#{postManagementManagedBean.postToView.image}" width="600px" height="600px"/>
                         <br/><br/>
-                        
+
                         <h:outputLabel value="Post Content: " style="font-weight: bold"/>
                         <h:outputText value="#{postManagementManagedBean.postToView.bodyContent}"/>
                         <br/> <br/>
-                        
+
                         <h:outputLabel value="Post Creation Date: " style="font-weight: bold"/>
                         <h:outputText value="#{postManagementManagedBean.postToView.creationDate}" />
                         <br/> <br/>
@@ -153,11 +177,11 @@
                                     <h:outputText value="#{comment.creationDate}" />
                                     <br/> <br/>
 
-                                    <p:commandButton value="Edit" rendered="#{comment.student == sessionScope.currentStudent}" update="dataScrollMyComments formViewPost:messagesViewPost" actionListener="#{createNewCommentManagedBean.doUpdateComment}" oncomplete="PF('dialogEditComment').show()">
+                                    <p:commandButton value="Edit" style="margin-right:20px;" rendered="#{comment.student == sessionScope.currentStudent}" update="dataScrollMyComments formViewPost:messagesViewPost" actionListener="#{createNewCommentManagedBean.doUpdateComment}" oncomplete="PF('dialogEditComment').show()">
                                         <f:attribute name="commentToBeUpdated" value="#{comment}" />
                                     </p:commandButton>
 
-                                    <p:commandButton value="Delete" actionListener="#{createNewCommentManagedBean.deleteComment}" update="dataScrollMyComments formViewPost:messagesViewPost">
+                                    <p:commandButton value="Delete" style="margin-right:20px;" actionListener="#{createNewCommentManagedBean.deleteComment}" update="dataScrollMyComments formViewPost:messagesViewPost">
                                         <f:attribute name="commentToDelete" value="#{comment}" />
                                     </p:commandButton>
 
@@ -214,11 +238,13 @@
                         <p:column>
                             <p:inputText id="body" value="#{createNewCommentManagedBean.commentToBeUpdated.content}" placeholder="#{createNewCommentManagedBean.commentToBeUpdated.content}" required="true" requiredMessage="Content is required" />
                         </p:column>
-                        <p:commandButton value="Confirm" actionListener="${createNewCommentManagedBean.updateComment}" update="formViewPost">
-                        </p:commandButton>
+
                     </p:row>
 
                 </p:panelGrid>
+                <br/>
+                <p:commandButton value="Confirm" actionListener="${createNewCommentManagedBean.updateComment}" update="formViewPost:dataScrollMyComments formEditComment:messagesEditCommnet">
+                </p:commandButton>
             </p:dialog>
 
         </h:form>
@@ -274,7 +300,7 @@
                             <p:outputLabel for="imageURL" value="Upload Image " style="font-weight: bold;"/>
                         </p:column>
                         <p:column>
-                            <p:fileUpload id="imageURL" listener="#{fileUploadManagedBean.handleFileUploadForUpdate}" multiple="true" update="@this" />
+                            <p:fileUpload id="imageURL" listener="#{fileUploadManagedBean.handleFileUpload}" multiple="true" update="@this messagesUpdatePost" />
                             <p:panel header="Uploaded File" visible="#{fileUploadManagedBean.showUploadedFile}">
                                 <p:graphicImage value="#{fileUploadManagedBean.uploadedFilePath}" height="50%" />
                             </p:panel>
@@ -294,6 +320,34 @@
 
                 </p:panelGrid>
 
+            </p:dialog>
+
+        </h:form>
+
+        <h:form id="formFilterSociety">
+
+            <p:dialog id="dialogFilterSociety" widgetVar="dialogFilterSociety" header="Select a Society" closable="true">
+                <p:messages id="messagesFilterSociety" redisplay="false" />
+                <p:panelGrid>
+
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel value="Society " style="font-weight: bold;"/>
+                        </p:column>
+                        <p:column>
+                            <p:selectOneMenu id="society" value="#{postManagementManagedBean.sortedSociety}" required="true" requiredMessage="Society is required" converter="societyConverterForPost" >
+                                <f:selectItem itemValue="#{null}" itemLabel="[Select Public Society]" noSelectionOption="true"/>
+                                <f:selectItems value="#{postManagementManagedBean.selectItemsFollowedSocietyObject}" />
+                            </p:selectOneMenu>
+                        </p:column>
+                    </p:row>
+                    <br/>
+
+
+                </p:panelGrid>
+                <p:commandButton actionListener="#{postManagementManagedBean.sortBySociety}" update="formViewMyPosts:dataScrollMyPosts filter:messages" value="Sort"  styleClass="ui-confirmdialog-yes">
+
+                </p:commandButton>
             </p:dialog>
 
         </h:form>

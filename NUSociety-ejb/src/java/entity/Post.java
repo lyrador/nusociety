@@ -51,6 +51,8 @@ public class Post implements Serializable {
     private Society society;
 
     public Post() {
+        this.creationDate = new Date();
+        this.postIsPublic = true;
         comments = new ArrayList<Comment>();
     }
 

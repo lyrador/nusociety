@@ -21,17 +21,17 @@
         
         <h:form id="formCreateNewpost">
             <p:messages id="messagesCreateNewpost" redisplay="false"/>
-            <h3>Create a Post (Public) </h3>
+            <h3>Create a Post (Private) </h3>
             <p:panelGrid id="grid">
 
                 <p:row>
                     <p:column>
-                        <p:outputLabel value="Society (Public) : " style="font-weight: bold;"/>
+                        <p:outputLabel value="Society (Private) : " style="font-weight: bold;"/>
                     </p:column>
                     <p:column>
                         <p:selectOneMenu id="society" value="#{postManagementManagedBean.newPostEntity.society}" required="true" requiredMessage="Society is required" converter="societyConverterForPost" >
-                            <f:selectItem itemValue="#{null}" itemLabel="[Select Public Society]" noSelectionOption="true"/>
-                            <f:selectItems value="#{postManagementManagedBean.selectItemsFollowedSocietyObject}" />
+                            <f:selectItem itemValue="#{null}" itemLabel="[Select Private Society]" noSelectionOption="true"/>
+                            <f:selectItems value="#{postManagementManagedBean.selectItemsMemberSocietyObject}"/>
                         </p:selectOneMenu>
                     </p:column>
                 </p:row>
@@ -68,7 +68,7 @@
                 <p:row>
                     <p:column colspan="3">
                         <p:commandButton type="reset" value="Clear" />&nbsp;
-                        <p:commandButton  value="Create New Post" actionListener="#{postManagementManagedBean.createNewPost}" update="@this messagesCreateNewpost" />
+                        <p:commandButton  value="Create New Post" actionListener="#{postManagementManagedBean.createNewPrivatePost}" update="@this messagesCreateNewpost" />
                     </p:column>
                 </p:row>
             </p:panelGrid>
@@ -78,5 +78,6 @@
 
 
 </ui:composition>
+
 
 

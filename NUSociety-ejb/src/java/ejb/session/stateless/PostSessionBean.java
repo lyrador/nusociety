@@ -9,6 +9,7 @@ import entity.Comment;
 import entity.Post;
 import entity.Society;
 import entity.Student;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -79,8 +80,13 @@ public class PostSessionBean implements PostSessionBeanLocal {
             p.getSociety().getPosts().remove(p);
             p.getStudent().getPosts().remove(p);
             
-            //Remove and Delete comments
+            List<Comment> commentList = new ArrayList<>();
             for(Comment c : p.getComments()) {
+                commentList.add(c);
+            }
+            
+            //Remove and Delete comments
+            for(Comment c : commentList) {
                 try {
                     commentSessionBean.deleteComment(c.getCommentId());
                 } catch (CommentNotFoundException ex) {

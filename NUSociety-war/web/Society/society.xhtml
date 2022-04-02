@@ -8,18 +8,18 @@
 
     <ui:define name="content">
         
-        <h:form>
-            
+        <h:form id="societyPage">
+
             <p:growl id="messages"/>
 
             <p:menubar>
                 <p:menuitem value="Society Home" icon="pi pi-fw pi-home" style="font-size: 14px; width:120px"/>
-                <p:menuitem value="Posts" icon="pi pi-fw pi-pencil" style="font-size: 14px; width:70px" />
+                <p:menuitem value="Posts" url="#{request.contextPath}/Society/viewSociety/#{societyManagedBean.society.societyId}-#{societyManagedBean.society.name.replaceAll(' ', '-')}/Posts" icon="pi pi-fw pi-pencil" style="font-size: 14px; width:70px" />
                 <p:menuitem value="Events" url="#{request.contextPath}/Society/viewSociety/#{societyManagedBean.society.societyId}-#{societyManagedBean.society.name.replaceAll(' ', '-')}/Events" icon="pi pi-fw pi-calendar" style="font-size: 14px; width:70px" />
                 <p:menuitem value="Roster" url="#{request.contextPath}/Society/viewSociety/#{societyManagedBean.society.societyId}-#{societyManagedBean.society.name.replaceAll(' ', '-')}/Roster" icon="pi pi-fw pi-user" style="font-size: 14px; width:70px" />
                 <p:menuitem value="Announcement Management" url="#{request.contextPath}/Society/viewSociety/#{societyManagedBean.society.societyId}-#{societyManagedBean.society.name.replaceAll(' ', '-')}/Announcement" icon="pi pi-fw pi-user" style="font-size: 14px; width:220px" rendered="#{sessionScope.currentStudent.accessRightEnum == societyManagedBean.leaderAccessRightEnum}"/>
             </p:menubar>
-            
+
             <h:outputText value="#{societyManagedBean.society.name}" style="font-size:25px; font-weight: bold;"/>
             <p:commandButton id="follow_button" rendered="#{!followManagedBean.followedSocieties.contains(societyManagedBean.society) and !followManagedBean.memberSocieties.contains(societyManagedBean.society)}" value="Follow" icon="pi pi-plus" 
                              style="float: right;" actionListener="#{followManagedBean.follow}" update="@form">
@@ -30,7 +30,7 @@
                              style="float: right;" actionListener="#{followManagedBean.unfollow}" update="@form">
                 <f:param name="societyId" value="#{societyManagedBean.society.societyId}" />
             </p:commandButton>
-            
+
             <h:outputText rendered="#{followManagedBean.memberSocieties.contains(societyManagedBean.society)}" value="You are a member of this society" style="float: right;"/>
             <br/>
             <h:outputText value="#{followManagedBean.memberCount} members" style="float: right;"/>
@@ -42,26 +42,184 @@
             <br/>
             <p:graphicImage value="#{FacesContext.getCurrentInstance().getExternalContext()}/resources/Images/#{societyManagedBean.society.profilePicture}" width="300px" height="300px"/> 
 
-            <h3>Public Posts</h3>
-<!--            can modify this to whatever design-->
-            <div style="display:flex">
-                
-                <p:panel style="width:33%">
-                    <h:outputText value="first post"/>
-                </p:panel>
-                <p:panel style="width:33%">
-                    <h:outputText value="second post"/>
-                </p:panel>
-                <p:panel style="width:33%">
-                    <h:outputText value="third post"/>
-                </p:panel>
-            </div>
+            <h3>Posts</h3>
+
+            <p:carousel id="caro" value="#{societyPostsManagedBean.postList}" headerText="Posts" var="post" itemStyle="text-align:center" responsive="true">
+                <p:panelGrid id="grid" columns="2" style="width:100%;margin:10px 0px" columnClasses="label,value" layout="grid" styleClass="ui-panelgrid-blank">
+                    <f:facet name="header">
+                        <h:outputText value="#{post.student.name} " style="font-weight: bold"/>
+                        <br/>
+                        <p:graphicImage value="#{FacesContext.getCurrentInstance().getExternalContext()}/resources/Images/#{post.student.profilePicture}"/>
+                    </f:facet>
+
+                    <h:outputText value="Post Id:" style="font-weight: bold" />
+                    <h:outputText value="#{post.postId}" />
+
+                    <h:outputText value="Society: " style="font-weight: bold"/>#{post.society.name} (#{post.publicOrPrivate})
+                    <br/> <br/>
+
+
+                    <p:graphicImage value="#{FacesContext.getCurrentInstance().getExternalContext()}/resources/Images/#{post.image}" width="400px" height="400px" style="margin-left:200px;"/>
+                    <br/> <br/>
+
+                    <h:outputText value="Post Creation Date:" style="font-weight: bold"/>
+                    <span class="product-category">#{post.creationDate}</span>
+                    <br/><br/>
+                </p:panelGrid>
+                <h:outputText value="Post Content: " style="font-weight: bold"/>#{post.bodyContent}
+                <br/><br/>
+
+                <p:commandButton value="View Comments"  update="formViewPost" oncomplete="PF('dialogViewPost').show()" actionListener="#{societyPostsManagedBean.doViewSocietyPagePost}">
+                    <f:attribute name="postToView" value="#{post}" />
+                </p:commandButton>
+
+                <br/> <br/>
+                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                    <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                    <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                </p:confirmDialog>
+                <f:facet name="footer">
+                    #{societyManagedBean.society} Society has #{societyPostsManagedBean.postList.size()} Post(s).
+                </f:facet>
+
+            </p:carousel>
 
         </h:form>
         
+        <h:form id="formViewPost">
+
+            <p:dialog id="dialogViewPost" widgetVar="dialogViewPost" header="View Post" closable="true" width="1000" height="850">
+
+                <p:messages id="messagesViewPost" redisplay="false" />
+                <p:panelGrid id="viewPanelGrid1">
+                    <p:row>
+
+                        <h:outputLabel value="Post ID: " style="font-weight: bold"/>
+                        <h:outputText value="#{societyPostsManagedBean.postToView.postId}" />
+                        <br/> <br/>
+                        <h:outputLabel value="Society Name: " style="font-weight: bold"/>
+                        <h:outputText value="#{societyPostsManagedBean.postToView.society.name} (#{societyPostsManagedBean.postToView.publicOrPrivate})" />
+                        <br/> <br/>
+
+                        <p:graphicImage value="#{FacesContext.getCurrentInstance().getExternalContext()}/resources/Images/#{societyPostsManagedBean.postToView.image}"  width="600px" height="600px"/>
+                        <br/><br/>
+                        <h:outputLabel value="Post Content: " style="font-weight: bold"/>
+                        <h:outputText value="#{societyPostsManagedBean.postToView.bodyContent}"/>  
+                        <br/> <br/>
+                        <h:outputLabel value="Post Creation Date: " style="font-weight: bold"/>
+                        <h:outputText value="#{societyPostsManagedBean.postToView.creationDate}" />
+                        <br/> <br/>
+
+                    </p:row>
+
+
+                </p:panelGrid>
+                <div>
+                    <br/> <br/>
+
+                    <p:dataScroller id="dataScrollMyComments" value="#{societyPostsManagedBean.commentsOfPost}" var="comment"  chunkSize="3">
+                        <f:facet name="header">
+                            Comments
+                        </f:facet>
+
+                        <f:facet name="loader">
+                            <div class="p-text-center">
+                                <p:commandButton type="button" value="More" icon="pi pi-refresh"/>
+                            </div>
+                        </f:facet>
+
+                        <div class="product">
+                            <div class="product-list-item p-p-5">
+
+                                <div class="product-list-detail">
+                                    <h:outputText value="Student Name: " style="font-weight: bold"/>
+                                    <h:outputText value="#{comment.student.name}" />
+                                    <br/><br/>
+
+                                    <h:outputText value="Comment: " style="font-weight: bold"/>
+                                    <h:outputText value="#{comment.content}" />
+                                    <br/><br/>
+
+                                    <h:outputText value="Date: " style="font-weight: bold"/>
+                                    <h:outputText value="#{comment.creationDate}" />
+                                    <br/> <br/>
+
+                                    <p:commandButton value="Edit" rendered="#{comment.student == sessionScope.currentStudent}" update="dataScrollMyComments formViewPost:messagesViewPost" actionListener="#{createNewCommentManagedBean.doUpdateComment}" oncomplete="PF('dialogEditComment').show()">
+                                        <f:attribute name="commentToBeUpdated" value="#{comment}" />
+                                    </p:commandButton>
+
+                                    <p:commandButton value="Delete" rendered="#{comment.student == sessionScope.currentStudent || societyPostsManagedBean.postToView == sessionScope.currentStudent}" actionListener="#{createNewCommentManagedBean.deleteCommentForSociety}" update="dataScrollMyComments formViewPost:messagesViewPost">
+                                        <f:attribute name="commentToDelete" value="#{comment}" />
+                                    </p:commandButton>
+
+                                </div>
+                                <div class="product-list-action">
+
+
+                                    <br/> <br/>
+                                </div>
+                            </div>
+                        </div>
+                    </p:dataScroller>
+                    <br/>
+                    <p:commandButton value="Post A Comment" oncomplete="PF('dialogCreateAComment').show()">
+
+                    </p:commandButton>
+                </div>
+            </p:dialog>
+
+
+
+        </h:form>
+
+        <h:form id="formCreateAComment">
+
+            <p:dialog id="dialogCreateAComment" widgetVar="dialogCreateAComment" header="Post a Comment" closable="true">
+                <p:messages id="messagesCreateAComment" redisplay="false" />
+                <p:panelGrid>
+
+                    <row>
+                        <p:inputTextarea rows="6" cols="100" id="newCommentContent" value="#{createNewCommentManagedBean.newCommentEntity.content}" placeholder="Write a Comment!" required="true" requiredMessage="Content is required"/>
+
+                    </row>
+                    <br/>
+                    <p:commandButton actionListener="#{createNewCommentManagedBean.createNewCommentOnSociety}" update="formCreateAComment formViewPost:dataScrollMyComments formViewPost:messagesViewPost formCreateAComment:messagesCreateAComment" value="Post Comment"  styleClass="ui-confirmdialog-yes">
+                        <f:attribute name="postOfNewComment" value="#{societyPostsManagedBean.postToView}" />
+                    </p:commandButton>
+
+                </p:panelGrid>
+            </p:dialog>
+
+        </h:form>
+
+        <h:form id="formEditComment">
+
+            <p:dialog id="dialogEditComment" widgetVar="dialogEditComment" header="Edit Comment" closable="true">
+                <p:messages id="messagesEditCommnet" redisplay="false" />
+                <p:panelGrid>
+
+                    <p:row>
+                        <p:column>
+                            <h:outputLabel value="New Comment Body: " />
+                        </p:column>
+                        <p:column>
+                            <p:inputText id="body" value="#{createNewCommentManagedBean.commentToBeUpdated.content}" placeholder="#{createNewCommentManagedBean.commentToBeUpdated.content}" required="true" requiredMessage="Content is required" />
+                        </p:column>
+
+                    </p:row>
+                </p:panelGrid>
+                <br/>
+                <p:commandButton value="Confirm" actionListener="${createNewCommentManagedBean.updateComment}" update="formViewPost:dataScrollMyComments formEditComment:messagesEditCommnet">
+                </p:commandButton>
+            </p:dialog>
+
+        </h:form>
+
+        
+
         <h:form id="form">
 
-            
+
             <div class="card">
                 <h3>Events</h3>
                 <p:carousel value="#{carouselViewManagedBean.events}" var="event" circular="true" numVisible="3" autoPlayInterval="3000" responsive="true" >
@@ -73,7 +231,7 @@
                                 <h5 style="font-style: oblique">#{event.eventDetails}</h5>
                                 <h5 style="font-style: oblique">Location: #{event.eventLocation}</h5>
                                 <div class="p-mt-5">
-                                     <p:commandButton value="View" update="formViewEvent" oncomplete="PF('dialogViewEvent').show()" icon="pi pi-file" >
+                                    <p:commandButton value="View" update="formViewEvent" oncomplete="PF('dialogViewEvent').show()" icon="pi pi-file" >
                                         <f:setPropertyActionListener value="#{event}" target="#{eventManagementManagedBean.viewEvent}" />
                                     </p:commandButton>
 
@@ -84,13 +242,13 @@
                 </p:carousel>
             </div>
         </h:form>
-        
+
         <h:form id="formViewEvent">
 
             <p:dialog id="dialogViewEvent" widgetVar="dialogViewEvent" header="View Event" closable="true">
-                
+
                 <p:panelGrid>
-                    
+
                     <p:row>
                         <p:column>
                             <p:outputLabel for="eventId" value="Event ID: " />
@@ -99,7 +257,7 @@
                             <h:outputText id="eventId" value="#{eventManagementManagedBean.viewEvent.eventId}" />
                         </p:column>                 
                     </p:row>
-                    
+
                     <p:row>
                         <p:column>
                             <p:outputLabel for="eventName" value="Event Name: " />
@@ -108,7 +266,7 @@
                             <h:outputText id="eventName" value="#{eventManagementManagedBean.viewEvent.eventName}" />
                         </p:column>                 
                     </p:row>
-                    
+
                     <p:row>
                         <p:column>
                             <p:outputLabel for="eventDetails" value="Event Details: " />
@@ -127,7 +285,7 @@
                         </p:column>                 
                     </p:row>
 
-                   <p:row>
+                    <p:row>
                         <p:column>
                             <p:outputLabel for="eventStartDate" value="Event Start Date: " />
                         </p:column>
@@ -135,7 +293,7 @@
                             <h:outputText id="eventStartDate" value="#{eventManagementManagedBean.viewEvent.eventDateStart}" />
                         </p:column>                 
                     </p:row>
-                    
+
                     <p:row>
                         <p:column>
                             <p:outputLabel for="eventEndDate" value="Event End Date: " />
@@ -144,7 +302,7 @@
                             <h:outputText id="eventEndDate" value="#{eventManagementManagedBean.viewEvent.eventDateEnd}" />
                         </p:column>                 
                     </p:row>
-                    
+
                     <p:row>
                         <p:column>
                             <p:outputLabel for="eventCapacity" value="Event Capacity: " />
@@ -153,7 +311,7 @@
                             <h:outputText id="eventCapacity" value="#{eventManagementManagedBean.viewEvent.eventCapacity}" />
                         </p:column>                 
                     </p:row>
-                    
+
                     <p:row>
                         <p:column>
                             <p:outputLabel for="eventSociety" value="Event Society: " />
@@ -162,7 +320,7 @@
                             <h:outputText id="eventSociety" value="#{eventManagementManagedBean.viewEvent.society.name}" />
                         </p:column>                 
                     </p:row>
-                    
+
                     <p:row>
                         <p:column>
                             <p:outputLabel for="eventOrganiser" value="Event Organiser: " />
@@ -171,14 +329,14 @@
                             <h:outputText id="eventOrganiser" value="#{eventManagementManagedBean.viewEvent.student.email}" />
                         </p:column>                 
                     </p:row>
-                    
+
 
                 </p:panelGrid>
 
             </p:dialog>
 
         </h:form>
-        
+
     </ui:define>
 
 </ui:composition>

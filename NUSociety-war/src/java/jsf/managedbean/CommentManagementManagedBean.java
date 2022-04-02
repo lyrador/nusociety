@@ -52,6 +52,9 @@ public class CommentManagementManagedBean implements Serializable {
     
     @Inject
     private HomePagePostManagedBean homePagePostManagedBean;
+    
+    @Inject
+    private societyPostsManagedBean societyPostsManagedBean;
 
     private Comment newCommentEntity;
     //private Long newStudentId;
@@ -121,6 +124,29 @@ public class CommentManagementManagedBean implements Serializable {
         //listOfComments = commentSessionBean.viewAllCommentsInDatabase();
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "New Comment created successfully (Comment ID: " + cId + ")", null));
     }
+    
+    public void createNewCommentOnSociety(ActionEvent event) throws StudentNotFoundException {
+        
+        //Student Id should take from Session Scope!!!
+        System.out.println("TEST!!!");
+        Post postOfNewComment = (Post) event.getComponent().getAttributes().get("postOfNewComment");
+        Student currentStudent =  (Student) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("currentStudent");
+        newCommentEntity.setStudent(currentStudent);
+        newCommentEntity.setPost(postOfNewComment);
+        newCommentEntity.setCreationDate(new Date());
+        
+        Long cId = commentSessionBean.createComment(newCommentEntity);
+        societyPostsManagedBean.getCommentsOfPost().add(newCommentEntity);
+        
+        societyPostsManagedBean.getCommentsOfPost().sort((p1, p2) -> {
+                return p2.getCreationDate().compareTo(p1.getCreationDate());
+            });
+        
+        newCommentEntity = new Comment();
+        
+        //listOfComments = commentSessionBean.viewAllCommentsInDatabase();
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "New Comment created successfully (Comment ID: " + cId + ")", null));
+    }
 
     //Retrieve Comment from client, Initialise the attributes required for update
     public void doUpdateComment(ActionEvent event) {
@@ -170,6 +196,24 @@ public class CommentManagementManagedBean implements Serializable {
             commentSessionBean.deleteComment(commentToDelete.getCommentId());
             
             homePagePostManagedBean.getCommentsOfPost().remove(commentToDelete);
+            //commentDeleteId = null;
+            //listOfComments = commentSessionBean.viewAllCommentsInDatabase();
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Comment Deleted successfully", null));
+
+        } catch (CommentNotFoundException ex) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An error has occurred while deleting Comment: " + ex.getMessage(), null));
+        } catch (Exception ex) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An unexpected error has occurred: " + ex.getMessage(), null));
+        }
+    }
+    
+    public void deleteCommentForSociety(ActionEvent event) {
+        try {
+            Comment commentToDelete = (Comment) event.getComponent().getAttributes().get("commentToDelete");
+            System.out.println(commentToDelete.getCommentId() + "DELETE ID");
+            commentSessionBean.deleteComment(commentToDelete.getCommentId());
+            
+            societyPostsManagedBean.getCommentsOfPost().remove(commentToDelete);
             //commentDeleteId = null;
             //listOfComments = commentSessionBean.viewAllCommentsInDatabase();
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Comment Deleted successfully", null));
