@@ -6,6 +6,7 @@
 package jsf.managedbean;
 
 import ejb.session.stateless.PostSessionBeanLocal;
+import ejb.session.stateless.SocietySessionBeanLocal;
 import ejb.session.stateless.StudentSessionBeanLocal;
 import entity.Comment;
 import entity.Post;
@@ -26,6 +27,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.inject.Inject;
 import util.exception.PostNotFoundException;
+import util.exception.SocietyNotFoundException;
 import util.exception.StudentNotFoundException;
 
 /**
@@ -35,6 +37,9 @@ import util.exception.StudentNotFoundException;
 @Named(value = "societyPostsManagedBean")
 @ViewScoped
 public class societyPostsManagedBean implements Serializable {
+
+    @EJB
+    private SocietySessionBeanLocal societySessionBean;
 
     @EJB
     private StudentSessionBeanLocal studentSessionBean;
@@ -50,6 +55,8 @@ public class societyPostsManagedBean implements Serializable {
     private Society currentSociety;
 
     private Post postToDelete;
+
+    private Society sortedSociety;
 
     private Post postToView;
     private List<Comment> commentsOfPost;
@@ -81,24 +88,30 @@ public class societyPostsManagedBean implements Serializable {
             postList.clear();
         }
 
-        postList = societyManagedBean.getSociety().getPosts();
-        System.out.println(postList.size());
+        try {
+            currentSociety = societySessionBean.retrieveSocietyById(currentSociety.getSocietyId());
+            postList = currentSociety.getPosts();
+            System.out.println(postList.size());
+            System.out.println(societyManagedBean.getSociety().getName());
 
-        //If student is not a member, remove private
-        if (!currentStudent.getMemberSocieties().contains(currentSociety)) {
-            Iterator<Post> i = postList.iterator();
-            while (i.hasNext()) {
-                Post p = i.next();
-                if (!p.isPostIsPublic()) {
-                    i.remove();
+            //If student is not a member, remove private
+            if (!currentStudent.getMemberSocieties().contains(currentSociety)) {
+                Iterator<Post> i = postList.iterator();
+                while (i.hasNext()) {
+                    Post p = i.next();
+                    if (!p.isPostIsPublic()) {
+                        i.remove();
+                    }
                 }
             }
-        }
-        System.out.println(postList.size());
+            System.out.println(postList.size());
 
-        postList.sort((p1, p2) -> {
-            return p2.getCreationDate().compareTo(p1.getCreationDate());
-        });
+            postList.sort((p1, p2) -> {
+                return p2.getCreationDate().compareTo(p1.getCreationDate());
+            });
+        } catch (SocietyNotFoundException ex) {
+            System.out.println(ex.getMessage());
+        }
 
     }
 
@@ -106,12 +119,88 @@ public class societyPostsManagedBean implements Serializable {
         postList.sort((p1, p2) -> {
             return p2.getCreationDate().compareTo(p1.getCreationDate());
         });
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Sorted by Latest!", null));
     }
 
     public void sortByEarliest(ActionEvent event) {
         postList.sort((p1, p2) -> {
             return p1.getCreationDate().compareTo(p2.getCreationDate());
         });
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Sorted by Earliest!", null));
+    }
+
+    public void sortByPrivate(ActionEvent event) {
+        Student currentStudent = (Student) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("currentStudent");
+        try {
+            currentStudent = studentSessionBean.retrieveStudentByStudentId(currentStudent.getStudentId());
+            studentFeed(currentStudent);
+
+            Iterator<Post> i = postList.iterator();
+            while (i.hasNext()) {
+                Post p = i.next();
+                if (p.isPostIsPublic()) {
+                    i.remove();
+                }
+
+            }
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Private Posts only!", null));
+        } catch (StudentNotFoundException ex) {
+            System.out.println(ex.getMessage());
+        }
+
+        //FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Sorted By Earliest!", null));
+    }
+
+    public void sortByPublic(ActionEvent event) {
+        Student currentStudent = (Student) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("currentStudent");
+        try {
+            currentStudent = studentSessionBean.retrieveStudentByStudentId(currentStudent.getStudentId());
+            studentFeed(currentStudent);
+
+            Iterator<Post> i = postList.iterator();
+            while (i.hasNext()) {
+                Post p = i.next();
+                if (!p.isPostIsPublic()) {
+                    i.remove();
+                }
+
+            }
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Public Posts only!", null));
+        } catch (StudentNotFoundException ex) {
+            System.out.println(ex.getMessage());
+        }
+        //FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Sorted By Earliest!", null));
+    }
+
+    public void resetFilter(ActionEvent event) {
+        Student currentStudent = (Student) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("currentStudent");
+        try {
+            currentStudent = studentSessionBean.retrieveStudentByStudentId(currentStudent.getStudentId());
+            studentFeed(currentStudent);
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Filters have been reset!", null));
+        } catch (StudentNotFoundException ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    public void sortBySociety(ActionEvent event) {
+        Student currentStudent = (Student) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("currentStudent");
+        try {
+            currentStudent = studentSessionBean.retrieveStudentByStudentId(currentStudent.getStudentId());
+            studentFeed(currentStudent);
+
+            Iterator<Post> i = postList.iterator();
+            while (i.hasNext()) {
+                Post p = i.next();
+                if (!p.getSociety().equals(sortedSociety)) {
+                    i.remove();
+                }
+            }
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Posts from " + sortedSociety.getName() + " only!", null));
+        } catch (StudentNotFoundException ex) {
+            System.out.println(ex.getMessage());
+        }
+        //FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Sorted By Earliest!", null));
     }
 
     public void doViewSocietyPagePost(ActionEvent event) {
@@ -141,21 +230,21 @@ public class societyPostsManagedBean implements Serializable {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An unexpected error has occurred: " + ex.getMessage(), null));
         }
     }
-    
+
     public void doUpdateSocietyPagePost(ActionEvent event) {
         postToUpdate = (Post) event.getComponent().getAttributes().get("postToUpdate");
     }
-    
+
     public void updateSocietyPagePost(ActionEvent event) {
         try {
-             System.out.println(postList.size());
+            System.out.println(postList.size());
             postSessionBean.updatePost(postToUpdate.getPostId(), postToUpdate);
 
             Student currentStudent = (Student) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("currentStudent");
             currentStudent = studentSessionBean.retrieveStudentByStudentId(currentStudent.getStudentId());
 
             studentFeed(currentStudent);
-            
+
             System.out.println(postList.size());
 
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Post updated successfully! ", null));
@@ -204,6 +293,22 @@ public class societyPostsManagedBean implements Serializable {
 
     public void setCommentsOfPost(List<Comment> commentsOfPost) {
         this.commentsOfPost = commentsOfPost;
+    }
+
+    public Society getCurrentSociety() {
+        return currentSociety;
+    }
+
+    public void setCurrentSociety(Society currentSociety) {
+        this.currentSociety = currentSociety;
+    }
+
+    public Society getSortedSociety() {
+        return sortedSociety;
+    }
+
+    public void setSortedSociety(Society sortedSociety) {
+        this.sortedSociety = sortedSociety;
     }
 
 }

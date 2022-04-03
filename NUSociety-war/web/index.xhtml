@@ -45,32 +45,36 @@
 
         <h:panelGroup rendered="#{sessionScope.isLogin == true}">
 
-            <h:outputText value="Welcome Back #{sessionScope.currentStudent.userName}!" style="font-weight: bold; font-size: 20pt; " />
-            <br/>
-            <p:graphicImage value="#{FacesContext.getCurrentInstance().getExternalContext()}/resources/Images/#{sessionScope.currentStudent.profilePicture}" width="50px" height="50px"/>
-            <br/> <br/>
             <h3 style="font-size: 32pt" align="center">My Feed!</h3>
             <br/>
-            <h2 style="color: darkblue; text-decoration: underline; font-size: 20pt">Whats on your mind?</h2>
-            <p:linkButton value="Create a Public Post!" style="margin-right:20px; background-color: lightblue" outcome="/Post/createPost.xhtml">
+            
+            <h:outputText value="Welcome Back #{sessionScope.currentStudent.userName}!" style="font-weight: bold; font-size: 20pt; margin-left: 20px" />
+            <br/>
+            <p:graphicImage value="#{FacesContext.getCurrentInstance().getExternalContext()}/resources/Images/#{sessionScope.currentStudent.profilePicture}" style="margin-left: 20px" width="50px" height="50px"/>
+            <br/> <br/>
+            
+            <h2 style="color: darkblue; text-decoration: underline; font-size: 20pt; margin-left: 20px">Whats on your mind?</h2>
+            <p:linkButton value="Create a Public Post!" style="margin-left: 20px; margin-right:20px; background-color: lightblue" outcome="/Post/createPost.xhtml">
             </p:linkButton>
             <p:linkButton value="Create a Private Post!" style="margin-right:20px; background-color: lightblue" outcome="/Post/createPrivatePost.xhtml">
             </p:linkButton>
 
 
             <h:form id="filter">
-                <p:messages id="messages" redisplay="false" closable="true" />
-                <h2 style="color: yellowgreen; text-decoration: underline; font-size: 20pt">Filter</h2>
-                <p:commandButton value="Sort by Latest" style="margin-right:20px;" actionListener="#{homePagePostManagedBean.sortByLatest}" update="formAllPosts:dataTableAllPosts filter:messages"/>
+                
+                <h2 style="color: yellowgreen; text-decoration: underline; font-size: 20pt; margin-left: 20px">Filter</h2>
+                <p:commandButton value="Sort by Latest" style="margin-right:20px; margin-left: 20px" actionListener="#{homePagePostManagedBean.sortByLatest}" update="formAllPosts:dataTableAllPosts filter:messages"/>
                 <p:commandButton value="Sort by Oldest" style="margin-right:20px;" actionListener="#{homePagePostManagedBean.sortByEarliest}" update="formAllPosts:dataTableAllPosts filter:messages"/>
                 <p:commandButton value="Show Private Posts Only " style="margin-right:20px;" actionListener="#{homePagePostManagedBean.sortByPrivate}" update="formAllPosts:dataTableAllPosts filter:messages"/>
                 <p:commandButton value="Show Public Posts Only" style="margin-right:20px;" actionListener="#{homePagePostManagedBean.sortByPublic}" update="formAllPosts:dataTableAllPosts filter:messages"/>
                 <p:commandButton value="Filter by Society" style="margin-right:20px;" oncomplete="PF('dialogFilterSociety').show()"/>
                 <br/><br/>
-                <p:commandButton value="Reset filters" style="margin-right:20px; background-color: greenyellow" actionListener="#{homePagePostManagedBean.resetFilter}" update="formAllPosts:dataTableAllPosts filter:messages" />
+                <p:commandButton value="Reset filters" style="margin-right:20px; margin-left: 20px; background-color: greenyellow" actionListener="#{homePagePostManagedBean.resetFilter}" update="formAllPosts:dataTableAllPosts filter:messages" />
+            
+                <p:messages id="messages" redisplay="false" closable="true" />
             </h:form>
 
-            <br/> <br/>
+            <br/> 
 
             <h:form id="formAllPosts">
 
@@ -206,6 +210,12 @@
                 <p:panelGrid id="viewPanelGrid1">
                     <p:row>
 
+                        <h:outputLabel value="Author: " style="font-weight: bold"/>
+                        <h:outputText value="#{homePagePostManagedBean.postToView.student.name}" />
+                        <br/>
+                        <p:graphicImage value="#{FacesContext.getCurrentInstance().getExternalContext()}/resources/Images/#{homePagePostManagedBean.postToView.student.profilePicture}"  width="60px" height="60px"/>
+                        <br/> <br/>
+                        
                         <h:outputLabel value="Post ID: " style="font-weight: bold"/>
                         <h:outputText value="#{homePagePostManagedBean.postToView.postId}" />
                         <br/> <br/>

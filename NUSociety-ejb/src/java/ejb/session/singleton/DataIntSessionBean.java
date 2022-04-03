@@ -197,8 +197,8 @@ public class DataIntSessionBean {
 
         students = studentSessionBeanLocal.retrieveAllStudents();
 
-        String[] imageLink = {"1030_two-students-looking-at-tablet-1028x579.jpg", "220327-chris-rock-will-smith-3-ew-1052p-acc676.jpg", "Harry-Maguire-2-1.jpg",
-            "Harry-Maguire-2-1.jpg", "Screenshot 2022-03-28 200640.jpg"};
+        String[] imageLink = {"alexPostPic.jpg", "bettyPostPic.jpg", "carlPostPic.jpg",
+            "davidPostPic.jpg", "elainePostPic.jpg"};
         
         
         if (em.find(Post.class, 1l) == null) {
@@ -208,11 +208,11 @@ public class DataIntSessionBean {
                 for (int j = 0; j < s.getMemberSocieties().size(); j++) {
                     System.out.println(s.getMemberSocieties().get(j));
                     try {
-                        Long pId = postSessionBeanLocal.createNewPost(new Post("Hi I'm " + students.get(i).getName(), imageLink[i],
+                        Long pId = postSessionBeanLocal.createNewPost(new Post("Hi I'm " + students.get(i).getName() +"!", imageLink[i],
                                 s, s.getMemberSocieties().get(j)));
                         Post p = postSessionBeanLocal.retrievePostById(pId);
 
-                        commentSessionBeanLocal.createComment(new Comment(new Date(), "Dummy Comment", p, s));
+                        commentSessionBeanLocal.createComment(new Comment(new Date(), "My name is " + students.get(i).getName() + ", nice to meet you guys!", p, s));
                     } catch (PostNotFoundException ex) {
                         System.out.println("Error");
                     }

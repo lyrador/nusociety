@@ -1,12 +1,313 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html">
-    <h:head>
-        <title>Facelet Title</title>
-    </h:head>
-    <h:body>
-        Hello from Facelets
-    </h:body>
-</html>
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                template="./../Template/defaultTemplate.xhtml">
+
+    <ui:define name="content">
+
+        <ui:insert name="societyHeader">
+            <ui:include src="/societyHeader.xhtml" />
+        </ui:insert>
+        <h:head>
+            <h3>Roster Management</h3>
+        </h:head>
+    </ui:define>
+
+    <ui:define name="content">
+        <h:panelGroup>
+            <h3 style="font-size: 32pt" align="center">
+                <p:graphicImage value="#{FacesContext.getCurrentInstance().getExternalContext()}/resources/Images/#{societyPostsManagedBean.currentSociety.profilePicture}" width="100px" height="100px"/>
+                #{societyPostsManagedBean.currentSociety.name} Posts
+                <p:graphicImage value="#{FacesContext.getCurrentInstance().getExternalContext()}/resources/Images/#{societyPostsManagedBean.currentSociety.profilePicture}" width="100px" height="100px"/>
+            </h3>
+            
+            <h2 style="color: darkblue; text-decoration: underline; font-size: 20pt; margin-left: 20px">Whats on your mind?</h2>
+            <p:linkButton value="Create a Public Post!" style="margin-left: 20px; margin-right:20px; background-color: lightblue" outcome="/Post/createPost.xhtml">
+            </p:linkButton>
+            <p:linkButton value="Create a Private Post!" style="margin-right:20px; background-color: lightblue" outcome="/Post/createPrivatePost.xhtml" rendered="#{sessionScope.currentStudent.memberSocieties.contains(societyPostsManagedBean.currentSociety) == true}">
+            </p:linkButton>
+
+
+            <h:form id="filter">
+                
+                <h2 style="color: yellowgreen; text-decoration: underline; font-size: 20pt; margin-left: 20px">Filter</h2>
+                <p:commandButton value="Sort by Latest" style="margin-right:20px; margin-left: 20px" actionListener="#{societyPostsManagedBean.sortByLatest}" update="formAllPosts:dataTableAllPosts filter:messages"/>
+                <p:commandButton value="Sort by Oldest" style="margin-right:20px;" actionListener="#{societyPostsManagedBean.sortByEarliest}" update="formAllPosts:dataTableAllPosts filter:messages"/>
+                <p:commandButton value="Show Private Posts Only " style="margin-right:20px;" actionListener="#{societyPostsManagedBean.sortByPrivate}" update="formAllPosts:dataTableAllPosts filter:messages"/>
+                <p:commandButton value="Show Public Posts Only" style="margin-right:20px;" actionListener="#{societyPostsManagedBean.sortByPublic}" update="formAllPosts:dataTableAllPosts filter:messages"/>
+
+                <br/><br/>
+                <p:commandButton value="Reset filters" style="margin-right:20px; margin-left: 20px; background-color: greenyellow" actionListener="#{societyPostsManagedBean.resetFilter}" update="formAllPosts:dataTableAllPosts filter:messages" />
+                <br/>
+                <p:messages id="messages" redisplay="false" closable="true" />
+            </h:form>
+
+            <br/>
+
+            <h:form id="formAllPosts">
+
+                <p:messages id="messages" redisplay="false" closable="true" />
+
+                <p:dataTable  id="dataTableAllPosts" widgetVar="dataTableAllPosts" value="#{societyPostsManagedBean.postList}" var="post" rowKey="#{post.postId}" rowIndexVar="row"
+                              rows="10" paginator="true" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="10,20,50">
+
+                    <p:column> 
+                        <h:outputText value="Post ID: " style="font-weight: bold"/>#{post.postId}
+                        <br/> <br/>
+
+                        <h:outputText value="#{post.student.name} " style="font-weight: bold"/>
+                        <br/>
+                        <p:graphicImage value="#{FacesContext.getCurrentInstance().getExternalContext()}/resources/Images/#{post.student.profilePicture}" width="50px" height="50px"/>
+                        <br/> <br/>
+
+                        <h:outputText value="Society: " style="font-weight: bold"/>#{post.society.name} (#{post.publicOrPrivate})
+                        <br/> <br/>
+
+                        <h:outputText value="Post Content: " style="font-weight: bold"/>#{post.bodyContent}
+                        <br/><br/>
+
+                        <p:graphicImage value="#{FacesContext.getCurrentInstance().getExternalContext()}/resources/Images/#{post.image}" width="600px" height="600px"/>
+                        <br/> <br/>
+
+                        <h:outputText value="Post Creation Date:" style="font-weight: bold"/>
+                        <span class="product-category">#{post.creationDate}</span>
+                        <br/><br/>
+
+                        <p:commandButton value="View Post" style="margin-right:20px;" update="formViewPost" oncomplete="PF('dialogViewPost').show()" actionListener="#{societyPostsManagedBean.doViewSocietyPagePost}" >
+                            <f:attribute name="postToView" value="#{post}" />
+                        </p:commandButton>
+
+                        <p:commandButton value="Edit Post" style="margin-right:20px;" rendered="#{post.student == sessionScope.currentStudent}" update="formUpdatePost"  oncomplete="PF('dialogUpdatePost').show()" actionListener="#{societyPostsManagedBean.doUpdateSocietyPagePost}">
+                            <f:attribute name="postToUpdate" value="#{post}" />
+                        </p:commandButton>
+
+                        <p:commandButton value="Delete Post" style="margin-right:20px;" rendered="#{post.student == sessionScope.currentStudent}" update="formAllPosts:dataTableAllPosts"  actionListener="#{societyPostsManagedBean.deleteSocietyPagePost}">
+                            <f:attribute name="postToDelete" value="#{post}" />
+                            <p:confirm header="Confirmation" message="Are you sure you want to delete POST ID: #{post.postId} ?" icon="ui-icon-alert" />
+                        </p:commandButton>
+                        <br/> <br/>
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                            <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        </p:confirmDialog>
+                    </p:column>
+                </p:dataTable>
+            </h:form>
+
+        </h:panelGroup>
+
+        <h:form id="formUpdatePost" rendered="#{sessionScope.isLogin == true}">
+
+            <p:dialog id="dialogUpdatePost" widgetVar="dialogUpdatePost" header="Update Post" closable="true">
+
+                <p:messages id="messagesUpdatePost" redisplay="false" />
+
+                <p:panelGrid>
+
+                    <p:row>
+                        <p:column>
+                            <h:outputLabel value="Post ID: " />
+                        </p:column>
+                        <p:column>
+                            <h:outputText value="#{societyPostsManagedBean.postToUpdate.postId}" />
+                        </p:column>
+                        <p:column>
+                            &nbsp;
+                        </p:column>
+                    </p:row>
+
+                    <p:row>
+                        <p:column>
+                            <h:outputLabel value="Post Creation Date: " />
+                        </p:column>
+                        <p:column>
+                            <h:outputText value="#{societyPostsManagedBean.postToUpdate.creationDate}" />
+                        </p:column>
+                        <p:column>
+                            &nbsp;
+                        </p:column>
+                    </p:row>
+
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="content" value="Content: " />
+                        </p:column>
+                        <p:column>
+                            <p:inputText id="content" value="#{societyPostsManagedBean.postToUpdate.bodyContent}" placeholder="#{societyPostsManagedBean.postToUpdate.bodyContent}" required="true" requiredMessage="Content is required" />
+                        </p:column>
+                        <p:column>
+                            <p:message for="content" />
+                        </p:column>
+                    </p:row>
+
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="imageURL" value="Upload Image " style="font-weight: bold;" />
+                        </p:column>
+                        <p:column>
+                            <p:fileUpload id="imageURL" listener="#{fileUploadManagedBean.handleFileUploadForUpdate}" multiple="true" update="@this messagesUpdatePost" />
+                            <p:panel header="Uploaded File" visible="#{fileUploadManagedBean.showUploadedFile}">
+                                <p:graphicImage value="#{fileUploadManagedBean.uploadedFilePath}" height="50%" />
+                            </p:panel>
+                        </p:column>
+                        <p:column>
+                            <p:message for="imageURL"/>
+                        </p:column>
+                    </p:row>
+
+
+
+                    <p:row>
+                        <p:column colspan="3">
+                            <p:commandButton value="Update Post" update="@this messagesUpdatePost formAllPosts:dataTableAllPosts formAllPosts:messages" actionListener="#{societyPostsManagedBean.updateSocietyPagePost}" oncomplete="PF('dialogUpdatePost').show();" />
+                        </p:column>
+                    </p:row>
+
+                </p:panelGrid>
+
+            </p:dialog>
+
+        </h:form>
+
+
+
+        <h:form id="formViewPost" rendered="#{sessionScope.isLogin == true}">
+
+            <p:dialog id="dialogViewPost" widgetVar="dialogViewPost" header="View Post" closable="true" width="1000" height="850">
+
+                <p:messages id="messagesViewPost" redisplay="false" />
+                <p:panelGrid id="viewPanelGrid1">
+                    <p:row>
+                        <h:outputLabel value="Author: " style="font-weight: bold"/>
+                        <h:outputText value="#{societyPostsManagedBean.postToView.student.name}" />
+                        <br/>
+                        <p:graphicImage value="#{FacesContext.getCurrentInstance().getExternalContext()}/resources/Images/#{societyPostsManagedBean.postToView.student.profilePicture}"  width="60px" height="60px"/>
+                        <br/> <br/>
+                        <h:outputLabel value="Post ID: " style="font-weight: bold"/>
+                        <h:outputText value="#{societyPostsManagedBean.postToView.postId}" />
+                        <br/> <br/>
+                        <h:outputLabel value="Society Name: " style="font-weight: bold"/>
+                        <h:outputText value="#{societyPostsManagedBean.postToView.society.name} (#{societyPostsManagedBean.postToView.publicOrPrivate})" />
+                        <br/> <br/>
+
+                        <p:graphicImage value="#{FacesContext.getCurrentInstance().getExternalContext()}/resources/Images/#{societyPostsManagedBean.postToView.image}"  width="600px" height="600px"/>
+                        <br/><br/>
+                        <h:outputLabel value="Post Content: " style="font-weight: bold"/>
+                        <h:outputText value="#{societyPostsManagedBean.postToView.bodyContent}"/>  
+                        <br/> <br/>
+                        <h:outputLabel value="Post Creation Date: " style="font-weight: bold"/>
+                        <h:outputText value="#{societyPostsManagedBean.postToView.creationDate}" />
+                        <br/> <br/>
+
+                    </p:row>
+
+
+                </p:panelGrid>
+                <div>
+                    <br/> <br/>
+
+                    <p:dataScroller id="dataScrollMyComments" value="#{societyPostsManagedBean.commentsOfPost}" var="comment"  chunkSize="3">
+                        <f:facet name="header">
+                            Comments
+                        </f:facet>
+
+                        <f:facet name="loader">
+                            <div class="p-text-center">
+                                <p:commandButton type="button" value="More" icon="pi pi-refresh"/>
+                            </div>
+                        </f:facet>
+
+                        <div class="product">
+                            <div class="product-list-item p-p-5">
+
+                                <div class="product-list-detail">
+                                    <h:outputText value="Student Name: " style="font-weight: bold"/>
+                                    <h:outputText value="#{comment.student.name}" />
+                                    <br/><br/>
+
+                                    <h:outputText value="Comment: " style="font-weight: bold"/>
+                                    <h:outputText value="#{comment.content}" />
+                                    <br/><br/>
+
+                                    <h:outputText value="Date: " style="font-weight: bold"/>
+                                    <h:outputText value="#{comment.creationDate}" />
+                                    <br/> <br/>
+
+                                    <p:commandButton value="Edit" rendered="#{comment.student == sessionScope.currentStudent}" update="dataScrollMyComments formViewPost:messagesViewPost" actionListener="#{createNewCommentManagedBean.doUpdateComment}" oncomplete="PF('dialogEditComment').show()">
+                                        <f:attribute name="commentToBeUpdated" value="#{comment}" />
+                                    </p:commandButton>
+
+                                    <p:commandButton value="Delete" rendered="#{comment.student == sessionScope.currentStudent || societyPostsManagedBean.postToView == sessionScope.currentStudent}" actionListener="#{createNewCommentManagedBean.deleteCommentForSociety}" update="dataScrollMyComments formViewPost:messagesViewPost">
+                                        <f:attribute name="commentToDelete" value="#{comment}" />
+                                    </p:commandButton>
+
+                                </div>
+                                <div class="product-list-action">
+
+
+                                    <br/> <br/>
+                                </div>
+                            </div>
+                        </div>
+                    </p:dataScroller>
+                    <br/>
+                    <p:commandButton value="Post A Comment" oncomplete="PF('dialogCreateAComment').show()">
+
+                    </p:commandButton>
+                </div>
+            </p:dialog>
+
+        </h:form>
+
+        <h:form id="formCreateAComment">
+
+            <p:dialog id="dialogCreateAComment" widgetVar="dialogCreateAComment" header="Post a Comment" closable="true">
+                <p:messages id="messagesCreateAComment" redisplay="false" />
+                <p:panelGrid>
+
+                    <row>
+                        <p:inputTextarea rows="6" cols="100" id="newCommentContent" value="#{createNewCommentManagedBean.newCommentEntity.content}" placeholder="Write a Comment!" required="true" requiredMessage="Content is required"/>
+
+                    </row>
+                    <br/>
+                    <p:commandButton actionListener="#{createNewCommentManagedBean.createNewCommentOnSociety}" update="formViewPost:dataScrollMyComments formCreateAComment:messagesCreateAComment" value="Post Comment"  styleClass="ui-confirmdialog-yes">
+                        <f:attribute name="postOfNewComment" value="#{societyPostsManagedBean.postToView}" />
+                    </p:commandButton>
+
+                </p:panelGrid>
+            </p:dialog>
+
+        </h:form>
+
+        <h:form id="formEditComment">
+
+            <p:dialog id="dialogEditComment" widgetVar="dialogEditComment" header="Edit Comment" closable="true">
+                <p:messages id="messagesEditCommnet" redisplay="false" />
+                <p:panelGrid>
+
+                    <p:row>
+                        <p:column>
+                            <h:outputLabel value="New Comment Body: " />
+                        </p:column>
+                        <p:column>
+                            <p:inputText id="body" value="#{createNewCommentManagedBean.commentToBeUpdated.content}" placeholder="#{createNewCommentManagedBean.commentToBeUpdated.content}" required="true" requiredMessage="Content is required" />
+                        </p:column>
+
+                    </p:row>
+                </p:panelGrid>
+                <br/>
+                <p:commandButton value="Confirm" actionListener="${createNewCommentManagedBean.updateComment}" update="formViewPost:dataScrollMyComments formEditComment:messagesEditCommnet">
+                </p:commandButton>
+            </p:dialog>
+
+        </h:form>
+
+
+    </ui:define>   
+
+</ui:composition>
+
 
