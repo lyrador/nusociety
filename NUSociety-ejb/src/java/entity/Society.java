@@ -57,7 +57,9 @@ public class Society implements Serializable {
     private List<Student> followedStudents;
     @OneToMany(mappedBy = "society", orphanRemoval = false, cascade = {}, fetch = FetchType.LAZY)
     private List<Event> events;
-
+    @OneToMany(mappedBy = "society", orphanRemoval = false, cascade = {}, fetch = FetchType.LAZY)
+    private List<FeedbackSurvey> surveys;
+    
     public Society() {
         this.announcements = new ArrayList<>();
         this.societyCategories = new ArrayList<>();
@@ -66,6 +68,7 @@ public class Society implements Serializable {
         this.events = new ArrayList<>();
         this.memberStudents = new ArrayList<>();
         this.followedStudents = new ArrayList<>();
+        this.surveys = new ArrayList<>();
     }
 
     public Society(String name, String description, Date dateCreated) {
@@ -202,6 +205,14 @@ public class Society implements Serializable {
 
     public void setEvents(List<Event> events) {
         this.events = events;
+    }
+
+    public List<FeedbackSurvey> getSurveys() {
+        return surveys;
+    }
+
+    public void setSurveys(List<FeedbackSurvey> surveys) {
+        this.surveys = surveys;
     }
     
     

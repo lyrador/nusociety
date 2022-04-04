@@ -41,10 +41,6 @@
                     </ui:repeat>
                 </p:column>
                 
-                <p:column headerText="Date created" sortBy="#{society.dateCreated}" filterBy="#{society.dateCreated}" filterMatchMode="contains" colspan="1">
-                    <h:outputText value="#{society.dateCreated}" />
-                </p:column>
-                
                 <p:column>
                     <h:outputLink value="#{application.contextPath}/Society/viewSociety/#{society.societyId}-#{society.name.replaceAll(' ', '-')}">
                         View

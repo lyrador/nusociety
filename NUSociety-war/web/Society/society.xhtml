@@ -22,26 +22,32 @@
 
             <h:outputText value="#{societyManagedBean.society.name}" style="font-size:25px; font-weight: bold;"/>
             <p:commandButton id="follow_button" rendered="#{!followManagedBean.followedSocieties.contains(societyManagedBean.society) and !followManagedBean.memberSocieties.contains(societyManagedBean.society)}" value="Follow" icon="pi pi-plus" 
-                             style="float: right;" actionListener="#{followManagedBean.follow}" update="@form">
+                             style="float: right; background-color: #008CBA;" actionListener="#{followManagedBean.follow}" update="@form">
                 <f:param name="societyId" value="#{societyManagedBean.society.societyId}" />
             </p:commandButton>
 
             <p:commandButton id="unfollow_button" rendered="#{followManagedBean.followedSocieties.contains(societyManagedBean.society) and !followManagedBean.memberSocieties.contains(societyManagedBean.society)}" value="Unfollow" icon="pi pi-minus" 
-                             style="float: right;" actionListener="#{followManagedBean.unfollow}" update="@form">
+                             style="float: right; background-color: white;" actionListener="#{followManagedBean.unfollow}" update="@form">
                 <f:param name="societyId" value="#{societyManagedBean.society.societyId}" />
             </p:commandButton>
 
             <h:outputText rendered="#{followManagedBean.memberSocieties.contains(societyManagedBean.society)}" value="You are a member of this society" style="float: right;"/>
             <br/>
-            <h:outputText value="#{followManagedBean.memberCount} members" style="float: right;"/>
+            <h:outputText value="#{followManagedBean.memberCount} members" style="float: right; font-weight: bold;"/>
             <br/>
-            <h:outputText value="#{followManagedBean.followerCount} followers" style="float: right;"/>
+            <h:outputText value="#{followManagedBean.followerCount} followers" style="float: right; font-weight: bold;"/>
             <br/>
             <h:outputText value="#{societyManagedBean.society.description}" />
             <br/>
+            <h:outputText value="Have feedback for #{societyManagedBean.society.name}?" style="float: right;"/>
+            <br/>
+
+            <h:outputLink onclick="PF('dialogFeedbackSurvey').show();return false;" style="float: right;">
+                Leave your feedback here
+            </h:outputLink>
             <br/>
             <p:graphicImage value="#{FacesContext.getCurrentInstance().getExternalContext()}/resources/Images/#{societyManagedBean.society.profilePicture}" width="300px" height="300px"/> 
-
+            
             <h3>Posts</h3>
 
             <p:carousel id="caro" value="#{societyPostsManagedBean.postList}" headerText="Posts" var="post" itemStyle="text-align:center" responsive="true">
@@ -330,6 +336,66 @@
                         </p:column>                 
                     </p:row>
 
+
+                </p:panelGrid>
+
+            </p:dialog>
+
+        </h:form>
+        
+        <h:form id="formFeedbackSurvey">
+
+            <p:dialog id="dialogFeedbackSurvey" widgetVar="dialogFeedbackSurvey" header="Feedback" closable="true">
+
+                <p:messages id="messagesFeedbackSurvey" redisplay="false" />
+
+                <p:panelGrid>
+
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="title" value="Title: " style="font-weight: bold;" />
+                        </p:column>
+                        <p:column>
+                            <p:inputText id="title" value="#{feedbackSurveyManagedBean.survey.title}" placeholder="Event" required="true" requiredMessage="Title is required" />
+                        </p:column>
+                        <p:column>
+                            <p:message for="title" />
+                        </p:column>
+                    </p:row>
+
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="content" value="Feedback Content: " style="font-weight: bold;" />
+                        </p:column>
+                        <p:column>
+                            <p:inputText id="content" value="#{feedbackSurveyManagedBean.survey.content}" placeholder="Content" required="true" requiredMessage="Content is required" />
+                        </p:column>
+                        <p:column>
+                            <p:message for="content" />
+                        </p:column>
+                    </p:row>
+
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="rating" value="Rating: " style="font-weight: bold;" />
+                        </p:column>
+                        <p:column>
+                            <p:rating id="rating" value="#{feedbackSurveyManagedBean.survey.rating}" stars="5" required="true" requiredMessage="Rating is required">
+                                <f:validateLongRange minimum="1" maximum="5" />
+                            </p:rating>
+                        </p:column>
+                        <p:column>
+                            <p:message for="rating" />
+                        </p:column>
+                    </p:row>
+
+                    <p:row>
+                        <p:column colspan="3">
+                            <p:commandButton value="Submit" update="@form formFeedbackSurvey" actionListener="#{feedbackSurveyManagedBean.submitSurvey}" oncomplete="PF('dialogFeedbackSurvey').show();">
+                                <f:param name="societyId" value="#{societyManagedBean.society.societyId}" />
+                            </p:commandButton>
+                        </p:column>
+                    </p:row>
 
                 </p:panelGrid>
 
