@@ -8,6 +8,7 @@ package ejb.session.stateless;
 import entity.Staff;
 import java.util.List;
 import javax.ejb.Local;
+import util.exception.InvalidLoginCredentialException;
 import util.exception.StaffDeletionException;
 import util.exception.StaffNotFoundException;
 
@@ -29,5 +30,7 @@ public interface StaffSessionBeanLocal {
     public void deleteStaff(Long staffId) throws StaffNotFoundException, StaffDeletionException;
 
     public List<Staff> retrieveAllStaffs();
+
+    public Staff staffLogin(String username, String password) throws InvalidLoginCredentialException, StaffNotFoundException;
     
 }

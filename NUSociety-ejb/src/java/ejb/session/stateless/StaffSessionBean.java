@@ -7,6 +7,7 @@ package ejb.session.stateless;
 
 import entity.Society;
 import entity.Staff;
+import entity.Student;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.Stateless;
@@ -15,8 +16,10 @@ import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import util.exception.InvalidLoginCredentialException;
 import util.exception.StaffDeletionException;
 import util.exception.StaffNotFoundException;
+import util.exception.StudentNotFoundException;
 
 /**
  *
@@ -54,7 +57,7 @@ public class StaffSessionBean implements StaffSessionBeanLocal {
         s.setEmail(newS.getEmail());
         s.setPassword(newS.getPassword());
         s.setProfilePicture(newS.getProfilePicture());
-        s.setUserName(newS.getUserName());
+        s.setUsername(newS.getUsername());
     }
     
     //Delete staff
@@ -98,6 +101,25 @@ public class StaffSessionBean implements StaffSessionBeanLocal {
         Query query = em.createQuery("SELECT s FROM Staff s");
 
         return query.getResultList();
+    }
+    
+    @Override
+    public Staff staffLogin(String username, String password) throws InvalidLoginCredentialException, StaffNotFoundException {
+        
+        try {
+            Staff staff = retrieveStaffByUsername(username);
+            
+            if (staff.getPassword().equals(password)) {
+                staff.getSocieties().size();
+                return staff;
+            }
+            else
+            {
+                throw new InvalidLoginCredentialException("Username does not exist or invalid password!");
+            }
+        } catch (StaffNotFoundException ex) {
+            throw new InvalidLoginCredentialException("Username does not exist or invalid password!");
+        }
     }
     
 }
