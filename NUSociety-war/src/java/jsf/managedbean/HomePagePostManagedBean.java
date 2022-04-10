@@ -71,6 +71,8 @@ public class HomePagePostManagedBean implements Serializable {
                 System.out.println(ex.getMessage());
             }
         }
+        
+        System.out.println(FacesContext.getCurrentInstance().getExternalContext() + " HEY");
 
     }
 
