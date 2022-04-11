@@ -67,6 +67,7 @@ public class PostSessionBean implements PostSessionBeanLocal {
         
         //Update Body and Image
         p.setBodyContent(newP.getBodyContent());
+        p.setPostIsPublic(newP.isPostIsPublic());
         p.setImage(newP.getImage()); 
         
     }

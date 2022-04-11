@@ -11,4 +11,16 @@
         <local>ejb.session.stateless.SocietyCategorySessionBeanLocal</local>
         <ejb-link>NUSociety-ejb.jar#SocietyCategorySessionBean</ejb-link>
     </ejb-local-ref>
+    <ejb-local-ref>
+        <ejb-ref-name>SocietySessionBean</ejb-ref-name>
+        <ejb-ref-type>Session</ejb-ref-type>
+        <local>ejb.session.stateless.SocietySessionBeanLocal</local>
+        <ejb-link>NUSociety-ejb.jar#SocietySessionBean</ejb-link>
+    </ejb-local-ref>
+    <ejb-local-ref>
+        <ejb-ref-name>FeedbackSurveySessionBean</ejb-ref-name>
+        <ejb-ref-type>Session</ejb-ref-type>
+        <local>ejb.session.stateless.FeedbackSurveySessionBeanLocal</local>
+        <ejb-link>NUSociety-ejb.jar#FeedbackSurveySessionBean</ejb-link>
+    </ejb-local-ref>
 </web-app>

@@ -10,6 +10,7 @@ import ejb.session.stateless.AttendanceSessionBeanLocal;
 import ejb.session.stateless.CommentSessionBeanLocal;
 import ejb.session.stateless.EventCategorySessionBeanLocal;
 import ejb.session.stateless.EventSessionBeanLocal;
+import ejb.session.stateless.FeedbackSurveySessionBeanLocal;
 import ejb.session.stateless.PostSessionBeanLocal;
 import ejb.session.stateless.SocietyCategorySessionBeanLocal;
 import ejb.session.stateless.SocietySessionBeanLocal;
@@ -18,6 +19,7 @@ import ejb.session.stateless.StudentSessionBeanLocal;
 import entity.Attendance;
 import entity.Comment;
 import entity.EventCategory;
+import entity.FeedbackSurvey;
 import entity.Post;
 import entity.Society;
 import entity.SocietyCategory;
@@ -51,6 +53,9 @@ import util.exception.UnknownPersistenceException;
 @LocalBean
 @Startup
 public class DataIntSessionBean {
+
+    @EJB
+    private FeedbackSurveySessionBeanLocal feedbackSurveySessionBeanLocal;
 
     @EJB
     private EventCategorySessionBeanLocal eventCategorySessionBeanLocal;
@@ -199,6 +204,18 @@ public class DataIntSessionBean {
 
         String[] imageLink = {"alexPostPic.jpg", "bettyPostPic.jpg", "carlPostPic.jpg",
             "davidPostPic.jpg", "elainePostPic.jpg"};
+        
+        if (em.find(FeedbackSurvey.class, 1l) == null) {
+            try {
+                FeedbackSurvey survey1 = new FeedbackSurvey("IHG Event", "Well organized. Good job!", new Date(), 5);
+                FeedbackSurvey survey2 = new FeedbackSurvey("Training sessions", "Could be more intense", new Date(), 3);
+                
+                feedbackSurveySessionBeanLocal.submitSurvey(survey1, 1l);
+                feedbackSurveySessionBeanLocal.submitSurvey(survey2, 1l);
+            } catch(SocietyNotFoundException ex) {
+                ex.getMessage();
+            }
+        }
         
         
         if (em.find(Post.class, 1l) == null) {

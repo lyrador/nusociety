@@ -44,7 +44,7 @@ public class SocietyCategoryResource {
     private UriInfo context;
 
     /**
-     * Creates a new instance of StaffResource
+     * Creates a new instance of SocietyCategoryResource
      */
     public SocietyCategoryResource() {
     }
