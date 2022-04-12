@@ -24,7 +24,7 @@
                 <p:graphicImage value="#{FacesContext.getCurrentInstance().getExternalContext()}/resources/Images/#{societyPostsManagedBean.currentSociety.profilePicture}" width="100px" height="100px"/>
             </h3>
             
-            <h2 style="color: darkblue; text-decoration: underline; font-size: 20pt; margin-left: 20px">Whats on your mind?</h2>
+            <h2 style="color: darkblue;  font-size: 30pt; margin-left: 20px; font-family: Roboto;">Whats on your mind?</h2>
             <p:linkButton value="Create a Public Post!" style="margin-left: 20px; margin-right:20px; background-color: lightblue" outcome="/Post/createPost.xhtml">
             </p:linkButton>
             <p:linkButton value="Create a Private Post!" style="margin-right:20px; background-color: lightblue" outcome="/Post/createPrivatePost.xhtml" rendered="#{sessionScope.currentStudent.memberSocieties.contains(societyPostsManagedBean.currentSociety) == true}">
@@ -33,7 +33,7 @@
 
             <h:form id="filter">
                 
-                <h2 style="color: yellowgreen; text-decoration: underline; font-size: 20pt; margin-left: 20px">Filter</h2>
+                <h2 style="color: #3CB371; font-family: Roboto; font-size: 30pt; margin-left: 20px">Filter</h2>
                 <p:commandButton value="Sort by Latest" style="margin-right:20px; margin-left: 20px" actionListener="#{societyPostsManagedBean.sortByLatest}" update="formAllPosts:dataTableAllPosts filter:messages"/>
                 <p:commandButton value="Sort by Oldest" style="margin-right:20px;" actionListener="#{societyPostsManagedBean.sortByEarliest}" update="formAllPosts:dataTableAllPosts filter:messages"/>
                 <p:commandButton value="Show Private Posts Only " style="margin-right:20px;" actionListener="#{societyPostsManagedBean.sortByPrivate}" update="formAllPosts:dataTableAllPosts filter:messages"/>
@@ -104,7 +104,8 @@
             <p:dialog id="dialogUpdatePost" widgetVar="dialogUpdatePost" header="Update Post" closable="true">
 
                 <p:messages id="messagesUpdatePost" redisplay="false" />
-
+                <p:growl id="msgs" />
+                
                 <p:panelGrid>
 
                     <p:row>
@@ -158,11 +159,24 @@
                         </p:column>
                     </p:row>
 
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="boolean" value="Public Or Private " />
+                        </p:column>
+                        <p:column>
+                            <p:selectBooleanButton id="boolean" value="#{societyPostsManagedBean.postToUpdate.postIsPublic}" onLabel="Public " offLabel="Private ">
+                                <p:ajax update="msgs" listener="#{societyPostsManagedBean.addMessage()}" />
+                            </p:selectBooleanButton>
+                        </p:column>
+                        <p:column>
+                            <p:message for="boolean" />
+                        </p:column>
+                    </p:row>
 
 
                     <p:row>
                         <p:column colspan="3">
-                            <p:commandButton value="Update Post" update="@this messagesUpdatePost formAllPosts:dataTableAllPosts formAllPosts:messages" actionListener="#{societyPostsManagedBean.updateSocietyPagePost}" oncomplete="PF('dialogUpdatePost').show();" />
+                            <p:commandButton value="Update Post" update="@this messagesUpdatePost formAllPosts:dataTableAllPosts formAllPosts:messages formUpdatePost" actionListener="#{societyPostsManagedBean.updateSocietyPagePost}" oncomplete="PF('dialogUpdatePost').show();" />
                         </p:column>
                     </p:row>
 

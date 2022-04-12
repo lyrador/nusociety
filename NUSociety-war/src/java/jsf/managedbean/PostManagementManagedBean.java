@@ -342,6 +342,11 @@ public class PostManagementManagedBean implements Serializable {
             return null;
         }
     }
+    
+    public void addMessage() {
+        String summary = postToUpdate.isPostIsPublic() ? "Public" : "Private";
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(summary));
+    }
 
     public Post getNewPostEntity() {
         return newPostEntity;
