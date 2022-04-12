@@ -80,6 +80,18 @@ public class StudentSessionBean implements StudentSessionBeanLocal {
     }
     
     @Override
+    public Long createNewStudentWithEnum(Student newStudent, String studentAccessRightString) {
+        if (studentAccessRightString.equals("MEMBER")) {
+            newStudent.setAccessRightEnum(AccessRightEnum.MEMBER);
+        } else {
+            newStudent.setAccessRightEnum(AccessRightEnum.LEADER);
+        }
+        em.persist(newStudent);
+        em.flush(); 
+        return newStudent.getStudentId();
+    }
+    
+    @Override
     public void deleteStudent(Long studentId) throws StudentNotFoundException {
         Student studentToBeDeleted = retrieveStudentByStudentId(studentId);
         

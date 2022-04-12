@@ -40,5 +40,7 @@ public interface StudentSessionBeanLocal {
     public Student studentUnfollow(Long studentId, Long societyId) throws StudentNotFoundException, SocietyNotFoundException;
 
     public Student retrieveStudentByEmail(String email) throws StudentNotFoundException;
+
+    public Long createNewStudentWithEnum(Student newStudent, String studentAccessRightString);
   
 }

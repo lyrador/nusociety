@@ -45,6 +45,7 @@ public class AnnouncementManagementManagedBean implements Serializable {
     private Announcement announcementToUpdate;
     private Announcement announcementToDelete;
     private Student currentStudent;
+    private String emptyAnnouncementNotice;
     
     public AnnouncementManagementManagedBean() {
         newAnnouncement = new Announcement();
@@ -159,5 +160,16 @@ public class AnnouncementManagementManagedBean implements Serializable {
         temp.addAll(allMyAnnouncements);
         Collections.reverse(temp);
         return temp;
+    }
+
+    public String getEmptyAnnouncementNotice() {
+        if (getAllMyAnnouncementsSortedByMostRecent().size() == 0) {
+            emptyAnnouncementNotice = "There is currently no announcements!";
+        }
+        return emptyAnnouncementNotice;
+    }
+
+    public void setEmptyAnnouncementNotice(String emptyAnnouncementNotice) {
+        this.emptyAnnouncementNotice = emptyAnnouncementNotice;
     }
 }

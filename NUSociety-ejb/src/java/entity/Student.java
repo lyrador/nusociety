@@ -8,6 +8,7 @@ package entity;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -40,7 +41,7 @@ public class Student implements Serializable {
     private String password;
     @Column(nullable = false, unique = true, length = 32)
     private String userName;
-    @Column(nullable = false, unique = true, length = 256)
+    @Column(unique = true, length = 256)
     private String profilePicture;
     @Enumerated(EnumType.STRING)
     @Column(nullable = true)
@@ -157,7 +158,7 @@ public class Student implements Serializable {
         this.profilePicture = profilePicture;
     }
 
-
+    @JsonbTransient
     public List<Attendance> getAttendances() {
         return attendances;
     }
@@ -166,6 +167,7 @@ public class Student implements Serializable {
         this.attendances = attendances;
     }
 
+    @JsonbTransient
     public List<Notification> getNotifications() {
         return notifications;
     }
@@ -182,6 +184,7 @@ public class Student implements Serializable {
         this.accessRightEnum = accessRightEnum;
     }
     
+    @JsonbTransient
     public List<Comment> getComments() {
         return comments;
     }
@@ -190,6 +193,7 @@ public class Student implements Serializable {
         this.comments = comments;
     }
 
+    @JsonbTransient
     public List<Post> getPosts() {
         return posts;
     }
@@ -198,6 +202,7 @@ public class Student implements Serializable {
         this.posts = posts;
     }
 
+    @JsonbTransient
     public List<Event> getEvents() {
         return events;
     }
@@ -206,6 +211,7 @@ public class Student implements Serializable {
         this.events = events;
     }
 
+    @JsonbTransient
     public List<Event> getEventsOrganised() {
         return eventsOrganised;
     }
@@ -214,6 +220,7 @@ public class Student implements Serializable {
         this.eventsOrganised = eventsOrganised;
     }
 
+    @JsonbTransient
     public List<Society> getMemberSocieties() {
         return memberSocieties;
     }
@@ -222,16 +229,13 @@ public class Student implements Serializable {
         this.memberSocieties = memberSocieties;
     }
 
+    @JsonbTransient
     public List<Society> getFollowedSocieties() {
         return followedSocieties;
     }
 
     public void setFollowedSocieties(List<Society> followedSocieties) {
         this.followedSocieties = followedSocieties;
-    }
-
-
-    
-    
+    }  
     
 }
