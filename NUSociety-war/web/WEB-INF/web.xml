@@ -24,13 +24,17 @@
         <param-name>primefaces.UPLOADER</param-name>
         <param-value>native</param-value>
     </context-param>
-<!--    <context-param>
+    <!--    <context-param>
         <param-name>primefaces.THEME</param-name>
         <param-value>sunny</param-value>
     </context-param>-->
     <context-param>
         <param-name>alternatedocroot_1</param-name>
-        <param-value>/Users/raihan/glassfish-5.1.0-uploadedfiles/Images</param-value>
+        <param-value>C:\Users\65912\Desktop\NUSociety_IS3106\nusociety\NUSociety-war\web\resources\Images</param-value>
+    </context-param>
+    <context-param>
+        <param-name>primefaces.THEME</param-name>
+        <param-value>ui-lightness</param-value>
     </context-param>
     <context-param>
         <param-name>uploadedFilesPath</param-name>
