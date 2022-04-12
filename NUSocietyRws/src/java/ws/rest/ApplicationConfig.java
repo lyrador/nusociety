@@ -32,7 +32,6 @@ public class ApplicationConfig extends Application {
         resources.add(ws.rest.CommentResource.class);
         resources.add(ws.rest.CorsFilter.class);
         resources.add(ws.rest.EventCategoryResource.class);
-        resources.add(ws.rest.PostResource.class);
         resources.add(ws.rest.FeedbackSurveyResource.class);
         resources.add(ws.rest.PostResource.class);
         resources.add(ws.rest.SocietyCategoryResource.class);

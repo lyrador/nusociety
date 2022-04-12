@@ -5,7 +5,7 @@
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:p="http://primefaces.org/ui">
-    
+
     <header style="text-align: right">
         <h:panelGroup rendered="#{sessionScope.isLogin == false}">
             <h:form id="loginForm">
@@ -29,14 +29,24 @@
 
             </h:form>
         </h:panelGroup>
-        
+
         <h:panelGroup rendered="#{sessionScope.isLogin == true}">
-            <h:form id="logoutForm">
-                <h:outputText value="You are login as #{sessionScope.currentStudent.userName}" />&nbsp;
-                <p:commandButton value="Logout" actionListener="#{loginManagedBean.logout}" icon="pi pi-sign-out" />
-            </h:form>
+            <div style="float: left">
+                <p:graphicImage value="#{FacesContext.getCurrentInstance().getExternalContext()}/resources/Images/NUSociety-logos.jpeg" style="width: 100px; height: 100px" />
+
+            </div>
+
+            <div style="float: right">
+                <h:form id="logoutForm">
+                    <h:outputText value="You are logged in as " style="font-family: Roboto; font-size: 14pt;" /> <b style="font-family: Roboto; font-size: 14pt">#{sessionScope.currentStudent.userName}</b>  &nbsp;      
+                    <p:graphicImage value="#{FacesContext.getCurrentInstance().getExternalContext()}/resources/Images/#{sessionScope.currentStudent.profilePicture}" style="margin-left: 20px;" width="40px" height="40px"/>
+                    <br/>
+                    <p:commandButton value="Logout" actionListener="#{loginManagedBean.logout}" icon="pi pi-sign-out" style="margin-top: 2px" />
+                </h:form>    
+            </div>
+
         </h:panelGroup>
-        
+
     </header>
 
 </ui:composition>
