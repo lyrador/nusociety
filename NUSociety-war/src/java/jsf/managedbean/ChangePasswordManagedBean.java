@@ -13,6 +13,7 @@ import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
+import util.exception.StudentNotFoundException;
 
 /**
  *
@@ -35,15 +36,22 @@ public class ChangePasswordManagedBean {
     }
     
     public void changePassword(ActionEvent event) {
-        if (oldPassword.equals(currentStudent.getPassword())) {
-            if (newPassword1.equals(newPassword2)) {
-                currentStudent.setPassword(newPassword1);
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,  "Password updated successfully!", ""));
+        
+        try {
+            if (oldPassword.equals(currentStudent.getPassword())) {
+                if (newPassword1.equals(newPassword2)) {
+                    currentStudent.setPassword(newPassword1);
+                    studentSessionBeanLocal.updateStudent(currentStudent);
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,  "Password updated successfully!", ""));
+                } else {
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,  "New passwords do not match!", ""));
+                }
             } else {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,  "New passwords do not match!", ""));
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,  "Old password is incorrect!", ""));
             }
-        } else {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,  "Old password is incorrect!", ""));
+        }
+        catch (StudentNotFoundException ex) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,  ex.getMessage(), ""));
         }
         
         
