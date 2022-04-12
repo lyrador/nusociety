@@ -10,28 +10,28 @@
         <nav>
             <h:form>
                     
-                <p:menu style="width:200px;">
+                <p:menu style="width:200px;" >
 
-                    <p:submenu label="System">
+                    <p:submenu label="NUSociety" icon="pi pi-users">
                         <p:menuitem value="Home" outcome="/index" icon="pi pi-home" />
-                        <p:menuitem value="Logout"  icon="pi pi-sign-out" rendered="#{sessionScope.isLogin == true}"/>
+                        <p:menuitem value="Logout" actionListener="#{loginManagedBean.logout}" icon="pi pi-sign-out" rendered="#{sessionScope.isLogin == true}"/>
                     </p:submenu>
 
-                    <p:submenu label="Personal" rendered="#{sessionScope.isLogin == true}">
-                        <p:menuitem value="Edit Profile" outcome="/Student/editProfile.xhtml" icon="pi pi-arrow-circle-right" />
-                        <p:menuitem value="Change Password" outcome="/Student/changePassword.xhtml" icon="pi pi-arrow-circle-right" />
-                        <p:menuitem value="View My Posts" outcome="/Post/viewMyPosts.xhtml" icon="pi pi-arrow-circle-right" />
+                    <p:submenu label="Personal" rendered="#{sessionScope.isLogin == true}" icon="pi pi-user">
+                        <p:menuitem value="Edit Profile" outcome="/Student/editProfile.xhtml" icon="pi pi-user-edit" />
+                        <p:menuitem value="Change Password" outcome="/Student/changePassword.xhtml" icon="pi pi-id-card" />
+                        <p:menuitem value="View My Posts" outcome="/Post/viewMyPosts.xhtml" icon="pi pi-th-large" />
                     </p:submenu>
                     
-                    <p:submenu label="My Society" rendered="#{sessionScope.isLogin == true}">
+                    <p:submenu label="My Society" rendered="#{sessionScope.isLogin == true}" icon="pi pi-users">
                         <p:menuitem value="View My Societies" outcome="/Society/mySocieties.xhtml" icon="pi pi-users" />
                          <p:menuitem value="View Followed Societies" outcome="/Society/followedSocieties.xhtml" icon="pi pi-user-plus" />
                         <p:menuitem value="Find a Society" outcome="/Society/findSociety.xhtml" icon="pi pi-search" />
                     </p:submenu>
                     
-                    <p:submenu label="My Events" rendered="#{sessionScope.isLogin == true}">
-                        <p:menuitem value="View My Events" outcome="/EventAndEventCategory/myEvents.xhtml" icon="pi pi-users" />
-                        <p:menuitem value="Find an Event" outcome="/EventAndEventCategory/eventManagement.xhtml" icon="pi pi-users" />
+                    <p:submenu label="My Events" rendered="#{sessionScope.isLogin == true}" icon="pi pi-calendar">
+                        <p:menuitem value="View My Events" outcome="/EventAndEventCategory/myEvents.xhtml" icon="pi pi-calendar" />
+                        <p:menuitem value="Find an Event" outcome="/EventAndEventCategory/eventManagement.xhtml" icon="pi pi-search" />
                     </p:submenu>   
 
                 </p:menu>

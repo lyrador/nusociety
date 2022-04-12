@@ -7,6 +7,7 @@ package entity;
 
 import java.io.Serializable;
 import java.util.Date;
+import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -51,12 +52,14 @@ public class FeedbackSurvey implements Serializable {
         this.title = title;
         this.content = content;
         this.date = date;
+        this.rating = rating;
     }
 
     public FeedbackSurvey(String title, String content, Date date, Integer rating, Society society) {
         this.title = title;
         this.content = content;
         this.date = date;
+        this.rating = rating;
         this.society = society;
     }
 
@@ -117,6 +120,7 @@ public class FeedbackSurvey implements Serializable {
         this.date = date;
     }
 
+    @JsonbTransient
     public Society getSociety() {
         return society;
     }

@@ -11,51 +11,50 @@
         <h:outputStylesheet library="css" name="default.css" />
     </h:head>
     <h:body>
-        
+
         <p:layout fullPage="true">
-            
+
             <p:layoutUnit position="north" size="120">
-            
-                <h1>NUSociety</h1>
 
                 <ui:insert name="header">
                     <ui:include src="/header.xhtml" />
                 </ui:insert>
                 
-            </p:layoutUnit>
-            
-            <p:layoutUnit size="240" position="west" >
                 
+            </p:layoutUnit>
+
+            <p:layoutUnit size="240" position="west" >
+
                 <ui:insert name="mainmenu">
                     <ui:include src="/mainMenu.xhtml" />
                 </ui:insert>        
-                
+
             </p:layoutUnit>
-            
+
             <p:layoutUnit position="center" >
-                
+
                 <ui:insert name="content">Content</ui:insert>
-                
+
             </p:layoutUnit>
-            
-            <p:layoutUnit minSize="200" maxSize="400" position="east" header="Announcements" collapsible="true" collapsed="true">
-                
+
+            <p:layoutUnit minSize="200" maxSize="400" position="east" header="Announcements" rendered="#{sessionScope.isLogin == true}">
+
                 <ui:insert name="announcements">
                     <ui:include src="/announcements.xhtml" />
                 </ui:insert>        
-                
+
             </p:layoutUnit>
-            
+
             <p:layoutUnit position="south" size="70" >
-                
+
                 <ui:insert name="footer">
                     <ui:include src="/footer.xhtml" />
                 </ui:insert>
-                
+
             </p:layoutUnit>                
-            
+
         </p:layout>
-        
+
     </h:body>
 </html>
 

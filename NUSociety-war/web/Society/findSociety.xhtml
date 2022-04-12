@@ -22,11 +22,12 @@
                     </p:outputPanel>
                 </f:facet>
                 
+                <p:column headerText="Display Picture">
+                    <p:graphicImage value="#{FacesContext.getCurrentInstance().getExternalContext()}/resources/Images/#{society.profilePicture}" width="100px" height="100px"  style="display: block; margin: 0px auto;"/> 
+                </p:column>
+                
                 <p:column headerText="Society" sortBy="#{society.name}" filterBy="#{society.name}" filterMatchMode="contains" colspan="3">
-<!--                <p:graphicImage name="demo/images/product/#{product.image}"/>-->
                     <h:outputText value="#{society.name}" style="font-weight: bold;"/>
-                    <br/>
-                    <h:outputText value="#{society.description}" />
                 </p:column>
                 
                 <p:column headerText="Society Category" sortBy="#{society.societyCategories}" filterBy="#{society.societyCategories}" filterMatchMode="contains" colspan="1">

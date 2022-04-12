@@ -15,6 +15,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -67,6 +68,7 @@ public class PostSessionBean implements PostSessionBeanLocal {
         
         //Update Body and Image
         p.setBodyContent(newP.getBodyContent());
+        p.setPostIsPublic(newP.isPostIsPublic());
         p.setImage(newP.getImage()); 
         
     }

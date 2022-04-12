@@ -10,6 +10,7 @@ import ejb.session.stateless.AttendanceSessionBeanLocal;
 import ejb.session.stateless.CommentSessionBeanLocal;
 import ejb.session.stateless.EventCategorySessionBeanLocal;
 import ejb.session.stateless.EventSessionBeanLocal;
+import ejb.session.stateless.FeedbackSurveySessionBeanLocal;
 import ejb.session.stateless.PostSessionBeanLocal;
 import ejb.session.stateless.SocietyCategorySessionBeanLocal;
 import ejb.session.stateless.SocietySessionBeanLocal;
@@ -18,6 +19,7 @@ import ejb.session.stateless.StudentSessionBeanLocal;
 import entity.Attendance;
 import entity.Comment;
 import entity.EventCategory;
+import entity.FeedbackSurvey;
 import entity.Post;
 import entity.Society;
 import entity.SocietyCategory;
@@ -51,6 +53,9 @@ import util.exception.UnknownPersistenceException;
 @LocalBean
 @Startup
 public class DataIntSessionBean {
+
+    @EJB
+    private FeedbackSurveySessionBeanLocal feedbackSurveySessionBeanLocal;
 
     @EJB
     private EventCategorySessionBeanLocal eventCategorySessionBeanLocal;
@@ -94,6 +99,7 @@ public class DataIntSessionBean {
         List<Long> categoryIds1 = new ArrayList<>();
         List<Long> categoryIds2 = new ArrayList<>();
         List<Long> categoryIds3 = new ArrayList<>();
+        List<Long> categoryIds4 = new ArrayList<>();
 
         if (em.find(Student.class, 1l) == null) {
             studentSessionBeanLocal.createNewStudent(new Student("Alex", "alex@gmail.com", "password", "alex", "alexPic.png", AccessRightEnum.MEMBER));
@@ -115,10 +121,14 @@ public class DataIntSessionBean {
                 SocietyCategory category1 = societyCategorySessionBeanLocal.createNewSocietyCategory(new SocietyCategory("Sports"));
                 SocietyCategory category2 = societyCategorySessionBeanLocal.createNewSocietyCategory(new SocietyCategory("Clubs"));
                 SocietyCategory category3 = societyCategorySessionBeanLocal.createNewSocietyCategory(new SocietyCategory("Performing Arts"));
+                SocietyCategory category4 = societyCategorySessionBeanLocal.createNewSocietyCategory(new SocietyCategory("Halls"));
+                SocietyCategory category5 = societyCategorySessionBeanLocal.createNewSocietyCategory(new SocietyCategory("Residences"));
                 categoryIds1.add(category1.getSocietyCategoryId());
+                categoryIds2.add(category5.getSocietyCategoryId());
                 categoryIds2.add(category2.getSocietyCategoryId());
-                categoryIds2.add(category3.getSocietyCategoryId());
                 categoryIds3.add(category3.getSocietyCategoryId());
+                categoryIds4.add(category4.getSocietyCategoryId());
+                categoryIds4.add(category1.getSocietyCategoryId());
             } catch (CreateSocietyCategoryException | SocietyCategoryNotFoundException e) {
                 e.printStackTrace();
             }
@@ -138,35 +148,38 @@ public class DataIntSessionBean {
         if (em.find(Society.class, 1l) == null) {
 
             try {
-                societySessionBeanLocal.createNewSociety(new Society("Floorball", "Sticks and Balls", new Date(), "Harry-Maguire-2-1.jpg"), categoryIds1, staffIds);
-
-                Student alex = studentSessionBeanLocal.retrieveStudentByUsername("alex");
-                Society floorball = societySessionBeanLocal.retrieveSocietyById(1l);
-
-//                List<Student> fbStuList = new ArrayList<>();
-//                fbStuList.add(alex);
-//                floorball.setMemberStudents(fbStuList);
-//
-//                List<Society> alexSocList = new ArrayList<>();
-//                alexSocList.add(floorball);
-//                alex.setMemberSocieties(alexSocList);
-                societySessionBeanLocal.createNewSociety(new Society("Choir Club", "We love singing", new Date(), "220327-chris-rock-will-smith-3-ew-1052p-acc676.jpg"), categoryIds2, staffIds);
-                societySessionBeanLocal.createNewSociety(new Society("NUS Band", "Banging the drums as hard as we can", new Date(), "1030_two-students-looking-at-tablet-1028x579.jpg"), categoryIds3, staffIds);
+                societySessionBeanLocal.createNewSociety(new Society("NUS Floorball", 
+                        "Floorball is a type of floor hockey with five players and a goalkeeper in each team. Men and women play indoors with "
+                                + "96–115.5 cm-long (37.8–45.5 in) sticks and a 70–72 mm-diameter (2.76–2.83 in) plastic ball with holes. Matches "
+                                + "are played in three twenty-minute periods. The sport of bandy also played a role in the game's development.", 
+                                new Date(), "floorball_society.jpeg"), categoryIds1, staffIds);
+                
+                societySessionBeanLocal.createNewSociety(new Society("NUS Choir", "A choir is a musical ensemble of singers. Choral music, in turn, "
+                        + "is the music written specifically for such an ensemble to perform. Choirs may perform music from the classical music repertoire, "
+                        + "which spans from the medieval era to the present, or popular music repertoire. Most choirs are led by a conductor, who leads the "
+                        + "performances with arm, hand, and facial gestures.", new Date(), "choir_society.jpeg"), categoryIds3, staffIds);
+                
+                societySessionBeanLocal.createNewSociety(new Society("NUS Concert Band", "A concert band, variously also called a wind ensemble, symphonic "
+                        + "band, wind symphony, wind orchestra, wind band, symphonic winds, symphony band, or symphonic wind ensemble, is a performing ensemble "
+                        + "consisting of members of the woodwind, brass, and percussion families of instruments, and occasionally including the harp and the "
+                        + "double bass or bass guitar. On rare occasions, additional non-traditional instruments may be added to such ensembles such as piano, "
+                        + "synthesizer, or electric guitar.", new Date(), "band_society.jpeg"), categoryIds3, staffIds);
+                
+                societySessionBeanLocal.createNewSociety(new Society("Tembusu College Art Club", "The Art Club is a place for practicing artists to hone in "
+                        + "on their skills, develop their techniques and portfolios, collaborate with other artists like themselves, create bonds with the "
+                        + "community through the arts, and learn how to work together through group projects that will beautify the school and community.", 
+                        new Date(), "artclub_society.jpeg"), categoryIds2, staffIds);
+                
+                societySessionBeanLocal.createNewSociety(new Society("Sheares Hall Swimming", "Swimming is an individual or team racing sport that requires the use of one's entire "
+                        + "body to move through water. The sport takes place in pools or open water (e.g., in a sea or lake). Competitive swimming is one "
+                        + "of the most popular Olympic sports,[1] with varied distance events in butterfly, backstroke, breaststroke, freestyle, and "
+                        + "individual medley. In addition to these individual events, four swimmers can take part in either a freestyle or medley relay. "
+                        + "A medley relay consists of four swimmers who will each swim a different stroke, ordered as backstroke, breaststroke, butterfly "
+                        + "and freestyle.", new Date(), "swimming_society.jpeg"), categoryIds4, staffIds);
 //                
-//                if (em.find(Event.class, 1l) == null) {
-//            
-//                    try {
-//                        Long eventId = eventSessionBeanLocal.createNewEvent(new Event("Floorball Finals", "NUS vs NTU", "USC", new Date(), new Date(), 20, alex, floorball));
-//                        Event event = eventSessionBeanLocal.retrieveEventById(eventId);
-//                        List<EventCategory> categories = new ArrayList<EventCategory>();
-//                        categories.add(new EventCategory("balls"));
-//                        event.setCategories(categories);
-//                    } catch (EventAlreadyExistsException | EventNotFoundException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
+//                
 
-            } catch (CreateSocietyException | UnknownPersistenceException | StudentNotFoundException | SocietyNotFoundException e) {
+            } catch (CreateSocietyException | UnknownPersistenceException e) {
                 e.printStackTrace();
             }
         }
@@ -199,6 +212,18 @@ public class DataIntSessionBean {
 
         String[] imageLink = {"alexPostPic.jpg", "bettyPostPic.jpg", "carlPostPic.jpg",
             "davidPostPic.jpg", "elainePostPic.jpg"};
+        
+        if (em.find(FeedbackSurvey.class, 1l) == null) {
+            try {
+                FeedbackSurvey survey1 = new FeedbackSurvey("IHG Event", "Well organized. Good job!", new Date(), 5);
+                FeedbackSurvey survey2 = new FeedbackSurvey("Training sessions", "Could be more intense", new Date(), 3);
+                
+                feedbackSurveySessionBeanLocal.submitSurvey(survey1, 1l);
+                feedbackSurveySessionBeanLocal.submitSurvey(survey2, 1l);
+            } catch(SocietyNotFoundException ex) {
+                ex.getMessage();
+            }
+        }
         
         
         if (em.find(Post.class, 1l) == null) {

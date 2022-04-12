@@ -10,8 +10,8 @@
     <ui:define name="content">
 
 
-        <h3 style="font-size: 32pt" align="center">My Posts!</h3>
-        <h2 style="color: darkblue; text-decoration: underline; font-size: 20pt; margin-left: 20px">Whats on your mind?</h2>
+        <h3 style="font-size: 32pt; font-family: Roboto;" align="center" >My Posts!</h3>
+        <h2 style="color: darkblue; font-size: 30pt; margin-left: 20px; font-family: Roboto;">Whats on your mind?</h2>
         <p:linkButton value="Create a Public Post!" style="margin-left: 20px; margin-right:20px; background-color: lightblue" outcome="/Post/createPost.xhtml">
         </p:linkButton>
         <p:linkButton value="Create a Private Post!" style="margin-right:20px; background-color: lightblue"  outcome="/Post/createPrivatePost.xhtml">
@@ -20,7 +20,7 @@
 
         <h:form id="filter">
 
-            <h2 style="color: yellowgreen; text-decoration: underline; font-size: 20pt; margin-left: 20px">Filter</h2>
+            <h2 style="color: #3CB371; font-size: 30pt; margin-left: 20px; font-family: Roboto;">Filter</h2>
             <p:commandButton value="Sort by Latest" style="margin-right:20px; margin-left: 20px" actionListener="#{postManagementManagedBean.sortByLatest}" update="formViewMyPosts:dataScrollMyPosts filter:messages">
             </p:commandButton>
             <p:commandButton value="Sort by Oldest" style="margin-right:20px;" actionListener="#{postManagementManagedBean.sortByEarliest}" update="formViewMyPosts:dataScrollMyPosts filter:messages">
@@ -130,7 +130,7 @@
                         <br/>
                         <p:graphicImage value="#{FacesContext.getCurrentInstance().getExternalContext()}/resources/Images/#{postManagementManagedBean.postToView.student.profilePicture}"  width="60px" height="60px"/>
                         <br/> <br/>
-                        
+
                         <h:outputLabel value="Post ID: " style="font-weight: bold"/>
                         <h:outputText value="#{postManagementManagedBean.postToView.postId}" />
                         <br/> <br/>
@@ -263,6 +263,7 @@
             <p:dialog id="dialogUpdatePost" widgetVar="dialogUpdatePost" header="Update Post" closable="true">
 
                 <p:messages id="messagesUpdatePost" redisplay="false" />
+                <p:growl id="msgs" />
 
                 <p:panelGrid>
 
@@ -317,11 +318,25 @@
                         </p:column>
                     </p:row>
 
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="boolean" value="Public Or Private " />
+                        </p:column>
+                        <p:column>
+                            <p:selectBooleanButton id="boolean" value="#{postManagementManagedBean.postToUpdate.postIsPublic}" onLabel="Public " offLabel="Private ">
+                                <p:ajax update="msgs" listener="#{postManagementManagedBean.addMessage()}" />
+                            </p:selectBooleanButton>
+                        </p:column>
+                        <p:column>
+                            <p:message for="boolean" />
+                        </p:column>
+                    </p:row>
+
 
 
                     <p:row>
                         <p:column colspan="3">
-                            <p:commandButton value="Update Post" update="@form formViewMyPosts:dataScrollMyPosts" actionListener="#{postManagementManagedBean.updatePost}" oncomplete="PF('dialogUpdatePost').show();" />
+                            <p:commandButton value="Update Post" update="@form formViewMyPosts:dataScrollMyPosts formUpdatePost" actionListener="#{postManagementManagedBean.updatePost}" oncomplete="PF('dialogUpdatePost').show();" />
                         </p:column>
                     </p:row>
 
@@ -348,10 +363,9 @@
                             </p:selectOneMenu>
                         </p:column>
                     </p:row>
-                    <br/>
-
 
                 </p:panelGrid>
+                <br/>
                 <p:commandButton actionListener="#{postManagementManagedBean.sortBySociety}" update="formViewMyPosts:dataScrollMyPosts filter:messages" value="Sort"  styleClass="ui-confirmdialog-yes">
 
                 </p:commandButton>

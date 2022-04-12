@@ -54,6 +54,7 @@ public class StaffResource {
             GenericEntity<List<Staff>> genericEntity = new GenericEntity<List<Staff>>(staffs) {
             };
 
+            
             return Response.status(Status.OK).entity(genericEntity).build();
         } catch (Exception ex) {
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();

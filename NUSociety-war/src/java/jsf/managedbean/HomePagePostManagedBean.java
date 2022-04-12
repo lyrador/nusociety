@@ -71,6 +71,8 @@ public class HomePagePostManagedBean implements Serializable {
                 System.out.println(ex.getMessage());
             }
         }
+        
+        System.out.println(FacesContext.getCurrentInstance().getExternalContext() + " HEY");
 
     }
 
@@ -270,6 +272,11 @@ public class HomePagePostManagedBean implements Serializable {
         });
     }
 
+    public void addMessage() {
+        String summary = postToUpdate.isPostIsPublic() ? "Public" : "Private";
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(summary));
+    }
+    
     public List<Post> getPostList() {
         return postList;
     }

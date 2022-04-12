@@ -45,6 +45,8 @@ public class SocietySessionBean implements SocietySessionBeanLocal {
     @Override
     public Society createNewSociety(Society society, List<Long> categoryIds, List<Long> staffIds) throws CreateSocietyException, UnknownPersistenceException {
 
+        System.out.println("cat id size " + categoryIds.size());
+        System.out.println("staff id size " + staffIds.size());
         try {
             if (categoryIds.isEmpty()) {
                 throw new CreateSocietyException("The new society must be associated with at least one society category");
@@ -60,6 +62,7 @@ public class SocietySessionBean implements SocietySessionBeanLocal {
                 for (Long id : staffIds) {
                     Staff staff = staffSessionBeanLocal.retrieveStaffById(id);
                     society.getStaffs().add(staff);
+                    staff.getSocieties().add(society);
                 }
 
                 em.persist(society);
@@ -71,7 +74,7 @@ public class SocietySessionBean implements SocietySessionBeanLocal {
         } catch (PersistenceException ex) {
             throw new UnknownPersistenceException(ex.getMessage());
         } catch (SocietyCategoryNotFoundException | StaffNotFoundException ex) {
-            throw new CreateSocietyException("An error has occurred while creating the new product: " + ex.getMessage());
+            throw new CreateSocietyException("An error has occurred while creating the new society: " + ex.getMessage());
         }
 
     }
@@ -107,6 +110,23 @@ public class SocietySessionBean implements SocietySessionBeanLocal {
         if (societies.isEmpty()) {
         System.out.println("**** The society is empty"); 
         System.out.println("**** The student id is " + memberId); 
+        }
+        return query.getResultList();
+    }
+    
+    @Override
+    public List<Society> retrieveSocietiesForStaff(Long staffId) {
+        Query query = em.createQuery("SELECT s FROM Society s, IN (s.staffs) m WHERE m.staffId = :inStaffId");
+        query.setParameter("inStaffId", staffId);
+        List<Society> societies = query.getResultList();
+
+        for (Society society : societies) {
+            society.getSocietyCategories().size();
+            society.getStaffs().size();
+        }
+        if (societies.isEmpty()) {
+        System.out.println("**** The society is empty"); 
+        System.out.println("**** The staff id is " + staffId); 
         }
         return query.getResultList();
     }
@@ -161,6 +181,12 @@ public class SocietySessionBean implements SocietySessionBeanLocal {
         for (Society society : societies) {
             society.getSocietyCategories().size();
             society.getStaffs().size();
+            society.getSurveys().size();
+            society.getAnnouncements().size();
+            society.getFollowedStudents().size();
+            society.getMemberStudents().size();
+            society.getPosts().size();
+            society.getEvents().size();
         }
         return query.getResultList();
     }
@@ -208,8 +234,12 @@ public class SocietySessionBean implements SocietySessionBeanLocal {
 
         //Announcement
         if (!societyToDelete.getAnnouncements().isEmpty()) {
-            //Call announcement session bean to delete announcements
             societyToDelete.getAnnouncements().clear();
+        }
+        
+        //Feedback Survey
+        if (!societyToDelete.getSurveys().isEmpty()) {
+            societyToDelete.getSurveys().clear();
         }
 
         //SocietyCategory
@@ -224,7 +254,6 @@ public class SocietySessionBean implements SocietySessionBeanLocal {
 
         //Post
         if (!societyToDelete.getPosts().isEmpty()) {
-            //Call post session bean to delete posts
             societyToDelete.getPosts().clear();
         }
 
@@ -241,10 +270,9 @@ public class SocietySessionBean implements SocietySessionBeanLocal {
         societyToDelete.getMemberStudents().clear();
 
         //Event
-//        if (!societyToDelete.getEvents().isEmpty()) {
-//            //Call event session bean to delete events
-//            societyToDelete.getEvents().clear();
-//        }
+        if (!societyToDelete.getEvents().isEmpty()) {
+            societyToDelete.getEvents().clear();
+        }
         em.remove(societyToDelete);
     }
 

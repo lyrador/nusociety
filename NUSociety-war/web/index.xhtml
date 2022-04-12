@@ -11,49 +11,54 @@
 
         <h:panelGroup rendered="#{sessionScope.isLogin == false}">
             <article>
-                <h3>Welcome</h3>
-                <p>
-                    This is NUSociety                   
+                <h2 style="font-family: Roboto">Welcome to NUSociety!</h2>
+                <p style="font-family: Roboto; font-size: 12pt">
+                    NUSociety is an all-in-one co-curricular activities (Society) portal for NUS students. It provides a one-stop platform 
+                    for NUS students to find information about student societies and events, sign up for them, network and communicate within 
+                    and across organisations and keep track of their involvement. It also has the ability to allow student leaders and staff 
+                    to check for their members’ attendance and manage the activities and events.                
                 </p>
-                <p>
-                    <ul>
-                        <li>Hello World</li>
-                        <li><h:link outcome="/Student/studentManagement.xhtml">Student CRUD</h:link></li>
-                        <li><h:link outcome="/Notification/notificationManagement.xhtml">Notification CRUD</h:link></li>
-                        <li><h:link outcome="/Attendance/attendanceManagement.xhtml">Attendance CRUD</h:link></li>
-
-                        <li><h:link outcome="/Comment/comment.xhtml">Comment CRUD</h:link></li>
-                        <li><h:link outcome="/Post/post.xhtml">Post CRUD</h:link></li>
-
-                        <li><h:link outcome="/EventAndEventCategory/eventManagement.xhtml">Events CRUD</h:link></li>
-
-                        <li><h:link outcome="/EventAndEventCategory/viewAllEventCategories">View All Event Categories</h:link></li>
-                        <li><h:link outcome="/EventAndEventCategory/createNewEventCategory">Create New Event Category</h:link></li>
-                        <li><h:link outcome="/EventAndEventCategory/updateEventCategory">Update an Event Category</h:link></li>
-                        <li><h:link outcome="/EventAndEventCategory/deleteEventCategory">Delete an Event Category</h:link></li>
-
-                        <li><h:link outcome="/Society/societyManagement.xhtml">Society CRUD</h:link></li>
-                        <li><h:link outcome="/SocietyCategory/societyCategoryManagement.xhtml">Society Category CRUD</h:link></li>
-                        <li><h:link outcome="/Announcement/announcementManagement.xhtml">Announcement CRUD</h:link></li>
-                        <li><h:link outcome="/Roster/rosterManagement.xhtml">Roster</h:link></li>
-                    </ul>
-                </p>
+                <!--                <p>
+                                    <ul>
+                                        <li>Hello World</li>
+                                        <li><h:link outcome="/Student/studentManagement.xhtml">Student CRUD</h:link></li>
+                                        <li><h:link outcome="/Notification/notificationManagement.xhtml">Notification CRUD</h:link></li>
+                                        <li><h:link outcome="/Attendance/attendanceManagement.xhtml">Attendance CRUD</h:link></li>
+                
+                                        <li><h:link outcome="/Comment/comment.xhtml">Comment CRUD</h:link></li>
+                                        <li><h:link outcome="/Post/post.xhtml">Post CRUD</h:link></li>
+                
+                                        <li><h:link outcome="/EventAndEventCategory/eventManagement.xhtml">Events CRUD</h:link></li>
+                
+                                        <li><h:link outcome="/EventAndEventCategory/viewAllEventCategories">View All Event Categories</h:link></li>
+                                        <li><h:link outcome="/EventAndEventCategory/createNewEventCategory">Create New Event Category</h:link></li>
+                                        <li><h:link outcome="/EventAndEventCategory/updateEventCategory">Update an Event Category</h:link></li>
+                                        <li><h:link outcome="/EventAndEventCategory/deleteEventCategory">Delete an Event Category</h:link></li>
+                
+                                        <li><h:link outcome="/Society/societyManagement.xhtml">Society CRUD</h:link></li>
+                                        <li><h:link outcome="/SocietyCategory/societyCategoryManagement.xhtml">Society Category CRUD</h:link></li>
+                                        <li><h:link outcome="/Announcement/announcementManagement.xhtml">Announcement CRUD</h:link></li>
+                                        <li><h:link outcome="/Roster/rosterManagement.xhtml">Roster</h:link></li>
+                                    </ul>
+                                </p>-->
 
                 &nbsp;
             </article>
+
+            <p:graphicImage value="#{FacesContext.getCurrentInstance().getExternalContext()}/resources/Images/Welcome.png" width="90%" height="86%" style="display: block;
+                            margin-left: auto;
+                            margin-right: auto;"/>
         </h:panelGroup>
 
         <h:panelGroup rendered="#{sessionScope.isLogin == true}">
 
-            <h3 style="font-size: 32pt" align="center">My Feed!</h3>
-            <br/>
-            
-            <h:outputText value="Welcome Back #{sessionScope.currentStudent.userName}!" style="font-weight: bold; font-size: 20pt; margin-left: 20px" />
+            <p:graphicImage value="#{FacesContext.getCurrentInstance().getExternalContext()}/resources/Images/My project.png" style="max-height: 100%; max-width: 100%;  display: block; margin-left: auto; margin-right: auto"/>
+            <h:outputText value="Welcome Back #{sessionScope.currentStudent.userName}!" style="font-weight: bold; font-size: 20pt; margin-left: 20px; font-family: Roboto;" />
             <br/>
             <p:graphicImage value="#{FacesContext.getCurrentInstance().getExternalContext()}/resources/Images/#{sessionScope.currentStudent.profilePicture}" style="margin-left: 20px" width="50px" height="50px"/>
             <br/> <br/>
-            
-            <h2 style="color: darkblue; text-decoration: underline; font-size: 20pt; margin-left: 20px">Whats on your mind?</h2>
+
+            <h2 style="color: darkblue;  font-size: 20pt; margin-left: 20px; font-family: Roboto;">Whats on your mind?</h2>
             <p:linkButton value="Create a Public Post!" style="margin-left: 20px; margin-right:20px; background-color: lightblue" outcome="/Post/createPost.xhtml">
             </p:linkButton>
             <p:linkButton value="Create a Private Post!" style="margin-right:20px; background-color: lightblue" outcome="/Post/createPrivatePost.xhtml">
@@ -61,8 +66,8 @@
 
 
             <h:form id="filter">
-                
-                <h2 style="color: yellowgreen; text-decoration: underline; font-size: 20pt; margin-left: 20px">Filter</h2>
+
+                <h2 style="color: #3CB371;  font-size: 20pt; margin-left: 20px; font-family: Roboto;">Filter</h2>
                 <p:commandButton value="Sort by Latest" style="margin-right:20px; margin-left: 20px" actionListener="#{homePagePostManagedBean.sortByLatest}" update="formAllPosts:dataTableAllPosts filter:messages"/>
                 <p:commandButton value="Sort by Oldest" style="margin-right:20px;" actionListener="#{homePagePostManagedBean.sortByEarliest}" update="formAllPosts:dataTableAllPosts filter:messages"/>
                 <p:commandButton value="Show Private Posts Only " style="margin-right:20px;" actionListener="#{homePagePostManagedBean.sortByPrivate}" update="formAllPosts:dataTableAllPosts filter:messages"/>
@@ -70,7 +75,7 @@
                 <p:commandButton value="Filter by Society" style="margin-right:20px;" oncomplete="PF('dialogFilterSociety').show()"/>
                 <br/><br/>
                 <p:commandButton value="Reset filters" style="margin-right:20px; margin-left: 20px; background-color: greenyellow" actionListener="#{homePagePostManagedBean.resetFilter}" update="formAllPosts:dataTableAllPosts filter:messages" />
-            
+
                 <p:messages id="messages" redisplay="false" closable="true" />
             </h:form>
 
@@ -82,6 +87,10 @@
 
                 <p:dataTable  id="dataTableAllPosts" widgetVar="dataTableAllPosts" value="#{homePagePostManagedBean.postList}" var="post" rowKey="#{post.postId}" rowIndexVar="row"
                               rows="10" paginator="true" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="10,20,50">
+
+                    <f:facet name="header">
+                        My Feed!
+                    </f:facet>
 
                     <p:column> 
                         <h:outputText value="Post ID: " style="font-weight: bold"/>#{post.postId}
@@ -132,6 +141,7 @@
             <p:dialog id="dialogUpdatePost" widgetVar="dialogUpdatePost" header="Update Post" closable="true">
 
                 <p:messages id="messagesUpdatePost" redisplay="false" />
+                <p:growl id="msgs" />
 
                 <p:panelGrid>
 
@@ -186,11 +196,27 @@
                         </p:column>
                     </p:row>
 
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="boolean" value="Public Or Private " />
+                        </p:column>
+                        <p:column>
+                            <p:selectBooleanButton id="boolean" value="#{homePagePostManagedBean.postToUpdate.postIsPublic}" onLabel="Public " offLabel="Private ">
+                                <p:ajax update="msgs" listener="#{homePagePostManagedBean.addMessage()}" />
+                            </p:selectBooleanButton>
+                        </p:column>
+                        <p:column>
+                            <p:message for="boolean" />
+                        </p:column>
+                    </p:row>
 
 
                     <p:row>
                         <p:column colspan="3">
-                            <p:commandButton value="Update Post" update="@this messagesUpdatePost formAllPosts:dataTableAllPosts formAllPosts:messages" actionListener="#{homePagePostManagedBean.updateHomePagePost}" oncomplete="PF('dialogUpdatePost').show();" />
+                            <p:commandButton value="Update Post" update="@this messagesUpdatePost formAllPosts:dataTableAllPosts formAllPosts:messages formUpdatePost" actionListener="#{homePagePostManagedBean.updateHomePagePost}" oncomplete="PF('dialogUpdatePost').show();">
+
+                            </p:commandButton>
+
                         </p:column>
                     </p:row>
 
@@ -215,7 +241,7 @@
                         <br/>
                         <p:graphicImage value="#{FacesContext.getCurrentInstance().getExternalContext()}/resources/Images/#{homePagePostManagedBean.postToView.student.profilePicture}"  width="60px" height="60px"/>
                         <br/> <br/>
-                        
+
                         <h:outputLabel value="Post ID: " style="font-weight: bold"/>
                         <h:outputText value="#{homePagePostManagedBean.postToView.postId}" />
                         <br/> <br/>
@@ -330,7 +356,7 @@
                 </p:panelGrid>
                 <br/>
                 <p:commandButton value="Confirm" actionListener="${createNewCommentManagedBean.updateComment}" update="formViewPost:dataScrollMyComments formEditComment:messagesEditCommnet">
-                    </p:commandButton>
+                </p:commandButton>
             </p:dialog>
 
         </h:form>
@@ -356,6 +382,7 @@
 
 
                 </p:panelGrid>
+                <br/>
                 <p:commandButton actionListener="#{homePagePostManagedBean.sortBySociety}" update="formAllPosts:dataTableAllPosts filter:messages" value="Sort"  styleClass="ui-confirmdialog-yes">
 
                 </p:commandButton>

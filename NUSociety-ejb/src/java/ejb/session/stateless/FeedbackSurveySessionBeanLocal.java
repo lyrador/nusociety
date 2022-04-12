@@ -6,6 +6,7 @@
 package ejb.session.stateless;
 
 import entity.FeedbackSurvey;
+import java.util.List;
 import javax.ejb.Local;
 import util.exception.SocietyNotFoundException;
 
@@ -17,5 +18,7 @@ import util.exception.SocietyNotFoundException;
 public interface FeedbackSurveySessionBeanLocal {
 
     public Long submitSurvey(FeedbackSurvey survey, Long societyId) throws SocietyNotFoundException;
+
+    public List<FeedbackSurvey> retrieveFeedbackSurveysForStaffSociety(Long staffId);
     
 }
