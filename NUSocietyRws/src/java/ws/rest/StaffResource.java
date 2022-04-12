@@ -66,9 +66,6 @@ public class StaffResource {
     public Response createNewStaff(Staff newStaff) {
         if (newStaff != null) {
             try {
-//                newStaff.setUserName("12345");
-                System.out.println(newStaff.getUsername());
-                System.out.println(newStaff.getEmail());
                 Long newStaffId = staffSessionBeanLocal.createNewStaff(newStaff);
 
                 return Response.status(Response.Status.OK).entity(newStaffId).build();
