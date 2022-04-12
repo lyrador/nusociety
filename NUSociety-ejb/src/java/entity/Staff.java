@@ -32,7 +32,7 @@ public class Staff implements Serializable {
     private String password;
     @Column(nullable = false, unique = true, length = 32)
     private String username;
-    @Column(nullable = false)
+    @Column
     private String profilePicture;
     
     
