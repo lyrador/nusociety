@@ -12,7 +12,7 @@
             }
         </style>
 
-        <h:form id="formAnnouncements">
+        <h:form id="formAnnouncements" rendered="#{sessionScope.isLogin == true}">
             <p:dataScroller id="dataScrollMyAnnouncements" value="#{announcementManagementManagedBean.allMyAnnouncementsSortedByMostRecent}" var="announcement" chunkSize="8" rendered="#{sessionScope.isLogin == true}">
                 <p:panel style="text-align: left">
                     <div class="announcement-id">

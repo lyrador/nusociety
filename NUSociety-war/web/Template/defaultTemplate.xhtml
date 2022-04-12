@@ -37,7 +37,7 @@
 
             </p:layoutUnit>
 
-            <p:layoutUnit minSize="200" maxSize="400" position="east" header="Announcements" >
+            <p:layoutUnit minSize="200" maxSize="400" position="east" header="Announcements" rendered="#{sessionScope.isLogin == true}">
 
                 <ui:insert name="announcements">
                     <ui:include src="/announcements.xhtml" />

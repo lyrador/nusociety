@@ -8,31 +8,39 @@
 
     <header style="text-align: right">
         <h:panelGroup rendered="#{sessionScope.isLogin == false}">
-            <h:form id="loginForm">
 
-                <p:outputLabel for="username" value="Username" />&nbsp;
-                <p:inputText id="username" value="#{loginManagedBean.username}" size="16" required="true" requiredMessage="Username is required" maxlength="32">
-                    <f:validateLength minimum="4" />
-                </p:inputText>
-                &nbsp;
-                <p:outputLabel for="password" value="Password" />&nbsp;
-                <p:password id="password" value="#{loginManagedBean.password}" size="16" required="true" requiredMessage="Password is required" maxlength="32">
-                    <f:validateLength minimum="4" />
-                </p:password>
-                &nbsp;
-                <p:commandButton type="reset" value="Clear" icon="pi pi-undo" />&nbsp;
-                <p:commandButton type="submit" value="Login" actionListener="#{loginManagedBean.login}" icon="pi pi-sign-in" />
+            <div style="float: left">
+                <p:graphicImage value="#{FacesContext.getCurrentInstance().getExternalContext()}/resources/Images/Logo.png" style="width: 120px; height: 105px" />
 
-                <p:growl>
-                    <p:autoUpdate />
-                </p:growl>
+            </div>
 
-            </h:form>
+            <div style="float: right; margin-top: 50px">
+                <h:form id="loginForm">
+
+                    <p:outputLabel for="username" value="Username" style="font-weight: bolder"/>&nbsp;
+                    <p:inputText id="username" value="#{loginManagedBean.username}" size="16" required="true" requiredMessage="Username is required" maxlength="32">
+                        <f:validateLength minimum="4" />
+                    </p:inputText>
+                    &nbsp;
+                    <p:outputLabel for="password" value="Password"  style="font-weight: bolder"/>&nbsp;
+                    <p:password id="password" value="#{loginManagedBean.password}" size="16" required="true" requiredMessage="Password is required" maxlength="32">
+                        <f:validateLength minimum="4" />
+                    </p:password>
+                    &nbsp;
+                    <p:commandButton type="reset" value="Clear" icon="pi pi-undo" />&nbsp;
+                    <p:commandButton type="submit" value="Login" actionListener="#{loginManagedBean.login}" icon="pi pi-sign-in" />
+
+                    <p:growl>
+                        <p:autoUpdate />
+                    </p:growl>
+
+                </h:form>
+            </div>
         </h:panelGroup>
 
         <h:panelGroup rendered="#{sessionScope.isLogin == true}">
             <div style="float: left">
-                <p:graphicImage value="#{FacesContext.getCurrentInstance().getExternalContext()}/resources/Images/NUSociety-logos.jpeg" style="width: 100px; height: 100px" />
+                <p:graphicImage value="#{FacesContext.getCurrentInstance().getExternalContext()}/resources/Images/Logo.png" style="width: 120px; height: 105px" />
 
             </div>
 
