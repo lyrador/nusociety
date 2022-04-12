@@ -24,13 +24,25 @@
         <param-name>primefaces.UPLOADER</param-name>
         <param-value>native</param-value>
     </context-param>
+<<<<<<< HEAD
     <context-param>
+=======
+    <!--    <context-param>
+>>>>>>> origin/master
         <param-name>primefaces.THEME</param-name>
         <param-value>ui-lightness</param-value>
     </context-param>
     <context-param>
         <param-name>alternatedocroot_1</param-name>
+<<<<<<< HEAD
         <param-value>/Users/raihan/Documents/University/Modules/Y2S2/IS3106/NUSociety/nusociety/NUSociety-war/web/resources/Images</param-value>
+=======
+        <param-value>C:\Users\65912\Desktop\NUSociety_IS3106\nusociety\NUSociety-war\web\resources\Images</param-value>
+    </context-param>
+    <context-param>
+        <param-name>primefaces.THEME</param-name>
+        <param-value>ui-lightness</param-value>
+>>>>>>> origin/master
     </context-param>
     <context-param>
         <param-name>uploadedFilesPath</param-name>
