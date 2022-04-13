@@ -30,9 +30,7 @@
     </context-param>
     <context-param>
         <param-name>alternatedocroot_1</param-name>
-        <param-value>C:\Users\yeeda\Desktop\IS3106Project\NUSociety\nusociety\NUSociety-war\web\resources\Images</param-value>
-<!--        <param-value>/Users/raihan/Documents/University/Modules/Y2S2/IS3106/NUSociety/nusociety/NUSociety-war/web/resources/Images</param-value>
-        <param-value>C:\Users\65912\Desktop\NUSociety_IS3106\nusociety\NUSociety-war\web\resources\Images</param-value>-->
+        <param-value>/Users/raihan/Documents/University/Modules/Y2S2/IS3106/NUSociety/nusociety/NUSociety-war/web/resources/Images</param-value>
     </context-param>
     <context-param>
         <param-name>primefaces.THEME</param-name>
