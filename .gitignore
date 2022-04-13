@@ -32,5 +32,7 @@ NUSociety-ejb/dist/
 hs_err_pid*
 /NUSociety-war/nbproject/private/
 /NUSociety-war/nbproject/web/
+/NUSociety-war/nbproject/build-impl.xml
 /NUSocietyRws/nbproject/private/
 /NUSocietyRws/nbproject/web/
+/NUSocietyRws/nbproject/build-impl.xml
