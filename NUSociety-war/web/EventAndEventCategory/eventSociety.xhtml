@@ -173,12 +173,12 @@
 
             <h:panelGrid columnClasses="value">
                 <h3 style="margin-top: 0">Society's Schedule</h3>
-                <p:schedule id="schedule" value="#{societyManagedBean.scheduleModel}" widgetVar="myschedule" timeZone="GMT+8">
+                <p:schedule id="schedule" draggable ="false" value="#{societyManagedBean.scheduleModel}" widgetVar="myschedule" timeZone="GMT+8"  >
 
-                    <p:ajax event="dateSelect" listener="#{societyManagedBean.onDateSelect}" update="eventDetails" oncomplete="PF('eventDialog').show();" />
+               <!-- <p:ajax event="dateSelect" listener="#{societyManagedBean.onDateSelect}" update="eventDetails" oncomplete="PF('eventDialog').show();" /> -->
                     <p:ajax event="eventSelect" listener="#{societyManagedBean.onEventSelect}" update="eventDetails" oncomplete="PF('eventDialog').show();" />
-                    <p:ajax event="eventMove" listener="#{societyManagedBean.onEventMove}" update="messages" />
-                    <p:ajax event="eventResize" listener="#{societyManagedBean.onEventResize}" update="messages" />
+               <!-- <p:ajax event="eventMove" listener="#{societyManagedBean.onEventMove}" update="messages" />
+                    <p:ajax event="eventResize" listener="#{societyManagedBean.onEventResize}" update="messages" /> -->
 
                 </p:schedule>
 
@@ -187,19 +187,13 @@
             <p:dialog widgetVar="eventDialog" header="Event Details" showEffect="clip" hideEffect="clip">
                 <h:panelGrid id="eventDetails" columns="2">
                     <p:outputLabel for="title" value="Titles:" />
-                    <p:inputText id="title" value="#{societyManagedBean.scheduleEvent.title}" required="true" />
+                    <h:outputText id="title" value="#{societyManagedBean.scheduleEvent.title}" />
 
                     <p:outputLabel for="from" value="From:" />
-                    <p:calendar id="from" value="#{societyManagedBean.scheduleEvent.startDate}" timeZone="GMT+8" pattern="dd/MM/yyyy HH:mm"/>
+                    <h:outputText id="from" value="#{societyManagedBean.scheduleEvent.startDate}"/>
 
                     <p:outputLabel for="to" value="To:" />
-                    <p:calendar id="to" value="#{societyManagedBean.scheduleEvent.endDate}" timeZone="GMT+8" pattern="dd/MM/yyyy HH:mm"/>
-
-                    <p:outputLabel for="allDay" value="All Day:" />
-                    <h:selectBooleanCheckbox id="allDay" value="#{societyManagedBean.scheduleEvent.allDay}" />
-
-                    <p:commandButton type="reset" value="Reset" />
-                    <p:commandButton id="addButton" value="Save" actionListener="#{societyManagedBean.addEvent}" oncomplete="PF('myschedule').update();PF('eventDialog').hide();" />
+                    <h:outputText id="to" value="#{societyManagedBean.scheduleEvent.endDate}"/>
                 </h:panelGrid>
             </p:dialog>    
         </h:form>
