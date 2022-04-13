@@ -39,6 +39,9 @@ public class FileUploadManagedBean {
     @Inject
     private EditProfileManagedBean editProfileManagedBean;
     
+    @Inject
+    private EditSocietyManagedBean editSocietyManagedBean;
+        
     public FileUploadManagedBean() 
     {
         showUploadedFile = false;
@@ -282,6 +285,53 @@ public class FileUploadManagedBean {
         }
     }
     
+        public void handleFileUploadForEditSociety(FileUploadEvent event)
+    {
+        try
+        {
+            String newFilePath = FacesContext.getCurrentInstance().getExternalContext().getInitParameter("alternatedocroot_1") + System.getProperty("file.separator") + event.getFile().getFileName();
+
+            System.err.println("********** Demo03ManagedBean.handleFileUpload(): File name: " + event.getFile().getFileName());
+            System.err.println("********** Demo03ManagedBean.handleFileUpload(): newFilePath: " + newFilePath);
+
+            File file = new File(newFilePath);
+            FileOutputStream fileOutputStream = new FileOutputStream(file);
+
+            int a;
+            int BUFFER_SIZE = 8192;
+            byte[] buffer = new byte[BUFFER_SIZE];
+
+            InputStream inputStream = event.getFile().getInputStream();
+
+            while (true)
+            {
+                a = inputStream.read(buffer);
+
+                if (a < 0)
+                {
+                    break;
+                }
+
+                fileOutputStream.write(buffer, 0, a);
+                fileOutputStream.flush();
+            }
+
+            fileOutputStream.close();
+            inputStream.close();
+            
+            setUploadedFilePath(FacesContext.getCurrentInstance().getExternalContext().getInitParameter("uploadedFilesPath") + "/" + event.getFile().getFileName());
+            System.out.println("link = " + uploadedFilePath);
+            showUploadedFile = true;
+            
+            editSocietyManagedBean.getSociety().setProfilePicture(event.getFile().getFileName());
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,  "File uploaded successfully", ""));
+        }
+        catch(IOException ex)
+        {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,  "File upload error: " + ex.getMessage(), ""));
+        }
+    }
+    
     public String getUploadedFilePath() {
         return uploadedFilePath;
     }
@@ -312,6 +362,30 @@ public class FileUploadManagedBean {
 
     public void setEditProfileManagedBean(EditProfileManagedBean editProfileManagedBean) {
         this.editProfileManagedBean = editProfileManagedBean;
+    }
+
+    public HomePagePostManagedBean getHomePagePostManagedBean() {
+        return homePagePostManagedBean;
+    }
+
+    public void setHomePagePostManagedBean(HomePagePostManagedBean homePagePostManagedBean) {
+        this.homePagePostManagedBean = homePagePostManagedBean;
+    }
+
+    public societyPostsManagedBean getSocietyPostsManagedBean() {
+        return societyPostsManagedBean;
+    }
+
+    public void setSocietyPostsManagedBean(societyPostsManagedBean societyPostsManagedBean) {
+        this.societyPostsManagedBean = societyPostsManagedBean;
+    }
+
+    public EditSocietyManagedBean getEditSocietyManagedBean() {
+        return editSocietyManagedBean;
+    }
+
+    public void setEditSocietyManagedBean(EditSocietyManagedBean editSocietyManagedBean) {
+        this.editSocietyManagedBean = editSocietyManagedBean;
     }
     
     
