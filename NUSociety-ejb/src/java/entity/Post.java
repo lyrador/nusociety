@@ -35,7 +35,6 @@ public class Post implements Serializable {
     private String bodyContent;
     @Column(nullable = false)
     private String image;
-    @Temporal(javax.persistence.TemporalType.DATE)
     private Date creationDate;
     @Column(nullable = false)
     private boolean postIsPublic;

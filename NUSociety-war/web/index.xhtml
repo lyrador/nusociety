@@ -296,7 +296,7 @@
                                         <f:attribute name="commentToBeUpdated" value="#{comment}" />
                                     </p:commandButton>
 
-                                    <p:commandButton value="Delete" rendered="#{comment.student == sessionScope.currentStudent || homePagePostManagedBean.postToView == sessionScope.currentStudent}" actionListener="#{createNewCommentManagedBean.deleteCommentForHome}" update="dataScrollMyComments formViewPost:messagesViewPost">
+                                    <p:commandButton value="Delete" rendered="#{comment.student == sessionScope.currentStudent || homePagePostManagedBean.postToView.student == sessionScope.currentStudent}" actionListener="#{createNewCommentManagedBean.deleteCommentForHome}" update="dataScrollMyComments formViewPost:messagesViewPost">
                                         <f:attribute name="commentToDelete" value="#{comment}" />
                                     </p:commandButton>
 
