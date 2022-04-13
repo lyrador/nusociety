@@ -5,7 +5,6 @@
  */
 package jsf.managedbean;
 
-import ejb.session.stateless.AnnouncementSessionBeanLocal;
 import ejb.session.stateless.AttendanceSessionBeanLocal;
 import ejb.session.stateless.SocietySessionBeanLocal;
 import ejb.session.stateless.StudentSessionBeanLocal;
@@ -18,13 +17,11 @@ import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
@@ -33,7 +30,6 @@ import util.enumeration.AccessRightEnum;
 import util.exception.AttendanceNotFoundException;
 import util.exception.SocietyNotFoundException;
 import util.exception.StudentNotFoundException;
-import util.exception.UnknownPersistenceException;
 
 /**
  *
@@ -53,7 +49,7 @@ public class RosterManagementManagedBean implements Serializable {
     private List<Student> students;
     private Student newStudent;
     private Student studentToUpdate;
-    private Student studentToDelete;
+//    private Student studentToDelete;
     private Society currentSociety;
     private Attendance tempAttendance;
     private Attendance viewedAttendance;
@@ -65,7 +61,7 @@ public class RosterManagementManagedBean implements Serializable {
     public RosterManagementManagedBean() {
         newStudent = new Student();
         studentToUpdate = new Student();
-        studentToDelete = new Student();
+//        studentToDelete = new Student();
         studentToAdd = new Student();
         leaderAccessRightEnum = AccessRightEnum.LEADER;
     }
@@ -92,7 +88,7 @@ public class RosterManagementManagedBean implements Serializable {
     public void addStudent(ActionEvent event) throws StudentNotFoundException, SocietyNotFoundException {
         studentToAdd = studentSessionBeanLocal.retrieveStudentByEmail(txt1);
         if (!students.contains(studentToAdd)) {
-            societySessionBeanLocal.addStudentToSociety(studentToAdd.getStudentId(), currentSociety.getSocietyId());
+            societySessionBeanLocal.addStudentToSociety(currentSociety.getSocietyId(), studentToAdd.getStudentId());
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "New student added: " + studentToAdd.getStudentId(), "New student added: " + studentToAdd.getStudentId()));
             Attendance newAttendance = new Attendance(1, 1);
             newAttendance.setStudent(studentToAdd);
@@ -111,26 +107,31 @@ public class RosterManagementManagedBean implements Serializable {
         attendances = attendanceSessionBeanLocal.retrieveMapAttendancesFromStudentListAndSocietyId(students, currentSociety.getSocietyId());
     }
 
-    public void deleteStudent(ActionEvent event) {
-        try {
-            studentSessionBeanLocal.deleteStudent(studentToDelete.getStudentId());
-            students.remove(studentToDelete);
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Student deleted successfully", null));
-        } catch (StudentNotFoundException ex) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An error has occurred while deleting student: " + ex.getMessage(), null));
-        } catch (Exception ex) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An unexpected error has occurred: " + ex.getMessage(), null));
-        }
-        this.students = studentSessionBeanLocal.retrieveAllStudentsFromSocietyId(currentSociety.getSocietyId());
-        attendances = attendanceSessionBeanLocal.retrieveMapAttendancesFromStudentListAndSocietyId(students, currentSociety.getSocietyId());
-    }
+//    public void deleteStudent(ActionEvent event) {
+//        try {
+//            studentSessionBeanLocal.deleteStudent(studentToDelete.getStudentId());
+//            students.remove(studentToDelete);
+//            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Student deleted successfully", null));
+//        } catch (StudentNotFoundException ex) {
+//            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An error has occurred while deleting student: " + ex.getMessage(), null));
+//        } catch (Exception ex) {
+//            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An unexpected error has occurred: " + ex.getMessage(), null));
+//        }
+//        this.students = studentSessionBeanLocal.retrieveAllStudentsFromSocietyId(currentSociety.getSocietyId());
+//        attendances = attendanceSessionBeanLocal.retrieveMapAttendancesFromStudentListAndSocietyId(students, currentSociety.getSocietyId());
+//    }
 
     public void removeStudent(ActionEvent event) {
         try {
+            Student currentStudent = (Student) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("currentStudent");          
             Student studentToRemove = (Student) event.getComponent().getAttributes().get("studentToRemove");
-            societySessionBeanLocal.removeStudentFromSociety(currentSociety.getSocietyId(), studentToRemove.getStudentId());
-
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Student removed successfully", null));
+            if (currentStudent.getStudentId() == studentToRemove.getStudentId()) {
+                System.out.println("HELLO");
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Cannot remove current user!", null));
+            } else {
+                societySessionBeanLocal.removeStudentFromSociety(currentSociety.getSocietyId(), studentToRemove.getStudentId());
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Student removed successfully", null));
+            }
         } catch (Exception ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An unexpected error has occurred: " + ex.getMessage(), null));
         }
@@ -188,8 +189,8 @@ public class RosterManagementManagedBean implements Serializable {
         attendances = attendanceSessionBeanLocal.retrieveMapAttendancesFromStudentListAndSocietyId(students, currentSociety.getSocietyId());
         DecimalFormat df = new DecimalFormat("#.##");
         currentValue = tempAttendance.getAttendedCount() + " / " + tempAttendance.getTotalCount() + " (" + df.format(tempAttendance.getAttendanceRate()) + "%)";
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Attendance updated: " + tempAttendance.getAttendanceId(), "Attendance updated: " + tempAttendance.getAttendanceId()));
         tempAttendance = new Attendance();
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Attendance updated: " + tempAttendance, "Attendance updated: " + tempAttendance));
     }
 
     public List<Student> getStudents() {
@@ -208,13 +209,13 @@ public class RosterManagementManagedBean implements Serializable {
         this.studentToUpdate = studentToUpdate;
     }
 
-    public Student getStudentToDelete() {
-        return studentToDelete;
-    }
-
-    public void setStudentToDelete(Student studentToDelete) {
-        this.studentToDelete = studentToDelete;
-    }
+//    public Student getStudentToDelete() {
+//        return studentToDelete;
+//    }
+//
+//    public void setStudentToDelete(Student studentToDelete) {
+//        this.studentToDelete = studentToDelete;
+//    }
 
     public Student getNewStudent() {
         return newStudent;
