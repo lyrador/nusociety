@@ -31,4 +31,6 @@ NUSociety-ejb/dist/
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 /NUSociety-war/nbproject/private/
+/NUSociety-war/nbproject/web/
 /NUSocietyRws/nbproject/private/
+/NUSocietyRws/nbproject/web/
