@@ -21,6 +21,11 @@
             </p:menubar>
 
             <h:outputText value="#{societyManagedBean.society.name}" style="font-size:25px; font-weight: bold;"/>
+            &nbsp;
+            <h:outputLink rendered="#{editSocietyManagedBean.student.accessRightEnum == editSocietyManagedBean.leaderAccessRightEnum}" value="#{application.contextPath}/Society/viewSociety/#{editSocietyManagedBean.society.societyId}-#{editSocietyManagedBean.society.name.replaceAll(' ', '-')}/edit">
+                <f:param name="societyId" value="#{societyManagedBean.society.societyId}" />
+                Edit
+            </h:outputLink>
             <p:commandButton id="follow_button" rendered="#{!followManagedBean.followedSocieties.contains(societyManagedBean.society) and !followManagedBean.memberSocieties.contains(societyManagedBean.society)}" value="Follow" icon="pi pi-plus" 
                              style="float: right; background-color: #008CBA;" actionListener="#{followManagedBean.follow}" update="@form">
                 <f:param name="societyId" value="#{societyManagedBean.society.societyId}" />
@@ -37,7 +42,9 @@
             <br/>
             <h:outputText value="#{followManagedBean.followerCount} followers" style="float: right; font-weight: bold;"/>
             <br/>
-            <h:outputText value="#{societyManagedBean.society.description}" />
+            <div style="width:75%;">
+                <h:outputText value="#{societyManagedBean.society.description}"/>
+            </div>
             <br/>
             <h:outputText value="Have feedback for #{societyManagedBean.society.name}?" style="float: right;"/>
             <br/>

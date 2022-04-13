@@ -36,7 +36,7 @@ public class Society implements Serializable {
     private String name;
     @Column(nullable = false, length = 1000)
     private String description;
-    @Column(nullable = true, unique = true, length = 256)
+    @Column(nullable = true, length = 256)
     private String profilePicture;
     @Column(nullable = false)
     @Temporal(TemporalType.DATE)
