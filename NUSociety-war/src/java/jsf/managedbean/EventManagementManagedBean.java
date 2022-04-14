@@ -28,7 +28,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.model.SelectItem;
 import org.primefaces.event.SelectEvent;
-import org.primefaces.model.ScheduleModel;
+//import org.primefaces.model.ScheduleModel;
 import util.enumeration.AccessRightEnum;
 import util.exception.EventAlreadyExistsException;
 import util.exception.EventCategoryNotFoundException;
