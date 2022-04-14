@@ -29,7 +29,6 @@ import javax.faces.event.ActionEvent;
 import javax.faces.model.SelectItem;
 import org.primefaces.event.SelectEvent;
 //import org.primefaces.model.ScheduleModel;
-import util.enumeration.AccessRightEnum;
 import util.exception.EventAlreadyExistsException;
 import util.exception.EventCategoryNotFoundException;
 import util.exception.EventNotFoundException;
@@ -82,8 +81,6 @@ public class EventManagementManagedBean implements Serializable {
     private Long studentId; 
     private List<Event> registeredEvents; 
     
-    private AccessRightEnum leaderAccessRightEnum; 
-    
    /* private Date minDateTime; 
     private Date maxDateTime; 
     private Date today; 
@@ -102,7 +99,6 @@ public class EventManagementManagedBean implements Serializable {
         selectItemsSocietyName = new ArrayList<>();
         selectItemsCategoryObject = new ArrayList<>();
         selectItemsCategoryName = new ArrayList<>();
-        leaderAccessRightEnum = AccessRightEnum.LEADER;
         //selectItemsStudentObject = new ArrayList<>();
         //selectItemsStudentName = new ArrayList<>();
 
@@ -452,12 +448,11 @@ public class EventManagementManagedBean implements Serializable {
         this.leaveEvent = leaveEvent;
     }
 
-    public AccessRightEnum getLeaderAccessRightEnum() {
-        return leaderAccessRightEnum;
+    public boolean isLeaderOfSociety() {
+        Student currentStudent = (Student) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("currentStudent");
+        if (currentStudent.getLeaderSocieties().size() != 0) {
+            return true;
+        }
+        return false;
     }
-
-    public void setLeaderAccessRightEnum(AccessRightEnum leaderAccessRightEnum) {
-        this.leaderAccessRightEnum = leaderAccessRightEnum;
-    }
-
 }

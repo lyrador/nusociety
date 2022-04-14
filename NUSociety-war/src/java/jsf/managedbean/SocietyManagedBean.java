@@ -31,7 +31,6 @@ import org.primefaces.model.DefaultScheduleEvent;
 import org.primefaces.model.DefaultScheduleModel;
 import org.primefaces.model.ScheduleEvent;
 import org.primefaces.model.ScheduleModel;
-import util.enumeration.AccessRightEnum;
 import util.exception.EventNotFoundException;
 import util.exception.SocietyNotFoundException;
 
@@ -54,8 +53,6 @@ public class SocietyManagedBean implements Serializable {
     private Student student;
     private Society society; 
     private Event event; 
-    
-    private AccessRightEnum leaderAccessRightEnum;
     
     private ScheduleModel scheduleModel;
     private ScheduleEvent scheduleEvent; 
@@ -81,7 +78,6 @@ public class SocietyManagedBean implements Serializable {
         } catch (SocietyNotFoundException ex) {
             ex.getMessage();
         }
-        leaderAccessRightEnum = AccessRightEnum.LEADER;
     }
     
     public void onEventSelect(SelectEvent selectEvent) throws EventNotFoundException 
@@ -156,10 +152,6 @@ public class SocietyManagedBean implements Serializable {
         this.student = student;
     }
 
-    public AccessRightEnum getLeaderAccessRightEnum() {
-        return leaderAccessRightEnum;
-    }
-
     public ScheduleModel getScheduleModel() {
         return scheduleModel;
     }
@@ -176,6 +168,21 @@ public class SocietyManagedBean implements Serializable {
         this.scheduleEvent = scheduleEvent;
     }
     
+    public boolean isLeaderOfSociety() {
+        for (Student leaderStudent : society.getLeaderStudents()) {
+            if (leaderStudent.getStudentId() == student.getStudentId()) { 
+                return true;
+            }
+        }
+        return false;
+    }
     
-    
+    public boolean isMemberOfSociety() {
+        for (Student memberStudent : society.getMemberStudents()) {
+            if (memberStudent.getStudentId() == student.getStudentId()) { 
+                return true;
+            }
+        }
+        return false;
+    }
 }

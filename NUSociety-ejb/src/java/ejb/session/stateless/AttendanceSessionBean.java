@@ -50,15 +50,18 @@ public class AttendanceSessionBean implements AttendanceSessionBeanLocal {
     public Attendance retrieveAttendanceFromStudentIdAndSocietyId(Long studentId, Long societyId) {
         Query query = em.createQuery("SELECT a FROM Attendance a WHERE a.student.studentId = :studentId");
         query.setParameter("studentId", studentId);
-        List<Attendance> allAttendancesBelongingToStudent = query.getResultList();
+        List<Attendance> allAttendancesBelongingToStudent = query.getResultList(); 
+        System.out.println(studentId + " | " + allAttendancesBelongingToStudent.size() + " = allAttendancesBelongingToStudent");
         
         Query query2 = em.createQuery("SELECT a FROM Attendance a, IN (a.student.memberSocieties) m WHERE m.societyId = :societyId");
         query2.setParameter("societyId", societyId);
         List<Attendance> allAttendancesBelongingToSociety = query2.getResultList();
+        System.out.println(studentId + " | " + allAttendancesBelongingToSociety.size() + " = allAttendancesBelongingToSociety");
 
         for (Attendance attendance1 : allAttendancesBelongingToStudent) {
             for (Attendance attendance2 : allAttendancesBelongingToSociety) {
                 if (attendance1.getAttendanceId() == attendance2.getAttendanceId()) {
+                    System.out.println(attendance2.getAttendanceId());
                     return attendance2;
                 }
             }

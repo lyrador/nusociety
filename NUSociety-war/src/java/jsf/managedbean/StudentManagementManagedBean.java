@@ -55,25 +55,6 @@ public class StudentManagementManagedBean implements Serializable {
     }
     
     public void updateStudent(ActionEvent event) throws StudentNotFoundException {
-//        Student existingStudent = studentSessionBeanLocal.retrieveStudentByStudentId(studentToUpdate.getStudentId());
-//        if (studentToUpdate.getName() == null) {
-//            studentToUpdate.setName(existingStudent.getName());
-//        }
-//        if (studentToUpdate.getEmail() == null) {
-//            studentToUpdate.setEmail(existingStudent.getEmail());
-//        }
-//        if (studentToUpdate.getPassword() == null) {
-//            studentToUpdate.setPassword(existingStudent.getPassword());
-//        }
-//        if (studentToUpdate.getUserName()== null) {
-//            studentToUpdate.setUserName(existingStudent.getUserName());
-//        }
-//        if (studentToUpdate.getProfilePicture()== null) {
-//            studentToUpdate.setProfilePicture(existingStudent.getProfilePicture());
-//        }
-//        if (studentToUpdate.getAccessRightEnum()== null) {
-//            studentToUpdate.setAccessRightEnum(existingStudent.getAccessRightEnum());
-//        }
         studentSessionBeanLocal.updateStudent(studentToUpdate);
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Student updated: " + studentToUpdate,"Student updated: " + studentToUpdate));
     }

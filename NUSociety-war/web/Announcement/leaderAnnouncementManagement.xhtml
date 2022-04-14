@@ -18,67 +18,84 @@
     </ui:define>
 
     <ui:define name="content">
+        
+        <h:form id="announcementHeader">
+            <p:menubar>
+                <p:menuitem value="Society Home" url="#{request.contextPath}/Society/viewSociety/#{societyManagedBean.society.societyId}-#{societyManagedBean.society.name.replaceAll(' ', '-')}/Home" icon="pi pi-fw pi-home" style="font-size: 14px; width:118px" />
+                <p:menuitem value="Posts" url="#{request.contextPath}/Society/viewSociety/#{societyManagedBean.society.societyId}-#{societyManagedBean.society.name.replaceAll(' ', '-')}/Posts" icon="pi pi-fw pi-pencil" style="font-size: 14px; width:70px" />
+                <p:menuitem value="Events" url="#{request.contextPath}/Society/viewSociety/#{societyManagedBean.society.societyId}-#{societyManagedBean.society.name.replaceAll(' ', '-')}/Events" icon="pi pi-fw pi-calendar" style="font-size: 14px; width:70px" />
+                <p:menuitem value="Roster" url="#{request.contextPath}/Society/viewSociety/#{societyManagedBean.society.societyId}-#{societyManagedBean.society.name.replaceAll(' ', '-')}/Roster" icon="pi pi-fw pi-user" style="font-size: 14px; width:70px" 
+                            rendered="#{societyManagedBean.memberOfSociety}"/>
+                <p:menuitem value="Announcement Management" url="#{request.contextPath}/Society/viewSociety/#{societyManagedBean.society.societyId}-#{societyManagedBean.society.name.replaceAll(' ', '-')}/Announcement" icon="pi pi-fw pi-user" 
+                            style="font-size: 14px; width:220px; background-color: #ffffe2; border-bottom-color:#045491; font-weight: bold " 
+                            rendered="#{societyManagedBean.leaderOfSociety}"/>
+            </p:menubar>
+        </h:form>
+        
+        <br></br>
 
         <h:form id="formCreateNewAnnouncement" >
-            <p:messages id="messagesCreateNewAnnouncement" redisplay="false"/>
-            <h3>Create New Announcement</h3>
-            <p:panelGrid>
 
-                <p:row>
-                    <p:column>
-                        <p:outputLabel value="Society: " style="font-weight: bold;"/>
-                    </p:column>
-                    <p:column>
-                        <p:outputLabel value="#{leaderAnnouncemmentManagedBean.currentSociety.name}"/>
-                    </p:column>
-                </p:row>
+            <p:panel header="Create New Announcement">
+                <p:messages id="messagesCreateNewAnnouncement" redisplay="false"/>      
+                <p:panelGrid>
 
-                <p:row>
-                    <p:column>
-                        <p:outputLabel for="title" value="Title: " style="font-weight: bold;"/>
-                    </p:column>
-                    <p:column>
-                        <p:inputText id="title" value="#{leaderAnnouncemmentManagedBean.newAnnouncement.announcementTitle}" placeholder="Header Name" required="true" requiredMessage="Title is required" />
-                    </p:column>
-                    <p:column>
-                        <p:message for="content"/>
-                    </p:column>
-                </p:row>
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel value="Society: " style="font-weight: bold;"/>
+                        </p:column>
+                        <p:column>
+                            <p:outputLabel value="#{leaderAnnouncemmentManagedBean.currentSociety.name}"/>
+                        </p:column>
+                    </p:row>
 
-                <p:row>
-                    <p:column>
-                        <p:outputLabel for="content" value="View Type: " style="font-weight: bold;"/>
-                    </p:column>
-                    <p:column>
-                        <p:selectOneButton value="#{leaderAnnouncemmentManagedBean.viewOption}">  
-                            <f:selectItem itemLabel="Followers" itemValue="Followers" />  
-                            <f:selectItem itemLabel="Members" itemValue="Members" />  
-                        </p:selectOneButton> 
-                    </p:column>
-                    <p:column>
-                        <p:message for="content"/>
-                    </p:column>
-                </p:row>
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="title" value="Title: " style="font-weight: bold;"/>
+                        </p:column>
+                        <p:column>
+                            <p:inputText id="title" value="#{leaderAnnouncemmentManagedBean.newAnnouncement.announcementTitle}" placeholder="Header Name" required="true" requiredMessage="Title is required" />
+                        </p:column>
+                        <p:column>
+                            <p:message for="content"/>
+                        </p:column>
+                    </p:row>
 
-                <p:row>
-                    <p:column>
-                        <p:outputLabel for="content" value="Content: " style="font-weight: bold;"/>
-                    </p:column>
-                    <p:column>
-                        <p:inputTextarea id="content" rows="6" cols="100" value="#{leaderAnnouncemmentManagedBean.newAnnouncement.announcementContent}" placeholder="Input details of announcement..." required="true" requiredMessage="Content is required"/>
-                    </p:column>
-                    <p:column>
-                        <p:message for="content"/>
-                    </p:column>
-                </p:row>
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="content" value="View Type: " style="font-weight: bold;"/>
+                        </p:column>
+                        <p:column>
+                            <p:selectOneButton value="#{leaderAnnouncemmentManagedBean.viewOption}">  
+                                <f:selectItem itemLabel="Followers" itemValue="Followers" />  
+                                <f:selectItem itemLabel="Members" itemValue="Members" />  
+                            </p:selectOneButton> 
+                        </p:column>
+                        <p:column>
+                            <p:message for="content"/>
+                        </p:column>
+                    </p:row>
 
-                <p:row>
-                    <p:column colspan="3">
-                        <p:commandButton type="reset" value="Clear" />&nbsp;
-                        <p:commandButton  value="Create" actionListener="#{leaderAnnouncemmentManagedBean.createNewAnnouncement}" update="@form formAnnouncements"/>
-                    </p:column>
-                </p:row>
-            </p:panelGrid>
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="content" value="Content: " style="font-weight: bold;"/>
+                        </p:column>
+                        <p:column>
+                            <p:inputTextarea id="content" rows="6" cols="100" value="#{leaderAnnouncemmentManagedBean.newAnnouncement.announcementContent}" placeholder="Input details of announcement..." required="true" requiredMessage="Content is required"/>
+                        </p:column>
+                        <p:column>
+                            <p:message for="content"/>
+                        </p:column>
+                    </p:row>
+
+                    <p:row>
+                        <p:column colspan="3">
+                            <p:commandButton type="reset" value="Clear" />&nbsp;
+                            <p:commandButton  value="Create" actionListener="#{leaderAnnouncemmentManagedBean.createNewAnnouncement}" update="@form formAnnouncements"/>
+                        </p:column>
+                    </p:row>
+                </p:panelGrid>
+            </p:panel>    
 
         </h:form>
 

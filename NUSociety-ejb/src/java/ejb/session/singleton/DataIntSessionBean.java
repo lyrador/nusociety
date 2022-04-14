@@ -35,7 +35,6 @@ import javax.ejb.LocalBean;
 import javax.ejb.Startup;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import util.enumeration.AccessRightEnum;
 import util.exception.CreateSocietyCategoryException;
 import util.exception.CreateSocietyException;
 import util.exception.EventCategoryAlreadyExistsException;
@@ -102,11 +101,21 @@ public class DataIntSessionBean {
         List<Long> categoryIds4 = new ArrayList<>();
 
         if (em.find(Student.class, 1l) == null) {
-            studentSessionBeanLocal.createNewStudent(new Student("Alex", "alex@gmail.com", "password", "alex", "alexPic.png", AccessRightEnum.MEMBER));
-            studentSessionBeanLocal.createNewStudent(new Student("Betty", "betty@gmail.com", "password", "betty", "bettyPic.png", AccessRightEnum.MEMBER));
-            studentSessionBeanLocal.createNewStudent(new Student("Carl", "carl@gmail.com", "password", "carl", "carlPic.png", AccessRightEnum.MEMBER));
-            studentSessionBeanLocal.createNewStudent(new Student("David", "david@gmail.com", "password", "david", "davidPic.png", AccessRightEnum.MEMBER));
-            studentSessionBeanLocal.createNewStudent(new Student("Elaine", "elaine@gmail.com", "password", "elaine", "elainePic.png", AccessRightEnum.LEADER));
+            studentSessionBeanLocal.createNewStudent(new Student("Alex Goh", "alex@gmail.com", "password", "alex", "alexPic.png"));
+            studentSessionBeanLocal.createNewStudent(new Student("Betty Tan", "betty@gmail.com", "password", "betty", "bettyPic.png"));
+            studentSessionBeanLocal.createNewStudent(new Student("Carl Alberto", "carl@gmail.com", "password", "carl", "carlPic.png"));
+            studentSessionBeanLocal.createNewStudent(new Student("David Sim", "david@gmail.com", "password", "david", "davidPic.png"));
+            studentSessionBeanLocal.createNewStudent(new Student("Elaine Soh", "elaine@gmail.com", "password", "elaine", "elainePic.png"));
+            studentSessionBeanLocal.createNewStudent(new Student("Aaron Tan", "aaron@gmail.com", "password", "aaron", "aaron.png"));
+            studentSessionBeanLocal.createNewStudent(new Student("Adrian Thomson", "adrian@gmail.com", "password", "adrian", "adrian.png"));
+            studentSessionBeanLocal.createNewStudent(new Student("Alan Brooks", "alan@gmail.com", "password", "alan", "alan.png"));
+            studentSessionBeanLocal.createNewStudent(new Student("Alexander Anderson", "alexander@gmail.com", "password", "alexander", "alexander.png"));
+            studentSessionBeanLocal.createNewStudent(new Student("Amanda Alen", "amanda@gmail.com", "password", "amanda", "amanda.png"));
+            studentSessionBeanLocal.createNewStudent(new Student("Beatrice Sun", "beatrice@gmail.com", "password", "beatrice", "beatrice.png"));
+            studentSessionBeanLocal.createNewStudent(new Student("Carol Poh", "carol@gmail.com", "password", "carol", "carol.png"));
+            studentSessionBeanLocal.createNewStudent(new Student("Gwen Stacey", "gwen@gmail.com", "password", "gwen", "gwen.png"));
+            studentSessionBeanLocal.createNewStudent(new Student("Isabel Lai", "isabel@gmail.com", "password", "isabel", "isabel.png"));
+            studentSessionBeanLocal.createNewStudent(new Student("Thomas Frank", "thomas@gmail.com", "password", "thomas", "thomas.png"));
         }
 
         List<Student> students = studentSessionBeanLocal.retrieveAllStudents();
@@ -206,6 +215,48 @@ public class DataIntSessionBean {
             } catch (SocietyNotFoundException | NullPointerException e) {
                 e.printStackTrace();
             }
+            
+            try {
+                Society choir = societySessionBeanLocal.retrieveSocietyById((long) 2);
+                for (int i = 6; i <= 10; i++) {
+                    Student student = studentSessionBeanLocal.retrieveStudentByStudentId((long) i);
+                    student.getMemberSocieties().size();
+                    student.getFollowedSocieties().size();
+                    choir.getFollowedStudents().size();
+                    choir.getMemberStudents().size();
+
+                    choir.getMemberStudents().add(student);
+                    student.getMemberSocieties().add(choir);
+
+                    Attendance tempAttendance = new Attendance(1, 1);
+                    tempAttendance.setStudent(student);
+                    student.getAttendances().add(tempAttendance);
+                    attendanceSessionBeanLocal.createNewAttendance(tempAttendance);
+                }
+            } catch (SocietyNotFoundException | StudentNotFoundException | NullPointerException e) {
+                e.printStackTrace();
+            }
+            
+            try {
+                Society band = societySessionBeanLocal.retrieveSocietyById((long) 3);
+                for (int i = 11; i <= 13; i++) {
+                    Student student = studentSessionBeanLocal.retrieveStudentByStudentId((long) i);
+                    student.getMemberSocieties().size();
+                    student.getFollowedSocieties().size();
+                    band.getFollowedStudents().size();
+                    band.getMemberStudents().size();
+
+                    band.getMemberStudents().add(student);
+                    student.getMemberSocieties().add(band);
+
+                    Attendance tempAttendance = new Attendance(1, 1);
+                    tempAttendance.setStudent(student);
+                    student.getAttendances().add(tempAttendance);
+                    attendanceSessionBeanLocal.createNewAttendance(tempAttendance);
+                }
+            } catch (SocietyNotFoundException | StudentNotFoundException | NullPointerException e) {
+                e.printStackTrace();
+            }
         }
 
         students = studentSessionBeanLocal.retrieveAllStudents();
@@ -223,11 +274,11 @@ public class DataIntSessionBean {
             } catch(SocietyNotFoundException ex) {
                 ex.getMessage();
             }
-        }
+        }     
         
         
         if (em.find(Post.class, 1l) == null) {
-            for (int i = 0; i < students.size(); i++) {
+            for (int i = 0; i < 5; i++) {
                 Student s = students.get(i);
 
                 for (int j = 0; j < s.getMemberSocieties().size(); j++) {
@@ -242,9 +293,23 @@ public class DataIntSessionBean {
                         System.out.println("Error");
                     }
                 }
-            }
-
-            System.out.println("POST INIT SUCCESS!");
+            } 
         }
+        
+//        MAKE LEADERS
+        try {     
+            //elaine + aaron leader of floorball
+            //amanda leader of choir
+            //beatrice leader of band      
+            
+            studentSessionBeanLocal.setStudentLeaderOfSociety((long) 5, (long) 1);
+            studentSessionBeanLocal.setStudentLeaderOfSociety((long) 6, (long) 1);
+            studentSessionBeanLocal.setStudentLeaderOfSociety((long) 10, (long) 2);
+            studentSessionBeanLocal.setStudentLeaderOfSociety((long) 11, (long) 3);
+        } catch (Exception ex) {
+            System.out.println(ex);
+        }
+        
+        System.out.println("POST INIT SUCCESS!");
     }
 }

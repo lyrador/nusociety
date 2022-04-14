@@ -7,24 +7,27 @@
                 template="./../Template/defaultTemplate.xhtml">
 
     <ui:define name="content">
-
-        <ui:insert name="societyHeader">
-            <ui:include src="/societyHeader.xhtml" />
-        </ui:insert>
-        <h:head>
-            <h3>Roster Management</h3>
-        </h:head>
-    </ui:define>
-
-    <ui:define name="content">
+        
+        <h:form id="rosterHeader">
+            <p:menubar>
+                <p:menuitem value="Society Home" url="#{request.contextPath}/Society/viewSociety/#{societyManagedBean.society.societyId}-#{societyManagedBean.society.name.replaceAll(' ', '-')}/Home" icon="pi pi-fw pi-home" style="font-size: 14px; width:118px" />
+                <p:menuitem value="Posts" url="#{request.contextPath}/Society/viewSociety/#{societyManagedBean.society.societyId}-#{societyManagedBean.society.name.replaceAll(' ', '-')}/Posts" icon="pi pi-fw pi-pencil" style="font-size: 14px; width:70px" />
+                <p:menuitem value="Events" url="#{request.contextPath}/Society/viewSociety/#{societyManagedBean.society.societyId}-#{societyManagedBean.society.name.replaceAll(' ', '-')}/Events" icon="pi pi-fw pi-calendar" style="font-size: 14px; width:70px" />
+                <p:menuitem value="Roster" url="#{request.contextPath}/Society/viewSociety/#{societyManagedBean.society.societyId}-#{societyManagedBean.society.name.replaceAll(' ', '-')}/Roster" icon="pi pi-fw pi-user" 
+                            style="font-size: 14px; width:70px; background-color: #ffffe2; border-bottom-color:#045491; font-weight: bold " 
+                            rendered="#{societyManagedBean.memberOfSociety}"/>
+                <p:menuitem value="Announcement Management" url="#{request.contextPath}/Society/viewSociety/#{societyManagedBean.society.societyId}-#{societyManagedBean.society.name.replaceAll(' ', '-')}/Announcement" icon="pi pi-fw pi-user" style="font-size: 14px; width:220px" 
+                            rendered="#{societyManagedBean.leaderOfSociety}"/>
+            </p:menubar>
+        </h:form>
+        
+        <br></br>
 
         <h:body>
             
             <p:messages id="messages" redisplay="false" closable="true" />
             
-            <h:form id="formAddStudent">
-
-<!--                <p:messages id="messages" redisplay="false" closable="true" />-->
+            <h:form id="formAddStudent" rendered="#{rosterManagementManagedBean.leaderOfSociety}">
 
                 <p:outputLabel value="Enter Email of Student to Add: " for="@next"/>
                 <p:autoComplete id="acSimple" value="#{rosterManagementManagedBean.txt1}"
@@ -36,13 +39,11 @@
             
             <br></br>
 
-            <h:form id="formMassUpdate">
+            <h:form id="formMassUpdate" rendered="#{rosterManagementManagedBean.leaderOfSociety}">
 
-<!--                <p:messages id="messages" redisplay="false" closable="true" />-->
-
-                <p:commandButton value="Increment Everyone's Attended Count By One" icon="ui-icon-pencil" actionListener="#{rosterManagementManagedBean.incrementEveryonesAttendedCountByOne}" rendered="#{sessionScope.currentStudent.accessRightEnum == rosterManagementManagedBean.leaderAccessRightEnum}" update="@form formAllStudents:dataTableAllStudents messages"/>
+                <p:commandButton value="Increment Everyone's Attended Count By One" icon="ui-icon-pencil" actionListener="#{rosterManagementManagedBean.incrementEveryonesAttendedCountByOne}" update="@form formAllStudents:dataTableAllStudents messages"/>
                 &nbsp;
-                <p:commandButton value="Increment Everyone's Total Count By One" icon="ui-icon-pencil" actionListener="#{rosterManagementManagedBean.incrementEveryonesTotalCountByOne}" rendered="#{sessionScope.currentStudent.accessRightEnum == rosterManagementManagedBean.leaderAccessRightEnum}" update="@form formAllStudents:dataTableAllStudents messages" />
+                <p:commandButton value="Increment Everyone's Total Count By One" icon="ui-icon-pencil" actionListener="#{rosterManagementManagedBean.incrementEveryonesTotalCountByOne}" update="@form formAllStudents:dataTableAllStudents messages" />
                 &nbsp;
                 
             </h:form>
@@ -50,8 +51,6 @@
             <br></br>
 
             <h:form id="formAllStudents">
-                
-<!--                <p:messages id="messages" redisplay="false" closable="true" />-->
 
                 <p:dataTable id="dataTableAllStudents"  value="#{rosterManagementManagedBean.students}" var="student" rowKey="#{student.studentId}" rowIndexVar="row"
                              rows="10" paginator="true" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="10,20,50">
@@ -76,32 +75,28 @@
                         <h:outputText value="#{student.userName}" />
                     </p:column>
 
-                    <p:column headerText="Access Right" sortBy="#{student.studentId}" width="4%">
-                        <h:outputText value="#{student.accessRightEnum}" />
-                    </p:column>
-
-                    <p:column headerText="Attended Count" rendered="#{sessionScope.currentStudent.accessRightEnum == rosterManagementManagedBean.leaderAccessRightEnum}" sortBy="#{student.studentId}" width="5%">
+                    <p:column headerText="Attended Count" rendered="#{rosterManagementManagedBean.leaderOfSociety}" sortBy="#{student.studentId}" width="5%">
                         <h:outputText value="#{rosterManagementManagedBean.attendances[student.studentId].attendedCount}" />
                     </p:column>
 
-                    <p:column headerText="Total Count" rendered="#{sessionScope.currentStudent.accessRightEnum == rosterManagementManagedBean.leaderAccessRightEnum}" sortBy="#{student.studentId}" width="4%">
+                    <p:column headerText="Total Count" rendered="#{rosterManagementManagedBean.leaderOfSociety}" sortBy="#{student.studentId}" width="4%">
                         <h:outputText value="#{rosterManagementManagedBean.attendances[student.studentId].totalCount}" />
                     </p:column>
 
-                    <p:column headerText="Attendance Rate" rendered="#{sessionScope.currentStudent.accessRightEnum == rosterManagementManagedBean.leaderAccessRightEnum}" sortBy="#{student.studentId}" width="6%">
+                    <p:column headerText="Attendance Rate" rendered="#{rosterManagementManagedBean.leaderOfSociety}" sortBy="#{student.studentId}" width="6%">
                         <h:outputText value="#{rosterManagementManagedBean.attendances[student.studentId].attendanceRate}">
                             <f:convertNumber pattern="#0.00"/>
                         </h:outputText>
                         <h:outputText value="%"/>
                     </p:column>
 
-                    <p:column headerText="Update Attendance" rendered="#{sessionScope.currentStudent.accessRightEnum == rosterManagementManagedBean.leaderAccessRightEnum}" sortBy="#{student.studentId}" width="8%">
+                    <p:column headerText="Update Attendance" rendered="#{rosterManagementManagedBean.leaderOfSociety}" sortBy="#{student.studentId}" width="8%">
                         <p:commandButton value="Update" actionListener="#{rosterManagementManagedBean.setAttendance}" oncomplete="PF('dialogUpdateAttendance').show()" icon="ui-icon-pencil" title="Update" style="margin-right:20px;" styleClass="ui-priority-primary" update="formAllStudents:dataTableAllStudents formUpdateAttendance">
                             <f:attribute name="studentToUpdate" value="#{student}" />
                         </p:commandButton>
                     </p:column>          
 
-                    <p:column headerText="Remove Member" rendered="#{sessionScope.currentStudent.accessRightEnum == rosterManagementManagedBean.leaderAccessRightEnum}" sortBy="#{student.studentId}" width="8%">
+                    <p:column headerText="Remove Member" rendered="#{rosterManagementManagedBean.leaderOfSociety}" sortBy="#{student.studentId}" width="8%">
                         <p:commandButton value="Remove" icon="ui-icon-trash" actionListener="#{rosterManagementManagedBean.removeStudent}" update="formAllStudents:dataTableAllStudents messages" >
                             <f:attribute name="studentToRemove" value="#{student}" />
                             <p:confirm header="Confirmation" message="Are you sure you want to remove Student ID: #{student.studentId} from Society?" icon="ui-icon-alert" />
@@ -163,10 +158,6 @@
                     </p:panelGrid>
 
                 </p:dialog>
-
-<!--                <p:dialog id="dialogSuccessfullyUpdated" widgetVar="dialogSuccessfullyUpdated" closable="true">
-                    <p:outputLabel value="Success!"/>
-                </p:dialog>-->
 
             </h:form>
 

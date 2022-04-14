@@ -11,16 +11,12 @@ import java.util.List;
 import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
-import util.enumeration.AccessRightEnum;
 
 /**
  *
@@ -43,14 +39,9 @@ public class Student implements Serializable {
     private String userName;
     @Column(unique = true, length = 256)
     private String profilePicture;
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = true)
-    private AccessRightEnum accessRightEnum;
     
     @OneToMany(mappedBy = "student", orphanRemoval = false, cascade = {}, fetch = FetchType.LAZY)
     private List<Attendance> attendances;
-    @ManyToMany(cascade = {}, fetch = FetchType.LAZY)
-    private List<Notification> notifications;
     @OneToMany(mappedBy = "student", cascade = {}, fetch = FetchType.LAZY)
     private List<Comment> comments;
     @OneToMany(mappedBy = "student", cascade = {}, fetch = FetchType.LAZY)
@@ -59,30 +50,32 @@ public class Student implements Serializable {
     private List<Event> events;
     @OneToMany(mappedBy = "student", orphanRemoval = false, cascade = {}, fetch = FetchType.LAZY)
     private List<Event> eventsOrganised;
-    @ManyToMany(cascade = {}, fetch = FetchType.LAZY)
+    
+    @ManyToMany(mappedBy = "memberStudents", cascade = {}, fetch = FetchType.EAGER)
     private List<Society> memberSocieties;
-    @ManyToMany(mappedBy = "followedStudents", cascade = {}, fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "followedStudents", cascade = {}, fetch = FetchType.EAGER)
     private List<Society> followedSocieties;
+    @ManyToMany(mappedBy = "leaderStudents", cascade = {}, fetch = FetchType.EAGER)
+    private List<Society> leaderSocieties;
 
     public Student() {
         attendances = new ArrayList<>();
-        notifications = new ArrayList<>();
         comments = new ArrayList<>();
         posts = new ArrayList<>();
         events = new ArrayList<>();
         eventsOrganised = new ArrayList<>();
         memberSocieties = new ArrayList<>();
         followedSocieties = new ArrayList<>();
+        leaderSocieties = new ArrayList<>();
     }
 
-    public Student(String name, String email, String password, String userName, String profilePicture, AccessRightEnum accessRightEnum) {
+    public Student(String name, String email, String password, String userName, String profilePicture) {
         this();
         this.name = name;
         this.email = email;
         this.password = password;
         this.userName = userName;
         this.profilePicture = profilePicture;
-        this.accessRightEnum = accessRightEnum;
     }
 
     public Long getStudentId() {
@@ -166,23 +159,6 @@ public class Student implements Serializable {
     public void setAttendances(List<Attendance> attendances) {
         this.attendances = attendances;
     }
-
-    @JsonbTransient
-    public List<Notification> getNotifications() {
-        return notifications;
-    }
-
-    public void setNotifications(List<Notification> notifications) {
-        this.notifications = notifications;
-    } 
-
-    public AccessRightEnum getAccessRightEnum() {
-        return accessRightEnum;
-    }
-
-    public void setAccessRightEnum(AccessRightEnum accessRightEnum) {
-        this.accessRightEnum = accessRightEnum;
-    }
     
     @JsonbTransient
     public List<Comment> getComments() {
@@ -227,6 +203,15 @@ public class Student implements Serializable {
 
     public void setMemberSocieties(List<Society> memberSocieties) {
         this.memberSocieties = memberSocieties;
+    }
+    
+    @JsonbTransient
+    public List<Society> getLeaderSocieties() {
+        return leaderSocieties;
+    }
+
+    public void setLeaderSocieties(List<Society> leaderSocieties) {
+        this.leaderSocieties = leaderSocieties;
     }
 
     @JsonbTransient

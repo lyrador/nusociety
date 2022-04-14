@@ -85,7 +85,7 @@ public class StudentResource {
     public Response createNewStudentWithEnum(CreateStudentReq createStudentReq) {
         if (createStudentReq != null) {
             try {
-                Long studentId = studentSessionBeanLocal.createNewStudentWithEnum(createStudentReq.getStudent(), createStudentReq.getAccessRightString());
+                Long studentId = studentSessionBeanLocal.createNewStudentWithListOfSocietyIdsToBeLeaderOf(createStudentReq.getStudent(), createStudentReq.getListOfSocietyIdsToBeLeaderOf());
 
                 return Response.status(Response.Status.OK).entity(studentId).build();
             } catch (Exception ex) {

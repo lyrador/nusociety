@@ -7,55 +7,63 @@
                 xmlns:p="http://primefaces.org/ui">	
 
     <ui:define name="content">
-        
+
         <h:form id="societyEditPage">
-            <p:messages id="messagesEditSociety" redisplay="false"/>
-             <div style="display:flex;">
-                <p:panelGrid>
 
-                    <p:row>
-                        <p:column>
-                            <p:outputLabel value="Society Name: " style="font-weight: bold;"/>
-                        </p:column>
-                        <p:column>
-                            <p:inputText value="#{editSocietyManagedBean.society.name}" required="true" requiredMessage="Name is required"/>
-                        </p:column>
-                    </p:row>
+            <p:panel header="Edit Society Details">
+                <p:messages id="messagesEditSociety" redisplay="false"/>
+                <div style="display:flex;">
+                    <p:panelGrid>
 
-                    <p:row>
-                        <p:column>
-                            <p:outputLabel value="Description: " style="font-weight: bold;"/>
-                        </p:column>
-                        <p:column>
-                            <p:inputText value="#{editSocietyManagedBean.society.description}" required="true" requiredMessage="Description is required" size="100"/>
-                        </p:column>
-                    </p:row>
+                        <p:row>
+                            <p:column>
+                                <p:outputLabel value="Society Name: " style="font-weight: bold;"/>
+                            </p:column>
+                            <p:column>
+                                <p:inputText value="#{editSocietyManagedBean.society.name}" required="true" requiredMessage="Name is required"/>
+                            </p:column>
+                        </p:row>
 
-                    <p:row>
-                        <p:column>
-                            <p:outputLabel value="Display Picture " style="font-weight: bold;"/>
-                        </p:column>
-                        <p:column>
-                            <p:fileUpload id="imageURL" listener="#{fileUploadManagedBean.handleFileUploadForEditSociety}" multiple="true" update="@this messagesEditSociety" />
-                            <p:panel header="Uploaded File" visible="#{fileUploadManagedBean.showUploadedFile}">
-                                <p:graphicImage value="#{fileUploadManagedBean.uploadedFilePath}" height="50%" />
-                            </p:panel>
-                        </p:column>
-                    </p:row>
-                    
-                    <p:row>
-                        <p:column colspan="3">
-                            <p:commandButton value="Update" actionListener="#{editSocietyManagedBean.editSociety}" update="@form"/>
-                        </p:column>
-                    </p:row>
+                        <p:row>
+                            <p:column>
+                                <p:outputLabel value="Description: " style="font-weight: bold;"/>
+                            </p:column>
+                            <p:column>
+    <!--                            <p:inputText value="#{editSocietyManagedBean.society.description}" required="true" requiredMessage="Description is required" size="100"/>-->
+                                <p:inputTextarea id="content" rows="6" cols="100" value="#{editSocietyManagedBean.society.description}" placeholder="Input details of society..." required="true" requiredMessage="Content is required" />
+                            </p:column>
+                        </p:row>
 
-                    <p:graphicImage value="#{FacesContext.getCurrentInstance().getExternalContext()}/resources/Images/#{editSocietyManagedBean.society.profilePicture}" width="100px" height="100px" style="padding:10px"/>
-                
-                    
-                </p:panelGrid>
-            </div>
+                        <p:row>
+                            <p:column>
+                                <p:outputLabel value="Display Picture " style="font-weight: bold;"/>
+                            </p:column>
+                            <p:column>
+                                <p:fileUpload id="imageURL" listener="#{fileUploadManagedBean.handleFileUploadForEditSociety}" multiple="true" update="@this messagesEditSociety" />
+                                <p:panel header="Uploaded File" visible="#{fileUploadManagedBean.showUploadedFile}">
+                                    <p:graphicImage value="#{fileUploadManagedBean.uploadedFilePath}" height="50%" />
+                                </p:panel>
+                            </p:column>
+                        </p:row>
+
+                        <p:row>
+                            <p:column colspan="3">
+                                <p:commandButton value="Update" actionListener="#{editSocietyManagedBean.editSociety}" update="@form"/>
+                            </p:column>
+                        </p:row>
+
+                        <p:graphicImage value="#{FacesContext.getCurrentInstance().getExternalContext()}/resources/Images/#{editSocietyManagedBean.society.profilePicture}" width="150px" height="150px" style="padding:10px"/>
+
+
+                    </p:panelGrid>
+                </div>
+            </p:panel>
+
 
         </h:form>
+        
+        <br></br>
+        <p:commandButton value="Back" onclick="window.history.back();" icon="pi pi-fw pi-arrow-left" style="width: 100px; height: 40px;font-size:130%;" />
 
 
     </ui:define>

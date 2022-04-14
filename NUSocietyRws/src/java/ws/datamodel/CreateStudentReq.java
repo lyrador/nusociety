@@ -1,18 +1,20 @@
 package ws.datamodel;
 
 import entity.Student;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CreateStudentReq {
     
     private Student student;
-    private String accessRightString;
+    private List<Long> listOfSocietyIdsToBeLeaderOf;
   
     public CreateStudentReq() {        
     }
 
-    public CreateStudentReq(Student student, String accessRightString) {
+    public CreateStudentReq(Student student, List<Long> listOfSocietyIdsToBeLeaderOf) {
         this.student = student;
-        this.accessRightString = accessRightString;
+        this.listOfSocietyIdsToBeLeaderOf = new ArrayList<Long>();
     }
 
     public Student getStudent() {
@@ -23,11 +25,11 @@ public class CreateStudentReq {
         this.student = student;
     }
 
-    public String getAccessRightString() {
-        return accessRightString;
+    public List<Long> getListOfSocietyIdsToBeLeaderOf() {
+        return listOfSocietyIdsToBeLeaderOf;
     }
 
-    public void setAccessRightString(String accessRightString) {
-        this.accessRightString = accessRightString;
-    } 
+    public void setListOfSocietyIdsToBeLeaderOf(List<Long> listOfSocietyIdsToBeLeaderOf) {
+        this.listOfSocietyIdsToBeLeaderOf = listOfSocietyIdsToBeLeaderOf;
+    }
 }

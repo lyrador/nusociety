@@ -15,6 +15,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
@@ -51,14 +53,20 @@ public class Society implements Serializable {
     private List<Post> posts;
     @ManyToMany(mappedBy = "societies", cascade = {}, fetch = FetchType.LAZY)
     private List<Staff> staffs;   
-    @ManyToMany(mappedBy = "memberSocieties", cascade = {}, fetch = FetchType.LAZY)
-    private List<Student> memberStudents;
-    @ManyToMany(cascade = {}, fetch = FetchType.LAZY)
-    private List<Student> followedStudents;
     @OneToMany(mappedBy = "society", orphanRemoval = false, cascade = {}, fetch = FetchType.LAZY)
     private List<Event> events;
     @OneToMany(mappedBy = "society", orphanRemoval = false, cascade = {}, fetch = FetchType.LAZY)
     private List<FeedbackSurvey> surveys;
+    
+    @ManyToMany(cascade = {}, fetch = FetchType.EAGER)
+    @JoinTable(name = "memberStudents", joinColumns = @JoinColumn(name = "society_id"), inverseJoinColumns = @JoinColumn(name = "member_id"))
+    private List<Student> memberStudents;
+    @ManyToMany(cascade = {}, fetch = FetchType.EAGER)
+    @JoinTable(name = "followedStudents", joinColumns = @JoinColumn(name = "society_id"), inverseJoinColumns = @JoinColumn(name = "follower_id"))
+    private List<Student> followedStudents;
+    @ManyToMany(cascade = {}, fetch = FetchType.EAGER)
+    @JoinTable(name = "leaderStudents", joinColumns = @JoinColumn(name = "society_id"), inverseJoinColumns = @JoinColumn(name = "leader_id"))
+    private List<Student> leaderStudents;
     
     public Society() {
         this.announcements = new ArrayList<>();
@@ -67,6 +75,7 @@ public class Society implements Serializable {
         this.staffs = new ArrayList<>();
         this.events = new ArrayList<>();
         this.memberStudents = new ArrayList<>();
+        this.leaderStudents = new ArrayList<>();
         this.followedStudents = new ArrayList<>();
         this.surveys = new ArrayList<>();
     }
@@ -164,6 +173,14 @@ public class Society implements Serializable {
 
     public void setMemberStudents(List<Student> memberStudents) {
         this.memberStudents = memberStudents;
+    }
+    
+    public List<Student> getLeaderStudents() {
+        return leaderStudents;
+    }
+
+    public void setLeaderStudents(List<Student> leaderStudents) {
+        this.leaderStudents = leaderStudents;
     }
 
     public List<Student> getFollowedStudents() {

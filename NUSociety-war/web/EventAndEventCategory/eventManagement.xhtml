@@ -11,7 +11,7 @@
         
         <h:form id="formCreateNewEvent">                
             
-            <p:panel header="Create New Event" toggleable="true" collapsed="true" rendered="#{sessionScope.currentStudent.accessRightEnum == eventManagementManagedBean.leaderAccessRightEnum}">
+            <p:panel header="Create New Event" toggleable="true" collapsed="true" rendered="#{eventManagementManagedBean.leaderOfSociety}">
                 
                 <p:messages id="messagesCreateNewEvent" redisplay="false" />
 

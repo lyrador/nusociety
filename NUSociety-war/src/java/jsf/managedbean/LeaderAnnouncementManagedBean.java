@@ -70,6 +70,7 @@ public class LeaderAnnouncementManagedBean implements Serializable {
         Announcement createdAnnouncement = announcementSessionBeanLocal.createNewAnnouncement(getNewAnnouncement(), getCurrentSociety().getSocietyId());      
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "New announcement created: " + getNewAnnouncement().getAnnouncementId(),"New announcement created: " + getNewAnnouncement().getAnnouncementId())); 
         newAnnouncement = new Announcement();
+        newAnnouncement.setCreationDate(new Date());
     }
 
     public List<Student> getStudents() {

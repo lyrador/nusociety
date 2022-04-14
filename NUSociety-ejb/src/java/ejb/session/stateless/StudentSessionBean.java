@@ -8,7 +8,6 @@ package ejb.session.stateless;
 import entity.Attendance;
 import entity.Comment;
 import entity.Event;
-import entity.Notification;
 import entity.Post;
 import entity.Society;
 import entity.Student;
@@ -18,7 +17,6 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import util.enumeration.AccessRightEnum;
 import util.exception.InvalidLoginCredentialException;
 import util.exception.SocietyNotFoundException;
 import util.exception.StudentNotFoundException;
@@ -58,11 +56,10 @@ public class StudentSessionBean implements StudentSessionBeanLocal {
     public Student retrieveStudentByStudentId(Long studentId) throws StudentNotFoundException{
         Student student = em.find(Student.class, studentId);   
         if(student != null) {
-            student.getNotifications().size();
             student.getPosts().size();
             student.getComments().size();
-            student.getMemberSocieties().size();
-            student.getFollowedSocieties().size();
+//            student.getMemberSocieties().size();
+//            student.getFollowedSocieties().size();
             student.getEvents().size();
             student.getEventsOrganised().size();
             student.getAttendances().size();
@@ -80,11 +77,11 @@ public class StudentSessionBean implements StudentSessionBeanLocal {
     }
     
     @Override
-    public Long createNewStudentWithEnum(Student newStudent, String studentAccessRightString) {
-        if (studentAccessRightString.equals("MEMBER")) {
-            newStudent.setAccessRightEnum(AccessRightEnum.MEMBER);
-        } else {
-            newStudent.setAccessRightEnum(AccessRightEnum.LEADER);
+    public Long createNewStudentWithListOfSocietyIdsToBeLeaderOf(Student newStudent, List<Long> listOfSocietyIdsToBeLeaderOf) throws StudentNotFoundException, SocietyNotFoundException {
+        em.persist(newStudent);
+        em.flush(); 
+        for (Long societyIdToBeLeaderOf : listOfSocietyIdsToBeLeaderOf) {
+            setStudentLeaderOfSociety(newStudent.getStudentId(), societyIdToBeLeaderOf);
         }
         em.persist(newStudent);
         em.flush(); 
@@ -99,17 +96,7 @@ public class StudentSessionBean implements StudentSessionBeanLocal {
         for(Attendance attendance: studentToBeDeleted.getAttendances()) {
             em.remove(attendance);
         }       
-        studentToBeDeleted.getAttendances().clear();
-        
-        //for many to many
-        for(Notification notification: studentToBeDeleted.getNotifications()) {
-            
-            notification.getStudents().remove(studentToBeDeleted);            
-            if (notification.getStudents().size() == 0) {                  
-                em.remove(notification);
-            }
-        }       
-        studentToBeDeleted.getNotifications().clear();
+        studentToBeDeleted.getAttendances().clear();   
         
         for(Comment comment : studentToBeDeleted.getComments()) {           
             em.remove(comment);  
@@ -145,7 +132,6 @@ public class StudentSessionBean implements StudentSessionBeanLocal {
         
         Student student = (Student) query.getSingleResult();
         if(student != null) {
-            student.getNotifications().size();
             student.getPosts().size();
             student.getComments().size();
             student.getMemberSocieties().size();
@@ -167,11 +153,10 @@ public class StudentSessionBean implements StudentSessionBeanLocal {
         
         Student student = (Student) query.getSingleResult();
         if(student != null) {
-            student.getNotifications().size();
             student.getPosts().size();
             student.getComments().size();
-            student.getMemberSocieties().size();
-            student.getFollowedSocieties().size();
+//            student.getMemberSocieties().size();
+//            student.getFollowedSocieties().size();
             student.getEvents().size();
             student.getEventsOrganised().size();
             student.getAttendances().size();
@@ -196,8 +181,6 @@ public class StudentSessionBean implements StudentSessionBeanLocal {
             studentToUpdate.setUserName(tempStudent.getUserName());
         if (tempStudent.getProfilePicture()!= null)
             studentToUpdate.setProfilePicture(tempStudent.getProfilePicture());
-        if (tempStudent.getAccessRightEnum()!= null)
-            studentToUpdate.setAccessRightEnum(tempStudent.getAccessRightEnum());
     }
     
     @Override
@@ -208,11 +191,10 @@ public class StudentSessionBean implements StudentSessionBeanLocal {
 //            String passwordHash = CryptographicHelper.getInstance().byteArrayToHexString(CryptographicHelper.getInstance().doMD5Hashing(password + staffEntity.getSalt()));
             
             if (student.getPassword().equals(password)) {
-                student.getMemberSocieties().size();
-                student.getFollowedSocieties().size();
+//                student.getMemberSocieties().size();
+//                student.getFollowedSocieties().size();
                 student.getEvents().size();
                 student.getEventsOrganised().size();
-                student.getNotifications().size();
                 student.getAttendances().size();
                 student.getComments().size();
                 student.getPosts().size();
@@ -251,5 +233,17 @@ public class StudentSessionBean implements StudentSessionBeanLocal {
 
         System.out.println(studentId + " unfollowed " + societyId + "!");
         return student;
+    }
+    
+    @Override
+    public void setStudentLeaderOfSociety(Long studentId, Long societyId) throws StudentNotFoundException, SocietyNotFoundException {
+        
+        Student studentLeader = retrieveStudentByStudentId(studentId);
+        Society leaderSociety = societySessionBeanLocal.retrieveSocietyById(societyId);
+
+        studentLeader.getLeaderSocieties().add(leaderSociety);
+        leaderSociety.getLeaderStudents().add(studentLeader);
+
+        System.out.println(studentId + " is now leader of " + societyId + "!");
     }
 }

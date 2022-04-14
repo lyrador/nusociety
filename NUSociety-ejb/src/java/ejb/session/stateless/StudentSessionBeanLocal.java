@@ -8,7 +8,6 @@ package ejb.session.stateless;
 import entity.Student;
 import java.util.List;
 import javax.ejb.Local;
-import util.enumeration.AccessRightEnum;
 import util.exception.InvalidLoginCredentialException;
 import util.exception.SocietyNotFoundException;
 import util.exception.StudentNotFoundException;
@@ -33,6 +32,7 @@ public interface StudentSessionBeanLocal {
     public Student retrieveStudentByUsername(String username) throws StudentNotFoundException;
 
     public Student studentLogin(String username, String password) throws InvalidLoginCredentialException, StudentNotFoundException;
+    
     public List<Student> retrieveAllStudentsFromSocietyId(Long societyId);
 
     public Student studentFollow(Long studentId, Long societyId) throws StudentNotFoundException, SocietyNotFoundException;
@@ -41,6 +41,8 @@ public interface StudentSessionBeanLocal {
 
     public Student retrieveStudentByEmail(String email) throws StudentNotFoundException;
 
-    public Long createNewStudentWithEnum(Student newStudent, String studentAccessRightString);
+    public void setStudentLeaderOfSociety(Long studentId, Long societyId) throws StudentNotFoundException, SocietyNotFoundException;
+
+    public Long createNewStudentWithListOfSocietyIdsToBeLeaderOf(Student newStudent, List<Long> listOfSocietyIdsToBeLeaderOf) throws StudentNotFoundException, SocietyNotFoundException;
   
 }

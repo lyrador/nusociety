@@ -8,23 +8,27 @@
 
     <ui:define name="content">
 
-        <ui:insert name="societyHeader">
-            <ui:include src="/societyHeader.xhtml" />
-        </ui:insert>
-        <h:head>
-            <h3>Roster Management</h3>
-        </h:head>
-    </ui:define>
-
-    <ui:define name="content">
+        <h:form id="postsHeader">
+            <p:menubar>
+                <p:menuitem value="Society Home" url="#{request.contextPath}/Society/viewSociety/#{societyManagedBean.society.societyId}-#{societyManagedBean.society.name.replaceAll(' ', '-')}/Home" icon="pi pi-fw pi-home" style="font-size: 14px; width:118px" />
+                <p:menuitem value="Posts" url="#{request.contextPath}/Society/viewSociety/#{societyManagedBean.society.societyId}-#{societyManagedBean.society.name.replaceAll(' ', '-')}/Posts" icon="pi pi-fw pi-pencil" 
+                            style="font-size: 14px; width:70px; background-color: #ffffe2; border-bottom-color:#045491; font-weight: bold " />
+                <p:menuitem value="Events" url="#{request.contextPath}/Society/viewSociety/#{societyManagedBean.society.societyId}-#{societyManagedBean.society.name.replaceAll(' ', '-')}/Events" icon="pi pi-fw pi-calendar" style="font-size: 14px; width:70px" />
+                <p:menuitem value="Roster" url="#{request.contextPath}/Society/viewSociety/#{societyManagedBean.society.societyId}-#{societyManagedBean.society.name.replaceAll(' ', '-')}/Roster" icon="pi pi-fw pi-user"         
+                            rendered="#{societyManagedBean.memberOfSociety}"/>
+                <p:menuitem value="Announcement Management" url="#{request.contextPath}/Society/viewSociety/#{societyManagedBean.society.societyId}-#{societyManagedBean.society.name.replaceAll(' ', '-')}/Announcement" icon="pi pi-fw pi-user" style="font-size: 14px; width:220px" 
+                            rendered="#{societyManagedBean.leaderOfSociety}"/>
+            </p:menubar>
+        </h:form>
+        
         <h:panelGroup>
             <h3 style="font-size: 32pt" align="center">
-                <p:graphicImage value="#{FacesContext.getCurrentInstance().getExternalContext()}/resources/Images/#{societyPostsManagedBean.currentSociety.profilePicture}" width="100px" height="100px"/>
-                #{societyPostsManagedBean.currentSociety.name} Posts
-                <p:graphicImage value="#{FacesContext.getCurrentInstance().getExternalContext()}/resources/Images/#{societyPostsManagedBean.currentSociety.profilePicture}" width="100px" height="100px"/>
+                <p:graphicImage value="#{FacesContext.getCurrentInstance().getExternalContext()}/resources/Images/#{societyPostsManagedBean.currentSociety.profilePicture}" width="80x" height="80px"/>
+                    #{societyPostsManagedBean.currentSociety.name} Posts
+                <p:graphicImage value="#{FacesContext.getCurrentInstance().getExternalContext()}/resources/Images/#{societyPostsManagedBean.currentSociety.profilePicture}" width="80px" height="80px"/>
             </h3>
             
-            <h2 style="color: darkblue;  font-size: 30pt; margin-left: 20px; font-family: Roboto;">Whats on your mind?</h2>
+            <h2 style="color: darkblue;  font-size: 20pt; margin-left: 20px; font-family: Roboto;">Whats on your mind?</h2>
             <p:linkButton value="Create a Public Post!" style="margin-left: 20px; margin-right:20px; background-color: lightblue" outcome="/Post/createPost.xhtml">
             </p:linkButton>
             <p:linkButton value="Create a Private Post!" style="margin-right:20px; background-color: lightblue" outcome="/Post/createPrivatePost.xhtml" rendered="#{sessionScope.currentStudent.memberSocieties.contains(societyPostsManagedBean.currentSociety) == true}">
@@ -33,7 +37,7 @@
 
             <h:form id="filter">
                 
-                <h2 style="color: #3CB371; font-family: Roboto; font-size: 30pt; margin-left: 20px">Filter</h2>
+                <h2 style="color: #3CB371; font-family: Roboto; font-size: 20pt; margin-left: 20px">Filter</h2>
                 <p:commandButton value="Sort by Latest" style="margin-right:20px; margin-left: 20px" actionListener="#{societyPostsManagedBean.sortByLatest}" update="formAllPosts:dataTableAllPosts filter:messages"/>
                 <p:commandButton value="Sort by Oldest" style="margin-right:20px;" actionListener="#{societyPostsManagedBean.sortByEarliest}" update="formAllPosts:dataTableAllPosts filter:messages"/>
                 <p:commandButton value="Show Private Posts Only " style="margin-right:20px;" actionListener="#{societyPostsManagedBean.sortByPrivate}" update="formAllPosts:dataTableAllPosts filter:messages"/>

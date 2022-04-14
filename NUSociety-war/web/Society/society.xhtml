@@ -7,60 +7,64 @@
                 xmlns:p="http://primefaces.org/ui">	
 
     <ui:define name="content">
-        
+
         <h:form id="societyPage">
 
             <p:growl id="messages"/>
 
             <p:menubar>
-                <p:menuitem value="Society Home" icon="pi pi-fw pi-home" style="font-size: 14px; width:120px"/>
+                <p:menuitem value="Society Home" icon="pi pi-fw pi-home" style="font-size: 14px; width:118px; background-color: #ffffe2; border-bottom-color:#045491; font-weight: bold"/>
                 <p:menuitem value="Posts" url="#{request.contextPath}/Society/viewSociety/#{societyManagedBean.society.societyId}-#{societyManagedBean.society.name.replaceAll(' ', '-')}/Posts" icon="pi pi-fw pi-pencil" style="font-size: 14px; width:70px" />
                 <p:menuitem value="Events" url="#{request.contextPath}/Society/viewSociety/#{societyManagedBean.society.societyId}-#{societyManagedBean.society.name.replaceAll(' ', '-')}/Events" icon="pi pi-fw pi-calendar" style="font-size: 14px; width:70px" />
-                <p:menuitem value="Roster" url="#{request.contextPath}/Society/viewSociety/#{societyManagedBean.society.societyId}-#{societyManagedBean.society.name.replaceAll(' ', '-')}/Roster" icon="pi pi-fw pi-user" style="font-size: 14px; width:70px" />
-                <p:menuitem value="Announcement Management" url="#{request.contextPath}/Society/viewSociety/#{societyManagedBean.society.societyId}-#{societyManagedBean.society.name.replaceAll(' ', '-')}/Announcement" icon="pi pi-fw pi-user" style="font-size: 14px; width:220px" rendered="#{sessionScope.currentStudent.accessRightEnum == societyManagedBean.leaderAccessRightEnum}"/>
+                <p:menuitem value="Roster" url="#{request.contextPath}/Society/viewSociety/#{societyManagedBean.society.societyId}-#{societyManagedBean.society.name.replaceAll(' ', '-')}/Roster" icon="pi pi-fw pi-user" style="font-size: 14px; width:70px" 
+                            rendered="#{societyManagedBean.memberOfSociety}"/>
+                <p:menuitem value="Announcement Management" url="#{request.contextPath}/Society/viewSociety/#{societyManagedBean.society.societyId}-#{societyManagedBean.society.name.replaceAll(' ', '-')}/Announcement" icon="pi pi-fw pi-user" style="font-size: 14px; width:220px" 
+                            rendered="#{societyManagedBean.leaderOfSociety}"/>
             </p:menubar>
 
-            <h:outputText value="#{societyManagedBean.society.name}" style="font-size:25px; font-weight: bold;"/>
-            &nbsp;
-            <h:outputLink rendered="#{editSocietyManagedBean.student.accessRightEnum == editSocietyManagedBean.leaderAccessRightEnum}" value="#{application.contextPath}/Society/viewSociety/#{editSocietyManagedBean.society.societyId}-#{editSocietyManagedBean.society.name.replaceAll(' ', '-')}/edit">
-                <f:param name="societyId" value="#{societyManagedBean.society.societyId}" />
-                Edit
-            </h:outputLink>
-            <p:commandButton id="follow_button" rendered="#{!followManagedBean.followedSocieties.contains(societyManagedBean.society) and !followManagedBean.memberSocieties.contains(societyManagedBean.society)}" value="Follow" icon="pi pi-plus" 
-                             style="float: right; background-color: #008CBA;" actionListener="#{followManagedBean.follow}" update="@form">
-                <f:param name="societyId" value="#{societyManagedBean.society.societyId}" />
-            </p:commandButton>
+            <div style="margin: 10px">
+                <h:outputText value="#{societyManagedBean.society.name}" style="font-size:25px; font-weight: bold;"/>
+                &nbsp;
+                <h:outputLink rendered="#{societyManagedBean.leaderOfSociety}" value="#{application.contextPath}/Society/viewSociety/#{editSocietyManagedBean.society.societyId}-#{editSocietyManagedBean.society.name.replaceAll(' ', '-')}/edit">
+                    <f:param name="societyId" value="#{societyManagedBean.society.societyId}" />
+                    Edit
+                </h:outputLink>
+                <p:commandButton id="follow_button" rendered="#{!followManagedBean.followedSocieties.contains(societyManagedBean.society) and !followManagedBean.memberSocieties.contains(societyManagedBean.society)}" value="Follow" icon="pi pi-plus" 
+                                 style="float: right; background-color: #008CBA;" actionListener="#{followManagedBean.follow}" update="@form">
+                    <f:param name="societyId" value="#{societyManagedBean.society.societyId}" />
+                </p:commandButton>
 
-            <p:commandButton id="unfollow_button" rendered="#{followManagedBean.followedSocieties.contains(societyManagedBean.society) and !followManagedBean.memberSocieties.contains(societyManagedBean.society)}" value="Unfollow" icon="pi pi-minus" 
-                             style="float: right; background-color: white;" actionListener="#{followManagedBean.unfollow}" update="@form">
-                <f:param name="societyId" value="#{societyManagedBean.society.societyId}" />
-            </p:commandButton>
+                <p:commandButton id="unfollow_button" rendered="#{followManagedBean.followedSocieties.contains(societyManagedBean.society) and !followManagedBean.memberSocieties.contains(societyManagedBean.society)}" value="Unfollow" icon="pi pi-minus" 
+                                 style="float: right; background-color: white;" actionListener="#{followManagedBean.unfollow}" update="@form">
+                    <f:param name="societyId" value="#{societyManagedBean.society.societyId}" />
+                </p:commandButton>
 
-            <h:outputText rendered="#{followManagedBean.memberSocieties.contains(societyManagedBean.society)}" value="You are a member of this society" style="float: right;"/>
-            <br/>
-            <h:outputText value="#{followManagedBean.memberCount} members" style="float: right; font-weight: bold;"/>
-            <br/>
-            <h:outputText value="#{followManagedBean.followerCount} followers" style="float: right; font-weight: bold;"/>
-            <br/>
-            <div style="width:75%;">
-                <h:outputText value="#{societyManagedBean.society.description}"/>
+                <h:outputText rendered="#{followManagedBean.memberSocieties.contains(societyManagedBean.society)}" value="You are a member of this society" style="float: right;"/>
+                <br/>
+                <h:outputText value="#{followManagedBean.memberCount} members" style="float: right; font-weight: bold;"/>
+                <br/>
+                <h:outputText value="#{followManagedBean.followerCount} followers" style="float: right; font-weight: bold;"/>
+                <br/>
+                <div style="width:75%;">
+                    <h:outputText value="#{societyManagedBean.society.description}"/>
+                </div>
+                <br/>
+                <h:outputText value="Have feedback for #{societyManagedBean.society.name}?" style="float: right;"/>
+                <br/>
+
+                <h:outputLink onclick="PF('dialogFeedbackSurvey').show();return false;" style="float: right;">
+                    Leave your feedback here
+                </h:outputLink>
+                <br/>
+                <p:graphicImage value="#{FacesContext.getCurrentInstance().getExternalContext()}/resources/Images/#{societyManagedBean.society.profilePicture}" width="300px" height="300px"/>
+                <br></br>
+                <br></br>
             </div>
-            <br/>
-            <h:outputText value="Have feedback for #{societyManagedBean.society.name}?" style="float: right;"/>
-            <br/>
-
-            <h:outputLink onclick="PF('dialogFeedbackSurvey').show();return false;" style="float: right;">
-                Leave your feedback here
-            </h:outputLink>
-            <br/>
-            <p:graphicImage value="#{FacesContext.getCurrentInstance().getExternalContext()}/resources/Images/#{societyManagedBean.society.profilePicture}" width="300px" height="300px"/> 
-            
-            <h3>Posts</h3>
 
             <p:carousel id="caro" value="#{societyPostsManagedBean.postList}" headerText="Posts" var="post" itemStyle="text-align:center" responsive="true">
                 <p:panelGrid id="grid" columns="2" style="width:100%;margin:10px 0px" columnClasses="label,value" layout="grid" styleClass="ui-panelgrid-blank">
                     <f:facet name="header">
-                        <h:outputText value="#{post.student.name} " style="font-weight: bold"/>
+                        <h:outputText value="#{post.student.name} " style="font-weight: bold; color: #045491"/>
                         <br/>
                         <p:graphicImage value="#{FacesContext.getCurrentInstance().getExternalContext()}/resources/Images/#{post.student.profilePicture}"/>
                     </f:facet>
@@ -72,7 +76,7 @@
                     <br/> <br/>
 
 
-                    <p:graphicImage value="#{FacesContext.getCurrentInstance().getExternalContext()}/resources/Images/#{post.image}" width="400px" height="400px" style="margin-left:200px;"/>
+                    <p:graphicImage value="#{FacesContext.getCurrentInstance().getExternalContext()}/resources/Images/#{post.image}" width="350px" height="350px" style="margin-left:200px;"/>
                     <br/> <br/>
 
                     <h:outputText value="Post Creation Date:" style="font-weight: bold"/>
@@ -98,7 +102,7 @@
             </p:carousel>
 
         </h:form>
-        
+
         <h:form id="formViewPost">
 
             <p:dialog id="dialogViewPost" widgetVar="dialogViewPost" header="View Post" closable="true" width="1000" height="850">
@@ -228,18 +232,18 @@
 
         </h:form>
 
-        
+        <br></br>
+        <br></br>
 
         <h:form id="form">
 
 
             <div class="card">
-                <h3>Events</h3>
-                <p:carousel value="#{carouselViewManagedBean.events}" var="event" circular="true" numVisible="3" autoPlayInterval="3000" responsive="true" >
+                <p:carousel value="#{carouselViewManagedBean.events}" var="event" circular="true" numVisible="3" autoPlayInterval="3000" responsive="true" headerText="Events" >
 
                     <div class="event" style="width:70%">
                         <div class="event-content">
-                            <div>
+                            <div style="margin: 10px">
                                 <h3>#{event.eventName}</h3>
                                 <h5 style="font-style: oblique">#{event.eventDetails}</h5>
                                 <h5 style="font-style: oblique">Location: #{event.eventLocation}</h5>
@@ -252,6 +256,10 @@
                             </div>
                         </div>
                     </div>
+                    
+                    <f:facet name="footer">
+                        #{societyManagedBean.society} Society has #{eventManagementManagedBean.events.size()} Events(s).
+                    </f:facet>
                 </p:carousel>
             </div>
         </h:form>
@@ -349,7 +357,7 @@
             </p:dialog>
 
         </h:form>
-        
+
         <h:form id="formFeedbackSurvey">
 
             <p:dialog id="dialogFeedbackSurvey" widgetVar="dialogFeedbackSurvey" header="Feedback" closable="true">
@@ -409,6 +417,15 @@
             </p:dialog>
 
         </h:form>
+        
+        <br></br>
+        <br></br>
+        <br></br>
+        <br></br>
+        <br></br>
+        <br></br>
+        <br></br>
+        <br></br>
 
     </ui:define>
 
