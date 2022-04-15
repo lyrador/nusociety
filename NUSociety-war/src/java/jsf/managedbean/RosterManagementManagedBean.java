@@ -88,6 +88,7 @@ public class RosterManagementManagedBean implements Serializable {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "New student added: " + studentToAdd.getStudentId(), "New student added: " + studentToAdd.getStudentId()));
             Attendance newAttendance = new Attendance(1, 1);
             newAttendance.setStudent(studentToAdd);
+            newAttendance.setSociety(currentSociety);
             attendanceSessionBeanLocal.createNewAttendance(newAttendance);
             this.students = studentSessionBeanLocal.retrieveAllStudentsFromSocietyId(currentSociety.getSocietyId());
             attendances = attendanceSessionBeanLocal.retrieveMapAttendancesFromStudentListAndSocietyId(students, currentSociety.getSocietyId());

@@ -210,9 +210,11 @@ public class DataIntSessionBean {
                     Attendance tempAttendance = new Attendance(1, 1);
                     tempAttendance.setStudent(student);
                     student.getAttendances().add(tempAttendance);
+                    tempAttendance.setSociety(floorball);
+                    floorball.getAttendances().add(tempAttendance);
                     attendanceSessionBeanLocal.createNewAttendance(tempAttendance);
                 }
-            } catch (SocietyNotFoundException | NullPointerException e) {
+            } catch (SocietyNotFoundException | StudentNotFoundException | NullPointerException e) {
                 e.printStackTrace();
             }
             
@@ -231,6 +233,9 @@ public class DataIntSessionBean {
                     Attendance tempAttendance = new Attendance(1, 1);
                     tempAttendance.setStudent(student);
                     student.getAttendances().add(tempAttendance);
+                    tempAttendance.setSociety(choir);
+                    choir.getAttendances().add(tempAttendance);
+                    
                     attendanceSessionBeanLocal.createNewAttendance(tempAttendance);
                 }
             } catch (SocietyNotFoundException | StudentNotFoundException | NullPointerException e) {
@@ -252,6 +257,8 @@ public class DataIntSessionBean {
                     Attendance tempAttendance = new Attendance(1, 1);
                     tempAttendance.setStudent(student);
                     student.getAttendances().add(tempAttendance);
+                    tempAttendance.setSociety(band);
+                    band.getAttendances().add(tempAttendance);
                     attendanceSessionBeanLocal.createNewAttendance(tempAttendance);
                 }
             } catch (SocietyNotFoundException | StudentNotFoundException | NullPointerException e) {

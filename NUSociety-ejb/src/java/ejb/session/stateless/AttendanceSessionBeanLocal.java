@@ -11,6 +11,8 @@ import java.util.HashMap;
 import java.util.List;
 import javax.ejb.Local;
 import util.exception.AttendanceNotFoundException;
+import util.exception.SocietyNotFoundException;
+import util.exception.StudentNotFoundException;
 
 /**
  *
@@ -23,8 +25,6 @@ public interface AttendanceSessionBeanLocal {
 
     public Attendance retrieveAttendanceByAttendanceId(Long attendanceId) throws AttendanceNotFoundException;
 
-    public Long createNewAttendance(Attendance newAttendance);
-
     public void deleteAttendance(Long attendanceId) throws AttendanceNotFoundException;
 
     public void updateAttendance(Attendance tempAttendance) throws AttendanceNotFoundException;
@@ -32,4 +32,6 @@ public interface AttendanceSessionBeanLocal {
     public Attendance retrieveAttendanceFromStudentIdAndSocietyId(Long studentId, Long societyId);
 
     public HashMap<Long, Attendance> retrieveMapAttendancesFromStudentListAndSocietyId(List<Student> students, Long societyId);
+
+    public Long createNewAttendance(Attendance newAttendance) throws SocietyNotFoundException, StudentNotFoundException;
 }

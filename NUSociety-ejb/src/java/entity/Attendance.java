@@ -34,6 +34,9 @@ public class Attendance implements Serializable {
     @ManyToOne(optional = false, cascade = {}, fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
     private Student student;
+    @ManyToOne(optional = false, cascade = {}, fetch = FetchType.LAZY)
+    @JoinColumn(nullable = false)
+    private Society society;
 
     public Attendance() {
     }
@@ -103,4 +106,12 @@ public class Attendance implements Serializable {
     public void setStudent(Student student) {
         this.student = student;
     }
+
+    public Society getSociety() {
+        return society;
+    }
+
+    public void setSociety(Society society) {
+        this.society = society;
+    }  
 }

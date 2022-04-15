@@ -19,6 +19,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import util.exception.AttendanceNotFoundException;
+import util.exception.SocietyNotFoundException;
 import util.exception.StudentNotFoundException;
 import util.exception.UnknownPersistenceException;
 
@@ -54,7 +55,7 @@ public class AttendanceManagementManagedBean implements Serializable {
         this.attendances = attendanceSessionBeanLocal.retrieveAllAttendances();
     }
     
-    public void createNewAttendance(ActionEvent event) throws StudentNotFoundException {
+    public void createNewAttendance(ActionEvent event) throws StudentNotFoundException, SocietyNotFoundException {
         Student studentToUpdate = studentSessionBeanLocal.retrieveStudentByStudentId(getExistingStudent().getStudentId());
         newAttendance.setStudent(studentToUpdate);
         Long newAttendanceId = attendanceSessionBeanLocal.createNewAttendance(newAttendance);      

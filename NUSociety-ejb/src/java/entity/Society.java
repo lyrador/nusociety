@@ -68,6 +68,9 @@ public class Society implements Serializable {
     @JoinTable(name = "leaderStudents", joinColumns = @JoinColumn(name = "society_id"), inverseJoinColumns = @JoinColumn(name = "leader_id"))
     private List<Student> leaderStudents;
     
+    @OneToMany(mappedBy = "society", orphanRemoval = false, cascade = {}, fetch = FetchType.LAZY)
+    private List<Attendance> attendances;
+    
     public Society() {
         this.announcements = new ArrayList<>();
         this.societyCategories = new ArrayList<>();
@@ -78,6 +81,7 @@ public class Society implements Serializable {
         this.leaderStudents = new ArrayList<>();
         this.followedStudents = new ArrayList<>();
         this.surveys = new ArrayList<>();
+        this.attendances = new ArrayList<>();
     }
 
     public Society(String name, String description, Date dateCreated) {
@@ -231,6 +235,12 @@ public class Society implements Serializable {
     public void setSurveys(List<FeedbackSurvey> surveys) {
         this.surveys = surveys;
     }
-    
-    
+
+    public List<Attendance> getAttendances() {
+        return attendances;
+    }
+
+    public void setAttendances(List<Attendance> attendances) {
+        this.attendances = attendances;
+    }  
 }
