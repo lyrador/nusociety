@@ -33,8 +33,6 @@ public class Staff implements Serializable {
     private String password;
     @Column(nullable = false, unique = true, length = 32)
     private String username;
-    @Column
-    private String profilePicture;
     
     
     @ManyToMany
@@ -44,12 +42,11 @@ public class Staff implements Serializable {
         this.societies = new ArrayList<>();
     }
 
-    public Staff(String email, String password, String username, String profilePicture) {
+    public Staff(String email, String password, String username) {
         this();
         this.email = email;
         this.password = password;
         this.username = username;
-        this.profilePicture = profilePicture;
     }
 
     public String getEmail() {
@@ -74,14 +71,6 @@ public class Staff implements Serializable {
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public String getProfilePicture() {
-        return profilePicture;
-    }
-
-    public void setProfilePicture(String profilePicture) {
-        this.profilePicture = profilePicture;
     }
 
     @JsonbTransient

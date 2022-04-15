@@ -98,6 +98,18 @@ public class StudentSessionBean implements StudentSessionBeanLocal {
         }       
         studentToBeDeleted.getAttendances().clear();   
         
+        for(Society memberSociety: studentToBeDeleted.getMemberSocieties()) {
+            memberSociety.getMemberStudents().remove(studentToBeDeleted);
+        }
+        
+        for(Society leaderSociety: studentToBeDeleted.getLeaderSocieties()) {
+            leaderSociety.getLeaderStudents().remove(studentToBeDeleted);
+        }
+        
+        for(Society followedSociety: studentToBeDeleted.getFollowedSocieties()) {
+            followedSociety.getFollowedStudents().remove(studentToBeDeleted);
+        }
+        
         for(Comment comment : studentToBeDeleted.getComments()) {           
             em.remove(comment);  
         }

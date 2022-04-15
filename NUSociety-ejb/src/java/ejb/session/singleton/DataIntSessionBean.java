@@ -94,6 +94,8 @@ public class DataIntSessionBean {
     @PostConstruct
     public void postConstruct() {
         List<Long> staffIds = new ArrayList<>();
+        List<Long> staffIds2 = new ArrayList<>();
+        List<Long> staffIds3 = new ArrayList<>();
         List<Long> eventCategoryIds = new ArrayList<>(); 
         List<Long> categoryIds1 = new ArrayList<>();
         List<Long> categoryIds2 = new ArrayList<>();
@@ -144,8 +146,16 @@ public class DataIntSessionBean {
         }
 
         if (em.find(Staff.class, 1l) == null) {
-            Long staffId = staffSessionBeanLocal.createNewStaff(new Staff("staff@gmail.com", "password", "staff", "www.staff.com/profilepic"));
+            Long staffId = staffSessionBeanLocal.createNewStaff(new Staff("staff@gmail.com", "password", "staff"));
+            Long staffId2 = staffSessionBeanLocal.createNewStaff(new Staff("staff2@gmail.com", "password", "staff2"));
+            Long staffId3 = staffSessionBeanLocal.createNewStaff(new Staff("staff3@gmail.com", "password", "staff3"));
+            Long staffId4 = staffSessionBeanLocal.createNewStaff(new Staff("staff4@gmail.com", "password", "staff4"));
+            Long staffId5 = staffSessionBeanLocal.createNewStaff(new Staff("staff5@gmail.com", "password", "staff5"));
             staffIds.add(staffId);
+            staffIds2.add(staffId2);
+            staffIds2.add(staffId3);
+            staffIds3.add(staffId4);
+            staffIds3.add(staffId5);
         }
         
         if(em.find(EventCategory.class, 1l) == null) {
@@ -172,19 +182,19 @@ public class DataIntSessionBean {
                         + "band, wind symphony, wind orchestra, wind band, symphonic winds, symphony band, or symphonic wind ensemble, is a performing ensemble "
                         + "consisting of members of the woodwind, brass, and percussion families of instruments, and occasionally including the harp and the "
                         + "double bass or bass guitar. On rare occasions, additional non-traditional instruments may be added to such ensembles such as piano, "
-                        + "synthesizer, or electric guitar.", new Date(), "band_society.jpeg"), categoryIds3, staffIds);
+                        + "synthesizer, or electric guitar.", new Date(), "band_society.jpeg"), categoryIds3, staffIds2);
                 
                 societySessionBeanLocal.createNewSociety(new Society("Tembusu College Art Club", "The Art Club is a place for practicing artists to hone in "
                         + "on their skills, develop their techniques and portfolios, collaborate with other artists like themselves, create bonds with the "
                         + "community through the arts, and learn how to work together through group projects that will beautify the school and community.", 
-                        new Date(), "artclub_society.jpeg"), categoryIds2, staffIds);
+                        new Date(), "artclub_society.jpeg"), categoryIds2, staffIds2);
                 
                 societySessionBeanLocal.createNewSociety(new Society("Sheares Hall Swimming", "Swimming is an individual or team racing sport that requires the use of one's entire "
                         + "body to move through water. The sport takes place in pools or open water (e.g., in a sea or lake). Competitive swimming is one "
-                        + "of the most popular Olympic sports,[1] with varied distance events in butterfly, backstroke, breaststroke, freestyle, and "
+                        + "of the most popular Olympic sports, with varied distance events in butterfly, backstroke, breaststroke, freestyle, and "
                         + "individual medley. In addition to these individual events, four swimmers can take part in either a freestyle or medley relay. "
                         + "A medley relay consists of four swimmers who will each swim a different stroke, ordered as backstroke, breaststroke, butterfly "
-                        + "and freestyle.", new Date(), "swimming_society.jpeg"), categoryIds4, staffIds);
+                        + "and freestyle.", new Date(), "swimming_society.jpeg"), categoryIds4, staffIds3);
 //                
 //                
 

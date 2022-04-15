@@ -56,7 +56,6 @@ public class StaffSessionBean implements StaffSessionBeanLocal {
         
         s.setEmail(newS.getEmail());
         s.setPassword(newS.getPassword());
-        s.setProfilePicture(newS.getProfilePicture());
         s.setUsername(newS.getUsername());
     }
     

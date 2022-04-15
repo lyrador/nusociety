@@ -13,18 +13,21 @@ import java.util.logging.Logger;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Produces;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import util.exception.InvalidLoginCredentialException;
+import util.exception.StudentNotFoundException;
 import util.exception.UnknownPersistenceException;
 import ws.datamodel.CreateStudentReq;
 
@@ -94,6 +97,25 @@ public class StudentResource {
         } else {
             return Response.status(Response.Status.BAD_REQUEST).entity("Invalid create new student request").build();
         }
+    }
+    
+    @Path("{studentId}")
+    @DELETE
+    @Consumes(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteProduct(@PathParam("studentId") Long studentId)
+    {
+        try
+        {
+            studentSessionBeanLocal.deleteStudent(studentId);
+            
+            return Response.status(Status.OK).build();
+        }
+        catch(StudentNotFoundException ex)
+        {
+            return Response.status(Status.BAD_REQUEST).entity(ex.getMessage()).build();
+        }
+
     }
 
     private StudentSessionBeanLocal lookupStudentSessionBeanLocal() {
