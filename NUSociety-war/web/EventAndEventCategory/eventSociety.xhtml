@@ -22,7 +22,7 @@
         </h:form>
         
         <h:form id="formDataTable">
-            <p:panel header="Society's Table of Events" toggleable="true" collapsed="true" > 
+            <p:panel header="Society's Table of Events" rendered="#{societyManagedBean.student.memberSocieties.contains(societyManagedBean.society)}" toggleable="true" collapsed="true" > 
             <p:messages id="messages" redisplay="false" closable="true" />
         
             <p:dataTable id="dataTableEvents" widgetVar="dataTableEvents" value="#{societyManagedBean.society.events}" var="event" rowKey="#{event.eventId}" rowIndexVar="row"
@@ -77,6 +77,73 @@
 
                 <f:facet name="footer">
                     <h:outputText value="Total number of events is #{societyManagedBean.society.events.size()}" />
+                </f:facet>
+
+            </p:dataTable>
+            
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+            </p:confirmDialog>
+           </p:panel>  
+        </h:form>
+        
+        <h:form id="formDataTablePublic">
+            <p:panel header="Society's Table of Public Events" rendered="#{!societyManagedBean.student.memberSocieties.contains(societyManagedBean.society)}" toggleable="true" collapsed="true" > 
+            <p:messages id="messages" redisplay="false" closable="true" />
+        
+            <p:dataTable id="dataTableEvents" widgetVar="dataTableEvents" value="#{societyManagedBean.publicSocietyEvents}" var="event" rowKey="#{event.eventId}" rowIndexVar="row"
+                         filteredValue="#{eventManagementManagedBean.filteredEvents}"
+                         rows="10" paginator="true" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="10,20,50">
+
+                <f:facet name="header">
+                    <p:outputPanel style="text-align: right;">
+                        <h:outputText value="Search all fields:" />
+                        <p:inputText id="globalFilter" onkeyup="PF('dataTableEvents').filter()" style="width:300px" placeholder="Enter keyword"/>
+                    </p:outputPanel>
+                </f:facet>
+                
+                <p:column headerText="Event ID" sortBy="#{event.eventId}" filterBy="#{event.eventId}" filterMatchMode="contains" width="80">
+                    <h:outputText value="#{event.eventId}" />
+                </p:column>
+
+                <p:column headerText="Event Name" sortBy="#{event.eventName}" filterBy="#{event.eventName}" filterMatchMode="contains" width="80">
+                    <h:outputText value="#{event.eventName}" />
+                </p:column>
+
+                <p:column headerText="Event Details" sortBy="#{event.eventDetails}" filterBy="#{event.eventDetails}" filterMatchMode="contains">
+                    <h:outputText value="#{event.eventDetails}" />
+                </p:column>
+
+                 <p:column headerText="Event Location" sortBy="#{event.eventLocation}" filterBy="#{event.eventLocation}" filterMatchMode="contains">
+                    <h:outputText value="#{event.eventLocation}" />
+                </p:column>
+                
+                <p:column headerText="Event Start Date" sortBy="#{event.eventDateStart}" filterBy="#{event.eventDateStart}" filterMatchMode="contains">
+                    <h:outputText value="#{event.eventDateStart}" />
+                </p:column>
+                
+                <p:column headerText="Event End Date" sortBy="#{event.eventDateEnd}" filterBy="#{event.eventDateEnd}" filterMatchMode="contains">
+                    <h:outputText value="#{event.eventDateEnd}" />
+                </p:column>
+                
+                <p:column headerText="Event Capacity" sortBy="#{event.eventCapacity}" filterBy="#{event.eventCapacity}" filterMatchMode="gte">
+                    <f:facet name="filter">
+                        <p:spinner onchange="PF('dataTableEvents').filter()" min="0">
+                            <f:converter converterId="javax.faces.Integer" />
+                        </p:spinner>
+                    </f:facet>
+                    <h:outputText value="#{event.eventCapacity}" />
+                </p:column>
+                                
+                <p:column headerText="Action" width="100" >
+                    <p:commandButton value="View" update="formViewEvent" oncomplete="PF('dialogViewEvent').show()" icon="pi pi-file" >
+                        <f:setPropertyActionListener value="#{event}" target="#{eventManagementManagedBean.viewEvent}" />
+                    </p:commandButton>
+                </p:column>
+
+                <f:facet name="footer">
+                    <h:outputText value="Total number of public events is #{societyManagedBean.publicSocietyEvents.size()}" />
                 </f:facet>
 
             </p:dataTable>
@@ -178,7 +245,7 @@
 
             <h:panelGrid columnClasses="value">
                 <h3 style="margin-top: 0">Society's Schedule</h3>
-                <p:schedule id="schedule" draggable ="false" value="#{societyManagedBean.scheduleModel}" widgetVar="myschedule" timeZone="GMT+8"  >
+                <p:schedule id="schedule" draggable ="false" resizable="false" value="#{societyManagedBean.scheduleModel}" widgetVar="myschedule" timeZone="GMT+8"  >
 
                <!-- <p:ajax event="dateSelect" listener="#{societyManagedBean.onDateSelect}" update="eventDetails" oncomplete="PF('eventDialog').show();" /> -->
                     <p:ajax event="eventSelect" listener="#{societyManagedBean.onEventSelect}" update="eventDetails" oncomplete="PF('eventDialog').show();" />

@@ -51,6 +51,8 @@ public class Event implements Serializable {
     private Date eventDateEnd; 
     @Column(nullable = false)
     private int eventCapacity; 
+    @Column(nullable = false)
+    private boolean eventIsPublic;
     
     @ManyToMany(cascade = {}, fetch = FetchType.LAZY)
     private List<Student> students;
@@ -75,9 +77,10 @@ public class Event implements Serializable {
         this.eventDateEnd = eventDateEnd;
         this.eventCapacity = eventCapacity;
         this.eventName = eventName; 
+        this.eventIsPublic = true; 
     }
 
-    public Event(String eventName, String eventDetails, String eventLocation, Date eventDateStart, Date eventDateEnd, int eventCapacity, Student student, Society society) {
+    public Event(String eventName, String eventDetails, String eventLocation, Date eventDateStart, Date eventDateEnd, int eventCapacity, Student student, Society society, Boolean eventIsPublic) {
         this.eventName = eventName;
         this.eventDetails = eventDetails;
         this.eventLocation = eventLocation;
@@ -86,9 +89,11 @@ public class Event implements Serializable {
         this.eventCapacity = eventCapacity;
         this.student = student;
         this.society = society;
+        this.eventIsPublic = eventIsPublic; 
     }
 
     public Event() {
+        this.eventIsPublic = false; 
     }
     
     
@@ -195,6 +200,22 @@ public class Event implements Serializable {
 
     public void setCategories(List<EventCategory> categories) {
         this.categories = categories;
+    }
+
+    public boolean isEventIsPublic() {
+        return eventIsPublic;
+    }
+
+    public void setEventIsPublic(boolean eventIsPublic) {
+        this.eventIsPublic = eventIsPublic;
+    }
+    
+    public String getPublicOrPrivate() {
+        if (eventIsPublic) {
+            return "Public";
+        } else {
+            return "Private";
+        }
     }
     
 }

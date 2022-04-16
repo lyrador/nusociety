@@ -24,11 +24,20 @@ import javax.faces.context.FacesContext;
 @ViewScoped
 public class CarouselViewManagedBean implements Serializable {
 
+    public List<Event> getEvents() {
+        return events;
+    }
+
+    public void setEvents(List<Event> events) {
+        this.events = events;
+    }
+
     @EJB
     private EventSessionBeanLocal eventSessionBeanLocal;
 
-    private List<Event> events; 
+    private List<Event> publicEvents; 
     private String societyId; 
+    private List<Event> events; 
     
     @PostConstruct
     public void init() {
@@ -36,15 +45,16 @@ public class CarouselViewManagedBean implements Serializable {
        // Society currentSociety = (Society) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("currentSociety");
         this.societyId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("societyId"); 
         
-        setEvents(eventSessionBeanLocal.retrieveEventsForSociety(Long.parseLong(societyId))); 
+        setPublicEvents(eventSessionBeanLocal.retrievePublicEventsForSociety(Long.parseLong(societyId)));
+        setEvents(eventSessionBeanLocal.retrieveEventsForSociety(Long.parseLong(societyId)));
     }
 
-    public List<Event> getEvents() {
-        return events;
+    public List<Event> getPublicEvents() {
+        return publicEvents;
     }
 
-    public void setEvents(List<Event> events) {
-        this.events = events;
+    public void setPublicEvents(List<Event> publicEvents) {
+        this.publicEvents = publicEvents;
     }
 
     public String getSocietyId() {

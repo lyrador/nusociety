@@ -7,7 +7,7 @@
                 template="./../Template/defaultTemplate.xhtml">
 
     <ui:define name="content">
-        <h3>Event Management</h3>
+        <h3>Events</h3>
         
         <h:form id="formCreateNewEvent">                
             
@@ -121,6 +121,22 @@
                             <p:message for="categories" />
                         </p:column>
                     </p:row>
+                    
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="status" value="Event Status: " />
+                        </p:column>
+                        <p:column>
+                            <p:selectOneMenu id="status" value="#{eventManagementManagedBean.newEvent.eventIsPublic}" required="true" requiredMessage="Event Status is required">
+                                <f:selectItem itemValue="#{null}" itemLabel="[Select]" noSelectionOption="true" />
+                                <f:selectItem itemValue="#{true}" itemLabel="Public" />
+                                <f:selectItem itemValue="#{false}" itemLabel="Private" />
+                            </p:selectOneMenu>
+                        </p:column>
+                        <p:column>
+                            <p:message for="status" />
+                        </p:column>
+                    </p:row>
 
                     <p:row>
                         <p:column colspan="3">
@@ -138,7 +154,7 @@
             
             <p:messages id="messages" redisplay="false" closable="true" style=""/>
         
-            <p:dataTable id="dataTableEvents" widgetVar="dataTableEvents" value="#{eventManagementManagedBean.events}" var="event" rowKey="#{event.eventId}" rowIndexVar="row"
+            <p:dataTable id="dataTableEvents" widgetVar="dataTableEvents" value="#{eventManagementManagedBean.publicEvents}" var="event" rowKey="#{event.eventId}" rowIndexVar="row"
                          filteredValue="#{eventManagementManagedBean.filteredEvents}"
                          rows="10" paginator="true" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="10,20,50">
 
@@ -192,6 +208,7 @@
                     
                     <h:outputText value="#{event.society.name}" />
                 </p:column>
+                
                                 
                 <p:column headerText="Action" width="100" >
                     <p:commandButton value="View" update="formViewEvent" oncomplete="PF('dialogViewEvent').show()" icon="pi pi-file" >
@@ -214,7 +231,7 @@
                 </p:column>
 
                 <f:facet name="footer">
-                    <h:outputText value="Total number of events is #{eventManagementManagedBean.events.size()}" />
+                    <h:outputText value="Total number of public events is #{eventManagementManagedBean.publicEvents.size()}" />
                 </f:facet>
 
             </p:dataTable>
@@ -345,7 +362,7 @@
                             <p:outputLabel for="eventDetails" value="Event Details: " />
                         </p:column>
                         <p:column>
-                            <p:inputMask id="eventDetails" value="#{eventManagementManagedBean.updateEvent.eventDetails}" maxlength="256" required="true" requiredMessage="Event Details is required" />
+                            <p:inputTextarea id="eventDetails" value="#{eventManagementManagedBean.updateEvent.eventDetails}" maxlength="256" required="true" requiredMessage="Event Details is required" />
                         </p:column>
                         <p:column>
                             <p:message for="eventDetails" />
@@ -432,6 +449,22 @@
                             <p:message for="categories" />
                         </p:column>
                     </p:row>
+                    
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="status" value="Event Status: " />
+                        </p:column>
+                        <p:column>
+                            <p:selectOneMenu id="status" value="#{eventManagementManagedBean.updateEvent.eventIsPublic}" required="true" requiredMessage="Event Status is required">
+                                <f:selectItem itemValue="#{null}" itemLabel="[Select]" noSelectionOption="true" />
+                                <f:selectItem itemValue="#{true}" itemLabel="Public" />
+                                <f:selectItem itemValue="#{false}" itemLabel="Private" />
+                            </p:selectOneMenu>
+                        </p:column>
+                        <p:column>
+                            <p:message for="status" />
+                        </p:column>
+                    </p:row>
 
                     <p:row>
                         <p:column colspan="3">
@@ -464,13 +497,14 @@
                         <p:column>
                             <h:outputText id="eventName" value="#{eventManagementManagedBean.joinEvent.eventName}" />
                         </p:column>
+                        
                     </p:row>
                    
                     <p:row>
                         <p:column colspan="3">
                             
-                            <p:commandButton id="joinEvent" value="Join" icon="pi pi-save" update="formJoinEvent:dialogJoinEvent" actionListener="#{eventManagementManagedBean.doJoinEvent}" oncomplete="PF('dialogSuccessfullyJoined').show();" />
-                             
+                            <p:commandButton id="joinEvent" value="Join" icon="pi pi-save" update="formJoinEvent:dialogJoinEvent" actionListener="#{eventManagementManagedBean.doJoinEvent}" onerror="PF('dialogNotJoined').show();" onsuccess="PF('dialogSuccessfullyJoined').show();" />
+                            <p:message for="messagesJoinEvent" />
                         </p:column>
                     </p:row>
 
@@ -480,6 +514,10 @@
             
             <p:dialog id="dialogSuccessfullyJoined" widgetVar="dialogSuccessfullyJoined" closable="true">
                 <p:outputLabel value="Joined Successfully!"/>
+            </p:dialog>
+            
+            <p:dialog id="dialogNotJoined" widgetVar="dialogNotJoined" closable="true">
+                <p:outputLabel value="Cannot be Joined!"/>
             </p:dialog>
             
         </h:form>
@@ -505,7 +543,7 @@
                         <p:column colspan="3">
                             
                             <p:commandButton id="leaveEvent" value="Leave" icon="pi pi-save" update="@form formLeaveEvent:dialogLeaveEvent" actionListener="#{eventManagementManagedBean.doLeaveEvent}" oncomplete="PF('dialogSuccessfullyLeft').show();"  />
-                             
+
                         </p:column>
                     </p:row>
 

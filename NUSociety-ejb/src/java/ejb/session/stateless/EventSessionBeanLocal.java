@@ -42,6 +42,16 @@ public interface EventSessionBeanLocal {
     public Long leaveEvent(Event leaveEvent, Student currentStudent) throws EventNotFoundException;
 
     public List<Event> retrieveEventsForSociety(Long societyId);
+
+    public List<Event> retrieveAllPublicEvents();
+
+    public List<Event> retrieveAllPrivateEvents();
+
+    public List<Event> retrievePublicEventsForSociety(Long societyId);
+
+    public List<Event> retrievePrivateEventsForSociety(Long societyId);
+
+
     
 }
 
