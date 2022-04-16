@@ -5,6 +5,7 @@
  */
 package ejb.session.stateless;
 
+import entity.Society;
 import entity.Student;
 import java.util.List;
 import javax.ejb.Local;
@@ -44,5 +45,11 @@ public interface StudentSessionBeanLocal {
     public void setStudentLeaderOfSociety(Long studentId, Long societyId) throws StudentNotFoundException, SocietyNotFoundException;
 
     public Long createNewStudentWithListOfSocietyIdsToBeLeaderOf(Student newStudent, List<Long> listOfSocietyIdsToBeLeaderOf) throws StudentNotFoundException, SocietyNotFoundException;
+    
+    public List<Society> retrieveSocietiesLedByStudent(Long studentId) throws StudentNotFoundException, SocietyNotFoundException;
+    
+    public List<Society> retrieveSocietiesForMemberPositions(Long studentId) throws StudentNotFoundException, SocietyNotFoundException;
+
+    public void unlinkStudentLeaderFromSociety(Long studentId, Long societyId) throws StudentNotFoundException, SocietyNotFoundException;
   
 }

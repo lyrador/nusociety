@@ -96,6 +96,8 @@ public class SocietyResource {
                 society.getMemberStudents().clear();
                 society.getPosts().clear();
                 society.getEvents().clear();
+                society.getAttendances().clear();
+                society.getLeaderStudents().clear();
             }
             GenericEntity<List<Society>> genericEntity = new GenericEntity<List<Society>>(societies) {
             };

@@ -12,6 +12,8 @@ import entity.Post;
 import entity.Society;
 import entity.Student;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -257,5 +259,64 @@ public class StudentSessionBean implements StudentSessionBeanLocal {
         leaderSociety.getLeaderStudents().add(studentLeader);
 
         System.out.println(studentId + " is now leader of " + societyId + "!");
+    }
+    
+    @Override
+    public List<Society> retrieveSocietiesLedByStudent(Long studentId) throws StudentNotFoundException, SocietyNotFoundException {
+        
+        Student studentLeader = retrieveStudentByStudentId(studentId);
+        return studentLeader.getLeaderSocieties();
+    }
+    
+    @Override
+    public List<Society> retrieveSocietiesForMemberPositions(Long studentId) throws StudentNotFoundException, SocietyNotFoundException {
+        
+//        try {
+//            Thread.sleep(1000);
+//        } catch (InterruptedException ex) {
+//            Logger.getLogger(StudentSessionBean.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+        
+        System.out.println("RETRIEVE SOCIETIES FOR MEMBER POSITIONS");
+        System.out.println(studentId);
+        
+        Student studentLeader = retrieveStudentByStudentId(studentId);
+        List<Society> societies= studentLeader.getMemberSocieties();
+        
+        for (Society society: societies) {
+            System.out.println("MEMBER OF " + society.getName());
+        }
+       
+        System.out.println("BREAK");
+        
+        for (Society society: studentLeader.getLeaderSocieties()) {
+            if (societies.contains(society)) {
+                societies.remove(society);
+            }
+        }
+        
+                
+        for (Society society: societies) {
+            System.out.println("MEMBER OF " + society.getName());
+        }
+        return societies;
+    }
+    
+    @Override
+    public void unlinkStudentLeaderFromSociety(Long studentId, Long societyId) throws StudentNotFoundException, SocietyNotFoundException {
+        
+        Student studentLeader = retrieveStudentByStudentId(studentId);
+        Society leaderSociety = societySessionBeanLocal.retrieveSocietyById(societyId);
+
+        studentLeader.getLeaderSocieties().remove(leaderSociety);
+        leaderSociety.getLeaderStudents().remove(studentLeader);
+        
+        List<Society> societies= studentLeader.getMemberSocieties();
+        
+        for (Society society: societies) {
+            System.out.println("MEMBER OF " + society.getName());
+        }
+
+        System.out.println(studentId + " is no longer leader of " + societyId + "!");
     }
 }

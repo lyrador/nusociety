@@ -5,7 +5,9 @@
  */
 package ws.rest;
 
+import ejb.session.stateless.SocietySessionBeanLocal;
 import ejb.session.stateless.StudentSessionBeanLocal;
+import entity.Society;
 import entity.Student;
 import java.util.List;
 import java.util.logging.Level;
@@ -18,6 +20,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Produces;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -30,6 +33,7 @@ import util.exception.InvalidLoginCredentialException;
 import util.exception.StudentNotFoundException;
 import util.exception.UnknownPersistenceException;
 import ws.datamodel.CreateStudentReq;
+import ws.datamodel.MakeStudentLeaderReq;
 
 /**
  * REST Web Service
@@ -40,6 +44,7 @@ import ws.datamodel.CreateStudentReq;
 public class StudentResource {
 
     StudentSessionBeanLocal studentSessionBeanLocal = lookupStudentSessionBeanLocal();
+    SocietySessionBeanLocal societySessionBeanLocal = lookupSocietySessionBeanLocal();
 
     @Context
     private UriInfo context;
@@ -65,37 +70,55 @@ public class StudentResource {
         }
     }
 
-//    @PUT
-//    @Consumes(MediaType.APPLICATION_JSON)
-//    @Produces(MediaType.APPLICATION_JSON)
-//    public Response createNewStudent(Student newStudent) {
-//        if (newStudent != null) {
-//            try {
-//                Long newStudentId = studentSessionBeanLocal.createNewStudent(newStudent);
-//
-//                return Response.status(Response.Status.OK).entity(newStudentId).build();
-//            } catch (Exception ex) {
-//                return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
-//            }
-//        } else {
-//            return Response.status(Response.Status.BAD_REQUEST).entity("Invalid create new student request").build();
-//        }
-//    }
-    
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response createNewStudentWithEnum(CreateStudentReq createStudentReq) {
-        if (createStudentReq != null) {
+    public Response createNewStudent(Student newStudent) {
+        if (newStudent != null) {
             try {
-                Long studentId = studentSessionBeanLocal.createNewStudentWithListOfSocietyIdsToBeLeaderOf(createStudentReq.getStudent(), createStudentReq.getListOfSocietyIdsToBeLeaderOf());
+                Long newStudentId = studentSessionBeanLocal.createNewStudent(newStudent);
 
-                return Response.status(Response.Status.OK).entity(studentId).build();
+                return Response.status(Response.Status.OK).entity(newStudentId).build();
+            } catch (Exception ex) {
+                return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
+            }
+        } else {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Invalid create new student request").build();
+        }
+    }
+    
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response makeStudentLeader(MakeStudentLeaderReq makeStudentLeaderReq) {
+        if (makeStudentLeaderReq != null) {
+            try {
+                studentSessionBeanLocal.setStudentLeaderOfSociety(makeStudentLeaderReq.getStudent().getStudentId(), Long.parseLong(makeStudentLeaderReq.getSocietyIdString()));
+
+                return Response.status(Response.Status.OK).build();
             } catch (Exception ex) {
                 return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
             } 
         } else {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Invalid create new student request").build();
+            return Response.status(Response.Status.BAD_REQUEST).entity("Invalid make student leader request").build();
+        }
+    }
+    
+    @Path("unlink")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response unlinkStudentLeaderFromSociety(MakeStudentLeaderReq makeStudentLeaderReq) {
+        if (makeStudentLeaderReq != null) {
+            try {
+                studentSessionBeanLocal.unlinkStudentLeaderFromSociety(makeStudentLeaderReq.getStudent().getStudentId(), Long.parseLong(makeStudentLeaderReq.getSocietyIdString()));
+
+                return Response.status(Response.Status.OK).build();
+            } catch (Exception ex) {
+                return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
+            } 
+        } else {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Invalid unlink student leader request").build();
         }
     }
     
@@ -122,6 +145,75 @@ public class StudentResource {
         try {
             javax.naming.Context c = new InitialContext();
             return (StudentSessionBeanLocal) c.lookup("java:global/NUSociety/NUSociety-ejb/StudentSessionBean!ejb.session.stateless.StudentSessionBeanLocal");
+        } catch (NamingException ne) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", ne);
+            throw new RuntimeException(ne);
+        }
+    }
+    
+    @Path("retrieveSocietiesLedByStudent/{studentId}")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response retrieveSocietiesLedByStudent(@PathParam("studentId") Long studentId) {
+        try {
+            System.out.println("HELLO");
+            List<Society> societies = studentSessionBeanLocal.retrieveSocietiesLedByStudent(studentId);
+            
+            for (Society society : societies) {
+                society.getSocietyCategories().clear();
+                society.getStaffs().clear();
+                society.getSurveys().clear();
+                society.getAnnouncements().clear();
+                society.getFollowedStudents().clear();
+                society.getMemberStudents().clear();
+                society.getLeaderStudents().clear();
+                society.getPosts().clear();
+                society.getEvents().clear();
+                society.getAttendances().clear();
+            }
+            GenericEntity<List<Society>> genericEntity = new GenericEntity<List<Society>>(societies) {
+            };
+
+            return Response.status(Status.OK).entity(genericEntity).build();
+        } catch (Exception ex) {
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
+        }
+    }
+    
+    @Path("retrieveSocietiesStudentIsIn/{studentId}")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response retrieveSocietiesStudentIsIn(@PathParam("studentId") Long studentId) {
+        try {
+            System.out.println("HELLO");
+            List<Society> societies = studentSessionBeanLocal.retrieveSocietiesForMemberPositions(studentId);
+            
+            for (Society society : societies) {
+                society.getSocietyCategories().clear();
+                society.getStaffs().clear();
+                society.getSurveys().clear();
+                society.getAnnouncements().clear();
+                society.getFollowedStudents().clear();
+                society.getMemberStudents().clear();
+                society.getPosts().clear();
+                society.getEvents().clear();
+                society.getLeaderStudents().clear();
+                society.getAttendances().clear();
+            }
+            GenericEntity<List<Society>> genericEntity = new GenericEntity<List<Society>>(societies) {
+            };
+
+            return Response.status(Status.OK).entity(genericEntity).build();
+        } catch (Exception ex) {
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
+        }
+    }
+    
+    
+    private SocietySessionBeanLocal lookupSocietySessionBeanLocal() {
+        try {
+            javax.naming.Context c = new InitialContext();
+            return (SocietySessionBeanLocal) c.lookup("java:global/NUSociety/NUSociety-ejb/SocietySessionBean!ejb.session.stateless.SocietySessionBeanLocal");
         } catch (NamingException ne) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", ne);
             throw new RuntimeException(ne);
