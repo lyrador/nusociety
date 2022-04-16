@@ -32,7 +32,6 @@ import javax.ws.rs.core.Response.Status;
 import util.exception.InvalidLoginCredentialException;
 import util.exception.StudentNotFoundException;
 import util.exception.UnknownPersistenceException;
-import ws.datamodel.CreateStudentReq;
 import ws.datamodel.MakeStudentLeaderReq;
 
 /**
@@ -101,6 +100,42 @@ public class StudentResource {
             } 
         } else {
             return Response.status(Response.Status.BAD_REQUEST).entity("Invalid make student leader request").build();
+        }
+    }
+    
+    @Path("addStudentToSociety")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response addStudentToSociety(MakeStudentLeaderReq makeStudentLeaderReq) {
+        if (makeStudentLeaderReq != null) {
+            try {
+                societySessionBeanLocal.addStudentToSociety(Long.parseLong(makeStudentLeaderReq.getSocietyIdString()), makeStudentLeaderReq.getStudent().getStudentId());
+
+                return Response.status(Response.Status.OK).build();
+            } catch (Exception ex) {
+                return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
+            } 
+        } else {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Invalid add student to society request").build();
+        }
+    }
+    
+    @Path("removeStudentFromSociety")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response removeStudentFromScoeity(MakeStudentLeaderReq makeStudentLeaderReq) {
+        if (makeStudentLeaderReq != null) {
+            try {
+                societySessionBeanLocal.removeStudentFromSociety(Long.parseLong(makeStudentLeaderReq.getSocietyIdString()), makeStudentLeaderReq.getStudent().getStudentId());
+
+                return Response.status(Response.Status.OK).build();
+            } catch (Exception ex) {
+                return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
+            } 
+        } else {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Invalid remove student from society request").build();
         }
     }
     
@@ -180,13 +215,42 @@ public class StudentResource {
         }
     }
     
-    @Path("retrieveSocietiesStudentIsIn/{studentId}")
+    @Path("retrieveSocietiesWhereStudentIsMemberOnly/{studentId}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response retrieveSocietiesStudentIsIn(@PathParam("studentId") Long studentId) {
+    public Response retrieveSocietiesWhereStudentIsMemberOnly(@PathParam("studentId") Long studentId) {
         try {
             System.out.println("HELLO");
             List<Society> societies = studentSessionBeanLocal.retrieveSocietiesForMemberPositions(studentId);
+            
+            for (Society society : societies) {
+                society.getSocietyCategories().clear();
+                society.getStaffs().clear();
+                society.getSurveys().clear();
+                society.getAnnouncements().clear();
+                society.getFollowedStudents().clear();
+                society.getMemberStudents().clear();
+                society.getPosts().clear();
+                society.getEvents().clear();
+                society.getLeaderStudents().clear();
+                society.getAttendances().clear();
+            }
+            GenericEntity<List<Society>> genericEntity = new GenericEntity<List<Society>>(societies) {
+            };
+
+            return Response.status(Status.OK).entity(genericEntity).build();
+        } catch (Exception ex) {
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
+        }
+    }
+    
+    @Path("retrieveSocietiesWhereStudentIsNotIn/{studentId}")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response retrieveSocietiesWhereStudentIsNotIn(@PathParam("studentId") Long studentId) {
+        try {
+            System.out.println("HELLO");
+            List<Society> societies = studentSessionBeanLocal.retrieveSocietiesWhereStudentIsNotIn(studentId);
             
             for (Society society : societies) {
                 society.getSocietyCategories().clear();

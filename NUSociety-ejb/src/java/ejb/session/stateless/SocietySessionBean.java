@@ -38,6 +38,9 @@ public class SocietySessionBean implements SocietySessionBeanLocal {
 
     @EJB
     private SocietyCategorySessionBeanLocal societyCategorySessionBeanLocal;
+    
+    @EJB
+    private AttendanceSessionBeanLocal attendanceSessionBeanLocal;
 
     @PersistenceContext(unitName = "NUSociety-ejbPU")
     private EntityManager em;
@@ -156,6 +159,9 @@ public class SocietySessionBean implements SocietySessionBeanLocal {
             society.getMemberStudents().size();
             society.getMemberStudents().remove(student);
             student.getMemberSocieties().remove(society);
+            society.getLeaderStudents().size();
+            society.getLeaderStudents().remove(student);
+            student.getLeaderSocieties().remove(society);
         } catch (NoResultException | NonUniqueResultException ex) {
             throw new SocietyNotFoundException("Society Id " + societyId + " does not exist!");
         }
@@ -168,6 +174,13 @@ public class SocietySessionBean implements SocietySessionBeanLocal {
             society.getMemberStudents().size();
             society.getMemberStudents().add(student);
             student.getMemberSocieties().add(society);
+            
+            Attendance tempAttendance = new Attendance(1, 1);
+            tempAttendance.setStudent(student);
+            student.getAttendances().add(tempAttendance);
+            tempAttendance.setSociety(society);
+            society.getAttendances().add(tempAttendance);
+            attendanceSessionBeanLocal.createNewAttendance(tempAttendance);
         } catch (NoResultException | NonUniqueResultException ex) {
             throw new SocietyNotFoundException("Society Id " + societyId + " does not exist!");
         }
@@ -187,6 +200,8 @@ public class SocietySessionBean implements SocietySessionBeanLocal {
             society.getMemberStudents().size();
             society.getPosts().size();
             society.getEvents().size();
+            society.getAttendances().size();
+            society.getLeaderStudents().size();
         }
         return query.getResultList();
     }

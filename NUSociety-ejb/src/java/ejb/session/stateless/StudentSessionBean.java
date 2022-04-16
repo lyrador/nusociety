@@ -11,6 +11,7 @@ import entity.Event;
 import entity.Post;
 import entity.Society;
 import entity.Student;
+import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -269,6 +270,22 @@ public class StudentSessionBean implements StudentSessionBeanLocal {
             }
         }
         return societies;
+    }
+    
+    @Override
+    public List<Society> retrieveSocietiesWhereStudentIsNotIn(Long studentId) throws StudentNotFoundException, SocietyNotFoundException {
+        
+        Student student= retrieveStudentByStudentId(studentId);   
+        
+        List<Society> availableSocieties = new ArrayList<Society>();
+        List<Society> memberSocieties= student.getMemberSocieties();
+        
+        for (Society society: societySessionBeanLocal.retrieveAllSocieties()) {
+            if (!memberSocieties.contains(society)) {
+                availableSocieties.add(society);
+            }
+        }
+        return availableSocieties;
     }
     
     @Override

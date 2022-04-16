@@ -214,15 +214,16 @@ public class DataIntSessionBean {
                     floorball.getFollowedStudents().size();
                     floorball.getMemberStudents().size();
 
-                    floorball.getMemberStudents().add(student);
-                    student.getMemberSocieties().add(floorball);
-
-                    Attendance tempAttendance = new Attendance(1, 1);
-                    tempAttendance.setStudent(student);
-                    student.getAttendances().add(tempAttendance);
-                    tempAttendance.setSociety(floorball);
-                    floorball.getAttendances().add(tempAttendance);
-                    attendanceSessionBeanLocal.createNewAttendance(tempAttendance);
+//                    floorball.getMemberStudents().add(student);
+//                    student.getMemberSocieties().add(floorball);
+//
+//                    Attendance tempAttendance = new Attendance(1, 1);
+//                    tempAttendance.setStudent(student);
+//                    student.getAttendances().add(tempAttendance);
+//                    tempAttendance.setSociety(floorball);
+//                    floorball.getAttendances().add(tempAttendance);
+//                    attendanceSessionBeanLocal.createNewAttendance(tempAttendance);
+                    societySessionBeanLocal.addStudentToSociety(floorball.getSocietyId(), student.getStudentId());
                 }
             } catch (SocietyNotFoundException | StudentNotFoundException | NullPointerException e) {
                 e.printStackTrace();
@@ -237,16 +238,17 @@ public class DataIntSessionBean {
                     choir.getFollowedStudents().size();
                     choir.getMemberStudents().size();
 
-                    choir.getMemberStudents().add(student);
-                    student.getMemberSocieties().add(choir);
-
-                    Attendance tempAttendance = new Attendance(1, 1);
-                    tempAttendance.setStudent(student);
-                    student.getAttendances().add(tempAttendance);
-                    tempAttendance.setSociety(choir);
-                    choir.getAttendances().add(tempAttendance);
-                    
-                    attendanceSessionBeanLocal.createNewAttendance(tempAttendance);
+//                    choir.getMemberStudents().add(student);
+//                    student.getMemberSocieties().add(choir);
+//
+//                    Attendance tempAttendance = new Attendance(1, 1);
+//                    tempAttendance.setStudent(student);
+//                    student.getAttendances().add(tempAttendance);
+//                    tempAttendance.setSociety(choir);
+//                    choir.getAttendances().add(tempAttendance);
+//                    
+//                    attendanceSessionBeanLocal.createNewAttendance(tempAttendance);
+                    societySessionBeanLocal.addStudentToSociety(choir.getSocietyId(), student.getStudentId());
                 }
             } catch (SocietyNotFoundException | StudentNotFoundException | NullPointerException e) {
                 e.printStackTrace();
@@ -261,15 +263,16 @@ public class DataIntSessionBean {
                     band.getFollowedStudents().size();
                     band.getMemberStudents().size();
 
-                    band.getMemberStudents().add(student);
-                    student.getMemberSocieties().add(band);
-
-                    Attendance tempAttendance = new Attendance(1, 1);
-                    tempAttendance.setStudent(student);
-                    student.getAttendances().add(tempAttendance);
-                    tempAttendance.setSociety(band);
-                    band.getAttendances().add(tempAttendance);
-                    attendanceSessionBeanLocal.createNewAttendance(tempAttendance);
+//                    band.getMemberStudents().add(student);
+//                    student.getMemberSocieties().add(band);
+//
+//                    Attendance tempAttendance = new Attendance(1, 1);
+//                    tempAttendance.setStudent(student);
+//                    student.getAttendances().add(tempAttendance);
+//                    tempAttendance.setSociety(band);
+//                    band.getAttendances().add(tempAttendance);
+//                    attendanceSessionBeanLocal.createNewAttendance(tempAttendance);
+                    societySessionBeanLocal.addStudentToSociety(band.getSocietyId(), student.getStudentId());
                 }
             } catch (SocietyNotFoundException | StudentNotFoundException | NullPointerException e) {
                 e.printStackTrace();
@@ -310,7 +313,9 @@ public class DataIntSessionBean {
                         System.out.println("Error");
                     }
                 }
-            } 
+            }
+            Student amanda = em.find(Student.class, 10l);
+            Long pId = postSessionBeanLocal.createNewPost(new Post("SYF Performance the other day!", "choir_society.jpeg", amanda, amanda.getMemberSocieties().get(1)));
         }
         
 //        MAKE LEADERS

@@ -51,5 +51,7 @@ public interface StudentSessionBeanLocal {
     public List<Society> retrieveSocietiesForMemberPositions(Long studentId) throws StudentNotFoundException, SocietyNotFoundException;
 
     public void unlinkStudentLeaderFromSociety(Long studentId, Long societyId) throws StudentNotFoundException, SocietyNotFoundException;
+
+    public List<Society> retrieveSocietiesWhereStudentIsNotIn(Long studentId) throws StudentNotFoundException, SocietyNotFoundException;
   
 }
