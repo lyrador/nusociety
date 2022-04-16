@@ -12,8 +12,6 @@ import entity.Post;
 import entity.Society;
 import entity.Student;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -22,7 +20,6 @@ import javax.persistence.Query;
 import util.exception.InvalidLoginCredentialException;
 import util.exception.SocietyNotFoundException;
 import util.exception.StudentNotFoundException;
-//import util.security.CryptographicHelper;
 
 /**
  *
@@ -36,7 +33,6 @@ public class StudentSessionBean implements StudentSessionBeanLocal {
 
     @PersistenceContext(unitName = "NUSociety-ejbPU")
     private EntityManager em;
-    
     
 
     // Add business logic below. (Right-click in editor and choose
@@ -60,8 +56,6 @@ public class StudentSessionBean implements StudentSessionBeanLocal {
         if(student != null) {
             student.getPosts().size();
             student.getComments().size();
-//            student.getMemberSocieties().size();
-//            student.getFollowedSocieties().size();
             student.getEvents().size();
             student.getEventsOrganised().size();
             student.getAttendances().size();
@@ -169,8 +163,6 @@ public class StudentSessionBean implements StudentSessionBeanLocal {
         if(student != null) {
             student.getPosts().size();
             student.getComments().size();
-//            student.getMemberSocieties().size();
-//            student.getFollowedSocieties().size();
             student.getEvents().size();
             student.getEventsOrganised().size();
             student.getAttendances().size();
@@ -202,11 +194,8 @@ public class StudentSessionBean implements StudentSessionBeanLocal {
         
         try {
             Student student = retrieveStudentByUsername(username);
-//            String passwordHash = CryptographicHelper.getInstance().byteArrayToHexString(CryptographicHelper.getInstance().doMD5Hashing(password + staffEntity.getSalt()));
             
             if (student.getPassword().equals(password)) {
-//                student.getMemberSocieties().size();
-//                student.getFollowedSocieties().size();
                 student.getEvents().size();
                 student.getEventsOrganised().size();
                 student.getAttendances().size();
@@ -271,33 +260,13 @@ public class StudentSessionBean implements StudentSessionBeanLocal {
     @Override
     public List<Society> retrieveSocietiesForMemberPositions(Long studentId) throws StudentNotFoundException, SocietyNotFoundException {
         
-//        try {
-//            Thread.sleep(1000);
-//        } catch (InterruptedException ex) {
-//            Logger.getLogger(StudentSessionBean.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-        
-        System.out.println("RETRIEVE SOCIETIES FOR MEMBER POSITIONS");
-        System.out.println(studentId);
-        
         Student studentLeader = retrieveStudentByStudentId(studentId);
         List<Society> societies= studentLeader.getMemberSocieties();
-        
-        for (Society society: societies) {
-            System.out.println("MEMBER OF " + society.getName());
-        }
-       
-        System.out.println("BREAK");
         
         for (Society society: studentLeader.getLeaderSocieties()) {
             if (societies.contains(society)) {
                 societies.remove(society);
             }
-        }
-        
-                
-        for (Society society: societies) {
-            System.out.println("MEMBER OF " + society.getName());
         }
         return societies;
     }
@@ -308,14 +277,18 @@ public class StudentSessionBean implements StudentSessionBeanLocal {
         Student studentLeader = retrieveStudentByStudentId(studentId);
         Society leaderSociety = societySessionBeanLocal.retrieveSocietyById(societyId);
 
-        studentLeader.getLeaderSocieties().remove(leaderSociety);
+        studentLeader.getLeaderSocieties().remove(leaderSociety);      
         leaderSociety.getLeaderStudents().remove(studentLeader);
         
-        List<Society> societies= studentLeader.getMemberSocieties();
+        if (!studentLeader.getMemberSocieties().contains(leaderSociety)) {
+            studentLeader.getMemberSocieties().add(leaderSociety);   
+        }   
         
-        for (Society society: societies) {
-            System.out.println("MEMBER OF " + society.getName());
-        }
+        if (!leaderSociety.getMemberStudents().contains(studentLeader)) {
+            leaderSociety.getMemberStudents().add(studentLeader);
+        }   
+
+        List<Society> societies= studentLeader.getMemberSocieties();
 
         System.out.println(studentId + " is no longer leader of " + societyId + "!");
     }

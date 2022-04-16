@@ -51,11 +51,11 @@ public class Student implements Serializable {
     @OneToMany(mappedBy = "student", orphanRemoval = false, cascade = {}, fetch = FetchType.LAZY)
     private List<Event> eventsOrganised;
     
-    @ManyToMany(mappedBy = "memberStudents", cascade = {}, fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "memberStudents", fetch = FetchType.EAGER)
     private List<Society> memberSocieties;
-    @ManyToMany(mappedBy = "followedStudents", cascade = {}, fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "followedStudents", fetch = FetchType.EAGER)
     private List<Society> followedSocieties;
-    @ManyToMany(mappedBy = "leaderStudents", cascade = {}, fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "leaderStudents", fetch = FetchType.EAGER)
     private List<Society> leaderSocieties;
 
     public Student() {
