@@ -53,6 +53,8 @@ public class SocietyManagedBean implements Serializable {
     private Student student;
     private Society society; 
     private Event event; 
+    private List<Event> privateSocietyEvents; 
+    private List<Event> publicSocietyEvents;
     
     private ScheduleModel scheduleModel;
     private ScheduleEvent scheduleEvent; 
@@ -70,11 +72,28 @@ public class SocietyManagedBean implements Serializable {
         try {
             society = societySessionBeanLocal.retrieveSocietyById(Long.parseLong(societyId));
             List<Event> events = society.getEvents(); 
-            for (Event event : events) {
+            setPrivateSocietyEvents(eventSessionBeanLocal.retrievePrivateEventsForSociety(society.getSocietyId())); 
+            publicSocietyEvents = eventSessionBeanLocal.retrievePublicEventsForSociety(society.getSocietyId()); 
+            if (student.getMemberSocieties().contains(society)) {
+                for (Event event : events) {
+                    getScheduleModel().addEvent(new DefaultScheduleEvent(event.getEventName(), Instant.ofEpochMilli(event.getEventDateStart().getTime())
+                    .atZone(ZoneId.systemDefault()).toLocalDateTime(), Instant.ofEpochMilli(event.getEventDateEnd().getTime())
+                    .atZone(ZoneId.systemDefault()).toLocalDateTime()));
+                }
+            } else {
+                for (Event event : publicSocietyEvents) {
+                getScheduleModel().addEvent(new DefaultScheduleEvent(event.getEventName(), Instant.ofEpochMilli(event.getEventDateStart().getTime())
+                .atZone(ZoneId.systemDefault()).toLocalDateTime(), Instant.ofEpochMilli(event.getEventDateEnd().getTime())
+                .atZone(ZoneId.systemDefault()).toLocalDateTime()));
+                }           
+            }
+    /*      for (Event event : getPrivateSocietyEvents()) {
                 getScheduleModel().addEvent(new DefaultScheduleEvent(event.getEventName(), Instant.ofEpochMilli(event.getEventDateStart().getTime())
                 .atZone(ZoneId.systemDefault()).toLocalDateTime(), Instant.ofEpochMilli(event.getEventDateEnd().getTime())
                 .atZone(ZoneId.systemDefault()).toLocalDateTime()));
             }
+            
+            */
         } catch (SocietyNotFoundException ex) {
             ex.getMessage();
         }
@@ -185,4 +204,22 @@ public class SocietyManagedBean implements Serializable {
         }
         return false;
     }
+
+    public List<Event> getPrivateSocietyEvents() {
+        return privateSocietyEvents;
+    }
+
+    public void setPrivateSocietyEvents(List<Event> privateSocietyEvents) {
+        this.privateSocietyEvents = privateSocietyEvents;
+    }
+
+    public List<Event> getPublicSocietyEvents() {
+        return publicSocietyEvents;
+    }
+
+    public void setPublicSocietyEvents(List<Event> publicSocietyEvents) {
+        this.publicSocietyEvents = publicSocietyEvents;
+    }
+    
+    
 }

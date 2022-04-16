@@ -52,6 +52,18 @@ public class EventSessionBean implements EventSessionBeanLocal {
     }
     
     @Override
+    public List<Event> retrieveAllPublicEvents() {
+        Query query = em.createQuery("SELECT e FROM Event e WHERE e.eventIsPublic = TRUE");     
+        return query.getResultList();
+    }
+    
+    @Override
+    public List<Event> retrieveAllPrivateEvents() {
+        Query query = em.createQuery("SELECT e FROM Event e WHERE e.eventIsPublic = FALSE");     
+        return query.getResultList();
+    }
+    
+    @Override
     public Event retrieveEventById(Long eventId) throws EventNotFoundException {
         Event e = em.find(Event.class, eventId);
         
@@ -135,6 +147,8 @@ public class EventSessionBean implements EventSessionBeanLocal {
         e.setSociety(event.getSociety());
         e.setStudent(event.getStudent());
         
+        e.setEventIsPublic(event.isEventIsPublic());
+        
         //List<EventCategory> categoriesToRemove = e.getCategories(); 
    
         e.getCategories().clear();
@@ -146,16 +160,16 @@ public class EventSessionBean implements EventSessionBeanLocal {
         }
         
         
-        System.out.println("******EVENT Details IS + " + event.getEventDetails()+ " *******"); 
+        System.out.println("******EVENT STATUS IS + " + event.getPublicOrPrivate() + " *******"); 
     }
     
     @Override
     public void deleteEvent(Long eventId) throws EventNotFoundException {
         Event eventToBeDeleted = retrieveEventById(eventId); 
         
-        for (Student student : eventToBeDeleted.getStudents()) {
+      /* for (Student student : eventToBeDeleted.getStudents()) {
             em.remove(student);
-        }
+        }*/
         eventToBeDeleted.getStudents().clear();
         em.remove(eventToBeDeleted);
         
@@ -251,6 +265,32 @@ public class EventSessionBean implements EventSessionBeanLocal {
     @Override
     public List<Event> retrieveEventsForSociety(Long societyId) {
         Query query = em.createQuery("SELECT e FROM Event e WHERE e.society.societyId = :inSocietyId"); 
+        query.setParameter("inSocietyId", societyId); 
+        List<Event> societyEvents = query.getResultList(); 
+        
+        for (Event event: societyEvents) {
+            event.getCategories().size(); 
+        }
+        
+        return query.getResultList(); 
+    }
+    
+    @Override
+    public List<Event> retrievePublicEventsForSociety(Long societyId) {
+        Query query = em.createQuery("SELECT e FROM Event e WHERE e.society.societyId = :inSocietyId AND e.eventIsPublic = TRUE"); 
+        query.setParameter("inSocietyId", societyId); 
+        List<Event> societyEvents = query.getResultList(); 
+        
+        for (Event event: societyEvents) {
+            event.getCategories().size(); 
+        }
+        
+        return query.getResultList(); 
+    }
+    
+    @Override
+    public List<Event> retrievePrivateEventsForSociety(Long societyId) {
+        Query query = em.createQuery("SELECT e FROM Event e WHERE e.society.societyId = :inSocietyId AND e.eventIsPublic = FALSE"); 
         query.setParameter("inSocietyId", societyId); 
         List<Event> societyEvents = query.getResultList(); 
         

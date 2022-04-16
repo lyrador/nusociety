@@ -43,10 +43,6 @@ import util.exception.StudentNotFoundException;
 @ViewScoped
 public class EventManagementManagedBean implements Serializable {
 
-
-    @EJB
-    private EventCategorySessionBeanLocal eventCategorySessionBeanLocal1;
-
     @EJB
     private EventCategorySessionBeanLocal eventCategorySessionBeanLocal;
 
@@ -60,6 +56,8 @@ public class EventManagementManagedBean implements Serializable {
     private StudentSessionBeanLocal studentSessionBeanLocal;
 
     private List<Event> events;
+    private List<Event> publicEvents; 
+    private List<Event> privateEvents;
     private List<Event> filteredEvents; 
 
     private Event newEvent;
@@ -107,6 +105,9 @@ public class EventManagementManagedBean implements Serializable {
     @PostConstruct
     public void postConstruct() {
         events = eventSessionBeanLocal.retrieveAllEvents();
+        
+        setPublicEvents(eventSessionBeanLocal.retrieveAllPublicEvents()); 
+        privateEvents = eventSessionBeanLocal.retrieveAllPrivateEvents(); 
         
         List<EventCategory> categories = eventCategorySessionBeanLocal.retrieveAllEvents();
        // this.setCategories(categories);
@@ -172,7 +173,13 @@ public class EventManagementManagedBean implements Serializable {
             newEvent.setStudent(studentSessionBeanLocal.retrieveStudentByStudentId(this.studentId));
             Long newEventId = eventSessionBeanLocal.createNewEvent(newEvent);
             newEvent.setEventId(newEventId);
+            System.out.println("The status is " + newEvent.getPublicOrPrivate());
             events.add(newEvent); 
+            if (newEvent.isEventIsPublic() == true) {
+                publicEvents.add(newEvent); 
+            } else {
+                privateEvents.add(newEvent); 
+            }
             
             newEvent = new Event(); 
 
@@ -189,6 +196,11 @@ public class EventManagementManagedBean implements Serializable {
         
         eventSessionBeanLocal.deleteEvent(eventToDelete.getEventId());
         events.remove(eventToDelete); 
+        if (eventToDelete.isEventIsPublic() == true) {
+                publicEvents.remove(eventToDelete); 
+            } else {
+                privateEvents.remove(eventToDelete); 
+            }
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Event deleted Id: " + eventToDelete.getEventId(),"Event deleted: " + eventToDelete.getEventId()));
         } catch(EventNotFoundException ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An unexpected error has occurred: " + ex.getMessage(), null));
@@ -212,23 +224,34 @@ public class EventManagementManagedBean implements Serializable {
     
     public void doJoinEvent(ActionEvent event) throws EventNotFoundException {
         try {
-            for (Student student : joinEvent.getStudents()) {
-            System.out.println("******** there is " + student.getName() + " in this event******");
-            }
-            joinEvent.getStudents().add(studentSessionBeanLocal.retrieveStudentByStudentId(studentId)); 
-            Long joinEventId = eventSessionBeanLocal.joinEvent(joinEvent);
-            joinEvent.setEventId(joinEventId);
-            events.add(joinEvent);
-            registeredEvents.add(joinEvent);
-            //setRegisteredEvents(registeredEvents);
-            for (Event eventRegistered : registeredEvents) {
-                System.out.println("********** " + eventRegistered.getEventName());
-                if (registeredEvents.contains(eventSessionBeanLocal.retrieveEventById(joinEventId))) {
-                    System.out.println("**********  + Yes it already contain");
+            if (joinEvent.getStudents().size() < joinEvent.getEventCapacity()) {
+                /*for (Student student : joinEvent.getStudents()) {
+                System.out.println("******** there is " + student.getName() + " in this event******");
+                }*/
+                System.out.println("******** there are " + joinEvent.getStudents().size() + " students in this event******");
+                joinEvent.getStudents().add(studentSessionBeanLocal.retrieveStudentByStudentId(studentId)); 
+                Long joinEventId = eventSessionBeanLocal.joinEvent(joinEvent);
+                joinEvent.setEventId(joinEventId);
+                events.add(joinEvent);
+                registeredEvents.add(joinEvent);
+                if (joinEvent.isEventIsPublic() == true) {
+                    publicEvents.add(joinEvent); 
+                } else {
+                    privateEvents.add(joinEvent); 
                 }
+                //setRegisteredEvents(registeredEvents);
+                for (Event eventRegistered : registeredEvents) {
+                    System.out.println("********** " + eventRegistered.getEventName());
+                    if (registeredEvents.contains(eventSessionBeanLocal.retrieveEventById(joinEventId))) {
+                        System.out.println("**********  + Yes it already contain");
+                    }
+                }
+            } else if  (joinEvent.getStudents().size() >= joinEvent.getEventCapacity()){
+                System.out.println("**********  Yes there would be an error *****");
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Unable to join this event because it has reached its maximum capacity!", "Unable to join this event because it has reached its maximum capacity!"));
             }
         } catch (EventNotFoundException ex) {
-             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An error has occurred while updating Event: " + ex.getMessage(), null));
+             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An error has occurred while joining Event: " + ex.getMessage(), null));
         } catch (Exception ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An unexpected error has occurred: " + ex.getMessage(), null));
         }
@@ -241,6 +264,11 @@ public class EventManagementManagedBean implements Serializable {
             Long leaveEventId = eventSessionBeanLocal.leaveEvent(getLeaveEvent(), currentStudent); 
             getLeaveEvent().setEventId(leaveEventId);
             events.add(getLeaveEvent()); 
+            if (leaveEvent.isEventIsPublic() == true) {
+                publicEvents.add(leaveEvent); 
+            } else {
+                privateEvents.add(leaveEvent); 
+            }
             registeredEvents.remove(getLeaveEvent()); 
         }
         catch(EventNotFoundException ex ) {
@@ -454,5 +482,21 @@ public class EventManagementManagedBean implements Serializable {
             return true;
         }
         return false;
+    }
+
+    public List<Event> getPublicEvents() {
+        return publicEvents;
+    }
+
+    public void setPublicEvents(List<Event> publicEvents) {
+        this.publicEvents = publicEvents;
+    }
+
+    public List<Event> getPrivateEvents() {
+        return privateEvents;
+    }
+
+    public void setPrivateEvents(List<Event> privateEvents) {
+        this.privateEvents = privateEvents;
     }
 }
