@@ -9,6 +9,7 @@ import ejb.session.stateless.AnnouncementSessionBeanLocal;
 import ejb.session.stateless.SocietyCategorySessionBeanLocal;
 import ejb.session.stateless.SocietySessionBeanLocal;
 import ejb.session.stateless.StaffSessionBeanLocal;
+import ejb.session.stateless.StudentSessionBeanLocal;
 import entity.Announcement;
 import entity.Society;
 import entity.SocietyCategory;
@@ -19,6 +20,8 @@ import javax.faces.view.ViewScoped;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
@@ -34,6 +37,7 @@ import util.exception.CreateSocietyException;
 import util.exception.SocietyCategoryNotFoundException;
 import util.exception.SocietyNotFoundException;
 import util.exception.StaffNotFoundException;
+import util.exception.StudentNotFoundException;
 import util.exception.UnknownPersistenceException;
 
 /**
@@ -52,6 +56,8 @@ public class SocietyManagementManagedBean implements Serializable {
     private SocietyCategorySessionBeanLocal societyCategorySessionBeanLocal;
     @EJB
     private SocietySessionBeanLocal societySessionBeanLocal;
+    @EJB
+    private StudentSessionBeanLocal studentSessionBeanLocal;
     
     
     private List<Society> societies;
@@ -87,9 +93,17 @@ public class SocietyManagementManagedBean implements Serializable {
         this.staffs = staffSessionBeanLocal.retrieveAllStaffs();
         this.announcements = announcementSessionBeanLocal.retrieveAllAnnouncements();
         Student currentStudent = (Student) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("currentStudent");
-        this.memberId = currentStudent.getStudentId();
-        this.memberSocieties = currentStudent.getMemberSocieties();
+        try {
+            Student latestStudent = studentSessionBeanLocal.retrieveStudentByStudentId(currentStudent.getStudentId());
+            this.memberId = latestStudent.getStudentId();
+            this.memberSocieties = currentStudent.getMemberSocieties();
+//        for (Society society: currentStudent.getMemberSocieties()) {
+//            System.out.println("IS IN SOCIETY: " + memberSocieties());
+//        }
         this.followedSocieties = currentStudent.getFollowedSocieties();
+        } catch (StudentNotFoundException ex) {
+            System.out.print(ex);
+        }
     }
     
     public void createNewSociety(ActionEvent event) {

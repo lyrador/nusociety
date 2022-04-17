@@ -106,7 +106,7 @@ public class SocietyCategorySessionBean implements SocietyCategorySessionBeanLoc
     public void deleteSocietyCategory(Long categoryId) throws SocietyCategoryNotFoundException, DeleteSocietyCategoryException {
         
         SocietyCategory categoryToDelete = retrieveSocietyCategoryById(categoryId);
-        
+        categoryToDelete.getSocieties().size();
         if(!categoryToDelete.getSocieties().isEmpty()) {
             throw new DeleteSocietyCategoryException("Tag ID " + categoryId + " is associated with existing products and cannot be deleted!");
         } else {

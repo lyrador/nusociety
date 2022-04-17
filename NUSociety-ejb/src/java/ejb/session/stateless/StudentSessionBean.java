@@ -80,8 +80,6 @@ public class StudentSessionBean implements StudentSessionBeanLocal {
         for (Long societyIdToBeLeaderOf : listOfSocietyIdsToBeLeaderOf) {
             setStudentLeaderOfSociety(newStudent.getStudentId(), societyIdToBeLeaderOf);
         }
-        em.persist(newStudent);
-        em.flush(); 
         return newStudent.getStudentId();
     }
     
@@ -247,6 +245,17 @@ public class StudentSessionBean implements StudentSessionBeanLocal {
 
         studentLeader.getLeaderSocieties().add(leaderSociety);
         leaderSociety.getLeaderStudents().add(studentLeader);
+        
+        if (!studentLeader.getMemberSocieties().contains(leaderSociety)) {
+            studentLeader.getMemberSocieties().add(leaderSociety);   
+        }   
+        
+        if (!leaderSociety.getMemberStudents().contains(studentLeader)) {
+            leaderSociety.getMemberStudents().add(studentLeader);
+        }   
+        
+        studentLeader.getLeaderSocieties();
+        studentLeader.getMemberSocieties();
 
         System.out.println(studentId + " is now leader of " + societyId + "!");
     }
@@ -278,9 +287,12 @@ public class StudentSessionBean implements StudentSessionBeanLocal {
         Student student= retrieveStudentByStudentId(studentId);   
         
         List<Society> availableSocieties = new ArrayList<Society>();
-        List<Society> memberSocieties= student.getMemberSocieties();
+        List<Society> memberSocieties = societySessionBeanLocal.retrieveSocietiesForMember(student.getStudentId());
+        List<Society> allSocieties = societySessionBeanLocal.retrieveAllSocieties();
         
-        for (Society society: societySessionBeanLocal.retrieveAllSocieties()) {
+        
+        for (Society society: allSocieties) {
+            System.out.println("MEMBER OF " + society.getName());
             if (!memberSocieties.contains(society)) {
                 availableSocieties.add(society);
             }

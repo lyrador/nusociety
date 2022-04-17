@@ -60,6 +60,7 @@ public class SocietySessionBean implements SocietySessionBeanLocal {
                 for (Long id : categoryIds) {
                     SocietyCategory category = societyCategorySessionBeanLocal.retrieveSocietyCategoryById(id);
                     society.getSocietyCategories().add(category);
+                    category.getSocieties().add(society);
                 }
 
                 for (Long id : staffIds) {
@@ -94,6 +95,8 @@ public class SocietySessionBean implements SocietySessionBeanLocal {
             society.getMemberStudents().size();
             society.getFollowedStudents().size();
             society.getEvents().size();
+            society.getLeaderStudents().size();
+            society.getAttendances().size();
             return society;
         } catch (NoResultException | NonUniqueResultException ex) {
             throw new SocietyNotFoundException("Society Id " + societyId + " does not exist!");
@@ -109,6 +112,14 @@ public class SocietySessionBean implements SocietySessionBeanLocal {
         for (Society society : societies) {
             society.getSocietyCategories().size();
             society.getStaffs().size();
+            society.getSurveys().size();
+            society.getAnnouncements().size();
+            society.getFollowedStudents().size();
+            society.getMemberStudents().size();
+            society.getPosts().size();
+            society.getEvents().size();
+            society.getAttendances().size();
+            society.getLeaderStudents().size();
         }
         if (societies.isEmpty()) {
         System.out.println("**** The society is empty"); 
@@ -138,23 +149,12 @@ public class SocietySessionBean implements SocietySessionBeanLocal {
         Society society = em.find(Society.class, societyId);
         Student student = em.find(Student.class, studentId);
         try {
-            Attendance attendanceToRemove = new Attendance();
-            Query query = em.createQuery("SELECT a FROM Attendance a WHERE a.student.studentId = :studentId");
+            Query query = em.createQuery("SELECT a FROM Attendance a WHERE a.student.studentId = :studentId AND a.society.societyId = :societyId");
             query.setParameter("studentId", studentId);
-            List<Attendance> allAttendancesBelongingToStudent = query.getResultList();
-
-            Query query2 = em.createQuery("SELECT a FROM Attendance a, IN (a.student.memberSocieties) m WHERE m.societyId = :societyId");
-            query2.setParameter("societyId", societyId);
-            List<Attendance> allAttendancesBelongingToSociety = query2.getResultList();
-
-            for (Attendance attendance1 : allAttendancesBelongingToStudent) {
-                for (Attendance attendance2 : allAttendancesBelongingToSociety) {
-                    if (attendance1.getAttendanceId() == attendance2.getAttendanceId()) {
-                        attendanceToRemove = attendance2;
-                    }
-                }
-            }            
+            query.setParameter("societyId", societyId);
+            Attendance attendanceToRemove = (Attendance) query.getSingleResult();
             student.getAttendances().remove(attendanceToRemove);  
+            System.out.println("REMOVING ATTENDANCE: " + attendanceToRemove.getAttendanceId());
             em.remove(attendanceToRemove);
             society.getMemberStudents().size();
             society.getMemberStudents().remove(student);
