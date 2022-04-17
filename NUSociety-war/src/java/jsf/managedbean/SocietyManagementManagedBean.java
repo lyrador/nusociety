@@ -97,9 +97,11 @@ public class SocietyManagementManagedBean implements Serializable {
             Student latestStudent = studentSessionBeanLocal.retrieveStudentByStudentId(currentStudent.getStudentId());
             this.memberId = latestStudent.getStudentId();
             this.memberSocieties = currentStudent.getMemberSocieties();
-//        for (Society society: currentStudent.getMemberSocieties()) {
-//            System.out.println("IS IN SOCIETY: " + memberSocieties());
-//        }
+            for (Society society: currentStudent.getLeaderSocieties()) {
+                if (!memberSocieties.contains(society)) {
+                    memberSocieties.add(society);
+                }
+            }
         this.followedSocieties = currentStudent.getFollowedSocieties();
         } catch (StudentNotFoundException ex) {
             System.out.print(ex);

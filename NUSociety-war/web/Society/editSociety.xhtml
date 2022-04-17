@@ -63,8 +63,9 @@
         </h:form>
         
         <br></br>
-        <p:commandButton value="Back" onclick="window.history.back();" icon="pi pi-fw pi-arrow-left" style="width: 100px; height: 40px;font-size:130%;" />
-
+        <p:menubar>
+            <p:menuitem value="Back" url="#{request.contextPath}/Society/viewSociety/#{societyManagedBean.society.societyId}-#{societyManagedBean.society.name.replaceAll(' ', '-')}/Home" icon="pi pi-fw pi-arrow-left" style="font-size:130%;" />
+        </p:menubar>
 
     </ui:define>
 

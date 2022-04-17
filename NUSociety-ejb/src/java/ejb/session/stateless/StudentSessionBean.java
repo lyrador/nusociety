@@ -200,6 +200,10 @@ public class StudentSessionBean implements StudentSessionBeanLocal {
                 student.getAttendances().size();
                 student.getComments().size();
                 student.getPosts().size();
+                //added this
+                student.getMemberSocieties().size();
+                student.getFollowedSocieties().size();
+                student.getLeaderSocieties().size();
                 return student;
             }
             else
@@ -242,6 +246,9 @@ public class StudentSessionBean implements StudentSessionBeanLocal {
         
         Student studentLeader = retrieveStudentByStudentId(studentId);
         Society leaderSociety = societySessionBeanLocal.retrieveSocietyById(societyId);
+        
+        studentLeader.getLeaderSocieties().size();
+        studentLeader.getMemberSocieties().size();
 
         studentLeader.getLeaderSocieties().add(leaderSociety);
         leaderSociety.getLeaderStudents().add(studentLeader);
@@ -253,9 +260,9 @@ public class StudentSessionBean implements StudentSessionBeanLocal {
         if (!leaderSociety.getMemberStudents().contains(studentLeader)) {
             leaderSociety.getMemberStudents().add(studentLeader);
         }   
-        
-        studentLeader.getLeaderSocieties();
-        studentLeader.getMemberSocieties();
+//        
+//        studentLeader.getLeaderSocieties().size();
+//        studentLeader.getMemberSocieties().size();
 
         System.out.println(studentId + " is now leader of " + societyId + "!");
     }
@@ -264,6 +271,8 @@ public class StudentSessionBean implements StudentSessionBeanLocal {
     public List<Society> retrieveSocietiesLedByStudent(Long studentId) throws StudentNotFoundException, SocietyNotFoundException {
         
         Student studentLeader = retrieveStudentByStudentId(studentId);
+        studentLeader.getLeaderSocieties().size();
+        studentLeader.getMemberSocieties().size();
         return studentLeader.getLeaderSocieties();
     }
     
@@ -271,6 +280,7 @@ public class StudentSessionBean implements StudentSessionBeanLocal {
     public List<Society> retrieveSocietiesForMemberPositions(Long studentId) throws StudentNotFoundException, SocietyNotFoundException {
         
         Student studentLeader = retrieveStudentByStudentId(studentId);
+        studentLeader.getMemberSocieties().size();
         List<Society> societies= studentLeader.getMemberSocieties();
         
         for (Society society: studentLeader.getLeaderSocieties()) {
@@ -285,9 +295,12 @@ public class StudentSessionBean implements StudentSessionBeanLocal {
     public List<Society> retrieveSocietiesWhereStudentIsNotIn(Long studentId) throws StudentNotFoundException, SocietyNotFoundException {
         
         Student student= retrieveStudentByStudentId(studentId);   
+        student.getLeaderSocieties().size();
+        student.getMemberSocieties().size();
         
         List<Society> availableSocieties = new ArrayList<Society>();
         List<Society> memberSocieties = societySessionBeanLocal.retrieveSocietiesForMember(student.getStudentId());
+        memberSocieties.size();
         List<Society> allSocieties = societySessionBeanLocal.retrieveAllSocieties();
         
         
@@ -297,6 +310,9 @@ public class StudentSessionBean implements StudentSessionBeanLocal {
                 availableSocieties.add(society);
             }
         }
+        student.getLeaderSocieties().size();
+        student.getMemberSocieties().size();
+        
         return availableSocieties;
     }
     
@@ -305,6 +321,9 @@ public class StudentSessionBean implements StudentSessionBeanLocal {
         
         Student studentLeader = retrieveStudentByStudentId(studentId);
         Society leaderSociety = societySessionBeanLocal.retrieveSocietyById(societyId);
+        
+        studentLeader.getLeaderSocieties().size();
+        leaderSociety.getMemberStudents().size();
 
         studentLeader.getLeaderSocieties().remove(leaderSociety);      
         leaderSociety.getLeaderStudents().remove(studentLeader);
@@ -317,7 +336,8 @@ public class StudentSessionBean implements StudentSessionBeanLocal {
             leaderSociety.getMemberStudents().add(studentLeader);
         }   
 
-        List<Society> societies= studentLeader.getMemberSocieties();
+        studentLeader.getLeaderSocieties().size();
+        leaderSociety.getMemberStudents().size();
 
         System.out.println(studentId + " is no longer leader of " + societyId + "!");
     }

@@ -172,6 +172,7 @@ public class SocietySessionBean implements SocietySessionBeanLocal {
         Student student = em.find(Student.class, studentId);
         try {
             society.getMemberStudents().size();
+            student.getMemberSocieties().size();
             society.getMemberStudents().add(student);
             student.getMemberSocieties().add(society);
             

@@ -213,16 +213,6 @@ public class DataIntSessionBean {
                     student.getFollowedSocieties().size();
                     floorball.getFollowedStudents().size();
                     floorball.getMemberStudents().size();
-
-//                    floorball.getMemberStudents().add(student);
-//                    student.getMemberSocieties().add(floorball);
-//
-//                    Attendance tempAttendance = new Attendance(1, 1);
-//                    tempAttendance.setStudent(student);
-//                    student.getAttendances().add(tempAttendance);
-//                    tempAttendance.setSociety(floorball);
-//                    floorball.getAttendances().add(tempAttendance);
-//                    attendanceSessionBeanLocal.createNewAttendance(tempAttendance);
                     societySessionBeanLocal.addStudentToSociety(floorball.getSocietyId(), student.getStudentId());
                 }
             } catch (SocietyNotFoundException | StudentNotFoundException | NullPointerException e) {
@@ -237,17 +227,6 @@ public class DataIntSessionBean {
                     student.getFollowedSocieties().size();
                     choir.getFollowedStudents().size();
                     choir.getMemberStudents().size();
-
-//                    choir.getMemberStudents().add(student);
-//                    student.getMemberSocieties().add(choir);
-//
-//                    Attendance tempAttendance = new Attendance(1, 1);
-//                    tempAttendance.setStudent(student);
-//                    student.getAttendances().add(tempAttendance);
-//                    tempAttendance.setSociety(choir);
-//                    choir.getAttendances().add(tempAttendance);
-//                    
-//                    attendanceSessionBeanLocal.createNewAttendance(tempAttendance);
                     societySessionBeanLocal.addStudentToSociety(choir.getSocietyId(), student.getStudentId());
                 }
             } catch (SocietyNotFoundException | StudentNotFoundException | NullPointerException e) {
@@ -262,16 +241,6 @@ public class DataIntSessionBean {
                     student.getFollowedSocieties().size();
                     band.getFollowedStudents().size();
                     band.getMemberStudents().size();
-
-//                    band.getMemberStudents().add(student);
-//                    student.getMemberSocieties().add(band);
-//
-//                    Attendance tempAttendance = new Attendance(1, 1);
-//                    tempAttendance.setStudent(student);
-//                    student.getAttendances().add(tempAttendance);
-//                    tempAttendance.setSociety(band);
-//                    band.getAttendances().add(tempAttendance);
-//                    attendanceSessionBeanLocal.createNewAttendance(tempAttendance);
                     societySessionBeanLocal.addStudentToSociety(band.getSocietyId(), student.getStudentId());
                 }
             } catch (SocietyNotFoundException | StudentNotFoundException | NullPointerException e) {
