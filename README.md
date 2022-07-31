@@ -1,4 +1,4 @@
-# nusociety
+# NUSociety
 
 ![nusociety banner](https://user-images.githubusercontent.com/65401176/182033140-a9985718-06a3-4e6c-9e96-fe4e0e5f3094.png)
 
@@ -10,4 +10,4 @@ Backend development is done with Jakarta EE. Front-end development is done with 
 For the front-end applications, the MVVM software architectural setup is used, while the common backend adopts component-based architecture and Service-oriented Architecture (SOA). The overall enterprise software system exhibits a multitier architecture with thin clients.
 A relational database is used to store data processed by the project permanently through the use of Jakarta Persistence API object/relational mapping (ORM) technology.
 
-NOTE: This repository contains the Jakarta Servlet Faces (JSF) Web Application portion of the project. Look at the Angular portion in this other repository: 
+NOTE: This repository contains the Jakarta Servlet Faces (JSF) Web Application portion of the project. Look at the Angular portion in this other repository: https://github.com/lyrador/nusociety-angular
